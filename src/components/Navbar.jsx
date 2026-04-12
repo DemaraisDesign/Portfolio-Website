@@ -98,9 +98,13 @@ const HAMBURGER_POSITIONS = [
 const AnimatedHamburger = ({ isOpen, toggle, isScrolled, buttonRef, isHoveringMenu, reverseColor }) => {
   const location = useLocation();
   const [isDesktop, setIsDesktop] = useState(typeof window !== 'undefined' ? window.innerWidth >= 1024 : true);
+  const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth < 768 : false);
 
   useEffect(() => {
-    const handleResize = () => setIsDesktop(window.innerWidth >= 1024);
+    const handleResize = () => {
+        setIsDesktop(window.innerWidth >= 1024);
+        setIsMobile(window.innerWidth < 768);
+    };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -193,7 +197,7 @@ const AnimatedHamburger = ({ isOpen, toggle, isScrolled, buttonRef, isHoveringMe
       onClick={toggle}
       ref={buttonRef}
       className={`relative ${containerSize} flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 rounded-full z-[80] cursor-pointer transition-all duration-500`}
-      style={{ transform: isScrolled ? 'scale(1)' : 'scale(1.25)' }}
+      style={{ transform: isMobile ? 'scale(1)' : (isScrolled ? 'scale(1)' : 'scale(1.25)') }}
       aria-label={isOpen ? "Close menu" : "Open menu"}
       aria-expanded={isOpen}
     >
@@ -238,6 +242,7 @@ const MENU_ITEMS = [
 
 const Navbar = ({ show = true, reverseColor = false }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth < 768 : false);
   const [isLocked, setIsLocked] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeColor, setActiveColor] = useState(null);
@@ -300,7 +305,10 @@ const Navbar = ({ show = true, reverseColor = false }) => {
     // Ensure clip path grows if browser is resized while menu is open
     // Debounce to improve performance and stop slugishness
     const debouncedCalculateClipPath = debounce(() => calculateClipPath(isOpen), 150);
-    const handleResize = () => debouncedCalculateClipPath();
+    const handleResize = () => {
+        setIsMobile(window.innerWidth < 768);
+        debouncedCalculateClipPath();
+    };
     window.addEventListener('resize', handleResize);
     return () => {
       window.removeEventListener('resize', handleResize);
@@ -520,7 +528,7 @@ const Navbar = ({ show = true, reverseColor = false }) => {
             <Link to="/">
               <DemaraisLogo
                 key={show}
-                size="default"
+                size={isMobile ? "small" : "default"}
                 textColor={finalLogoColor}
                 animateEntrance={true}
               />
@@ -597,7 +605,7 @@ const Navbar = ({ show = true, reverseColor = false }) => {
               <div className="w-full fluid-px flex justify-between items-center">
                 <Link to="/" onClick={() => setIsOpen(false)} className="relative block">
                   <DemaraisLogo
-                    size="default"
+                    size={isMobile ? "small" : "default"}
                     textColor={activeColor ? 'text-white' : `text-[${BRAND_COLORS.dark}]`}
                     forceWhiteDots={!!activeColor}
                     animateEntrance={false}
@@ -609,7 +617,7 @@ const Navbar = ({ show = true, reverseColor = false }) => {
 
             <div
               className="relative z-10 w-full flex-shrink-0 flex items-center justify-center pt-20 md:pt-24 pb-8"
-              style={{ height: 'max(100vh, 750px)' }}
+              style={{ height: isMobile ? '100dvh' : 'max(100vh, 750px)' }}
             >
               <NavigationMap closeMenu={() => setIsOpen(false)} />
             </div>

@@ -500,8 +500,8 @@ const computeLayout = (w, h, focusedId, isLaunched, isLeftHanded = false) => {
 
             if (isLaunched && isFocused) {
                 // Ensure mobile colSpacing is small enough to fit 3 columns, but keep rowSpacing high for wrapped text
-                const colSpacing = w < 768 ? 130 : 140;
-                const rowSpacing = w < 768 ? 140 : (h < 768 ? 160 : 180);
+                const colSpacing = w < 768 ? 115 : 140;
+                const rowSpacing = w < 768 ? 130 : (h < 768 ? 160 : 180);
 
                 // 1. Calculate safe center between the true diagonal anchors
                 const gridCenterX = (activeX + hx) / 2;
@@ -510,7 +510,7 @@ const computeLayout = (w, h, focusedId, isLaunched, isLeftHanded = false) => {
                 // 2. Dynamically solve arrangement based on true physical width strictly preventing X-overlaps
                 let paddingX = w >= 1024 ? 96 : (w >= 768 ? 48 : 20); // Reduce mobile side padding
                 const safeW = w - (paddingX * 2) - 20;
-                let maxCols = Math.max(1, Math.floor(safeW / colSpacing));
+                let maxCols = w < 768 ? 3 : Math.max(1, Math.floor(safeW / colSpacing));
                 if (maxCols > 3) maxCols = 3;
                 if (sec.children.length === 4) maxCols = 2; // Force exactly 4 items into a tidy 2x2 grid
                 if (sec.children.length > 0 && sec.children.length < maxCols) maxCols = sec.children.length;
@@ -977,7 +977,7 @@ export default function NavigationMap({ closeMenu }) {
     return (
         <div ref={containerRef} style={{
             width: '100%', height: '100%',
-            fontFamily: '"Outfit", sans-serif', overflow: 'hidden', position: 'relative',
+            fontFamily: '"Outfit", sans-serif', overflow: 'visible', position: 'relative',
             userSelect: 'none'
         }}>
             <style>{`
@@ -1001,6 +1001,7 @@ export default function NavigationMap({ closeMenu }) {
             {/* SVG Connector Lines for Grid View */}
             <svg style={{
                 position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 1,
+                overflow: 'visible',
                 opacity: isLaunched && !focusedId && viewport.w >= 768 ? 1 : 0,
                 transition: isResizing ? 'none' : 'opacity 0.8s ease 0.4s'
             }}>

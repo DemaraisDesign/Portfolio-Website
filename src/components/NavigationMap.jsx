@@ -499,9 +499,9 @@ const computeLayout = (w, h, focusedId, isLaunched, isLeftHanded = false) => {
             let gridCol = null;
 
             if (isLaunched && isFocused) {
-                // Ensure mobile colSpacing is small enough to fit 3 columns, but keep rowSpacing high for wrapped text
-                const colSpacing = w < 768 ? 115 : 140;
-                const rowSpacing = w < 768 ? 130 : (h < 768 ? 160 : 180);
+                // Ensure mobile colSpacing and rowSpacing compactly reflect the new popup label system
+                const colSpacing = w < 768 ? 100 : 140;
+                const rowSpacing = w < 768 ? 85 : (h < 768 ? 160 : 180);
 
                 // 1. Calculate safe center between the true diagonal anchors
                 const gridCenterX = (activeX + hx) / 2;

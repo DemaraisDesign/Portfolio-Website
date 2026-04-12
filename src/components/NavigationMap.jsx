@@ -843,7 +843,7 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                         : (labelData.align === 'right' ? 'translate(10px, -50%)' : (labelData.align === 'left' ? 'translate(calc(-100% - 10px), -50%)' : `translate(-50%, ${labelData.align === 'top' ? '10px' : '-10px'})`)),
                     marginTop: labelData.align === 'top' || labelData.align === 'right' || labelData.align === 'left' ? '0' : '20px',
                     marginBottom: labelData.align === 'top' ? '20px' : '0',
-                    textAlign: isShortViewport ? 'left' : (labelData.align === 'right' ? 'left' : (labelData.align === 'left' ? 'right' : 'center')),
+                    textAlign: isShortViewport ? (labelData.align === 'center' ? 'center' : 'left') : (labelData.align === 'right' ? 'left' : (labelData.align === 'left' ? 'right' : 'center')),
                     whiteSpace: isShortViewport ? 'nowrap' : 'normal',
                     width: isShortViewport ? 'auto' : '180px',
                     minWidth: isShortViewport ? '140px' : 'auto',
@@ -1156,7 +1156,7 @@ export default function NavigationMap({ closeMenu }) {
                                 isResizing={isResizing} isChild={true} initialOpacity={opacityMul}
                                 isDimmed={!sec.isFocused && !isLargeUnfocused}
                                 labelData={isLargeUnfocused ? { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: ((isShortDesktop || (viewport.w >= 768 && viewport.w < 1024)) && sec.quadrant.includes('b')) ? 'top' : 'center', img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: showLabels } : { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: (isShortDesktop && sec.quadrant.includes('b')) ? 'top' : (viewport.w < 768 ? 'center' : sp.alignLabel), img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: showLabels }}
-                                isShortViewport={isShortDesktop || (viewport.w >= 768 && viewport.w < 1024)}
+                                isShortViewport={isShortDesktop || viewport.w < 1024}
                             />
                         );
                     })}

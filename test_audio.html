@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <button id="btn">Start Audio</button>
+    <script type="module">
+        import * as Tone from 'tone';
+        document.getElementById('btn').addEventListener('click', async () => {
+            try {
+                await Tone.start();
+                console.log("Tone started!");
+                const reverb = new Tone.Reverb().toDestination();
+                console.log("Reverb created!");
+            } catch (e) {
+                console.error(e);
+            }
+        });
+    </script>
+</body>
+</html>

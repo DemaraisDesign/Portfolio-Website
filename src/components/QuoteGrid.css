@@ -1,0 +1,49 @@
+.quote-box-container {
+    width: 100%;
+}
+
+.quote-box {
+    background: #F5F7F8;
+    /* Light grey */
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    /* Subtle shadow/border */
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+}
+
+.quote-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.quote-text {
+    font-family: 'Outfit', sans-serif;
+    font-size: 22px;
+    line-height: 1.5;
+    color: #16161D;
+    font-weight: 300;
+    font-style: normal;
+    letter-spacing: -0.01em;
+    margin-bottom: 10px;
+}
+
+.quote-author {
+    font-size: 14px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+@media (max-width: 768px) {
+    .quote-item {
+        padding: 28px 24px;
+    }
+
+    .quote-text {
+        font-size: 19px;
+    }
+}

@@ -1,0 +1,286 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* Base Styles from User HTML */
+#canvas-starfield,
+#starfield {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    opacity: 0;
+    transition: opacity 3s ease-in-out;
+}
+
+/* Hide scrollbar for this experience */
+html.intro-experience-active,
+html.intro-experience-active body {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+    overflow: auto;
+    /* Keep scrolling functional */
+}
+
+html.intro-experience-active ::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+}
+
+/* --- INTRO OVERLAY --- */
+#intro-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(5, 5, 8, 0.54);
+    /* Reduced opacity by ~40% (0.9 * 0.6 = 0.54) */
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 1s ease;
+}
+
+/* --- VISUAL EFFECTS --- */
+@keyframes glow-pulse {
+
+    0%,
+    100% {
+        text-shadow: 0 0 10px rgba(255, 222, 33, 0.4), 0 0 20px rgba(255, 222, 33, 0.2);
+    }
+
+    50% {
+        text-shadow: 0 0 15px rgba(255, 222, 33, 0.6), 0 0 25px rgba(255, 222, 33, 0.3);
+    }
+}
+
+.inner-light {
+    color: #FFDE21;
+    animation: glow-pulse 6s infinite ease-in-out;
+}
+
+/* --- SCROLLY TEXT --- */
+.scrolly-text {
+    opacity: 0;
+    transform: translate3d(0, 30px, 0) scale(0.98);
+    filter: blur(20px) drop-shadow(0 25px 25px rgb(0 0 0 / 0.5));
+    transition: opacity 2.25s cubic-bezier(0.2, 0.8, 0.2, 1), transform 2.25s cubic-bezier(0.2, 0.8, 0.2, 1), filter 2.25s ease-in-out;
+    will-change: opacity, transform, filter;
+    backface-visibility: hidden;
+}
+
+.scrolly-text.fast-entry {
+    transition: opacity 1s, transform 1s, filter 1s;
+}
+
+.scrolly-text.active {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0px);
+}
+
+.scrolly-text.smoke {
+    opacity: 0;
+    transform: translate3d(0, -40px, 0) scale(1.1);
+    filter: blur(40px);
+    transition: opacity 1s, transform 1s, filter 1s;
+}
+
+.scrolly-text.finale-fade-out {
+    opacity: 0 !important;
+    filter: blur(10px) !important;
+    transform: scale(0.95) !important;
+    transition: 2s !important;
+}
+
+.scrolly-text.backtracking {
+    transition: all 0.3s ease-out !important;
+}
+
+/* --- FINALE ANIMATIONS --- */
+@keyframes move-purple {
+
+    0%,
+    75% {
+        transform: translate(-50%, calc(-50% - 13vmin));
+        left: 50%;
+        top: 50%;
+    }
+
+    100% {
+        transform: translate(0, -50%);
+        left: 10vw;
+        top: 75%;
+    }
+}
+
+@keyframes move-blue {
+
+    0%,
+    75% {
+        transform: translate(calc(-50% - 11vmin), calc(-50% + 6vmin));
+        left: 50%;
+        top: 50%;
+    }
+
+    100% {
+        transform: translate(0, -50%);
+        left: 10vw;
+        top: 50%;
+    }
+}
+
+@keyframes move-green {
+
+    0%,
+    75% {
+        transform: translate(calc(-50% + 11vmin), calc(-50% + 6vmin));
+        left: 50%;
+        top: 50%;
+    }
+
+    100% {
+        transform: translate(0, -50%);
+        left: 10vw;
+        top: 25%;
+    }
+}
+
+.animate-move-purple {
+    animation: move-purple 4.5s cubic-bezier(0.5, 0, 0.1, 1) forwards;
+}
+
+.animate-move-blue {
+    animation: move-blue 4.5s cubic-bezier(0.5, 0, 0.1, 1) forwards;
+}
+
+.animate-move-green {
+    animation: move-green 4.5s cubic-bezier(0.5, 0, 0.1, 1) forwards;
+}
+
+@keyframes zoom-entrance {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.animate-zoom-entrance {
+    animation: zoom-entrance 1.5s ease-out forwards;
+    transform-origin: 50% 50%;
+}
+
+@keyframes spin-group {
+    0% {
+        transform: rotate(1800deg);
+    }
+
+    75%,
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+.animate-spin-group {
+    animation: spin-group 4.5s cubic-bezier(0.1, 0.9, 0.1, 1) forwards;
+    transform-origin: 50% 50%;
+}
+
+@keyframes spin-icon-counter {
+    0% {
+        transform: rotate(-1800deg);
+    }
+
+    75%,
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+.animate-spin-icon-counter {
+    animation: spin-icon-counter 4.5s cubic-bezier(0.1, 0.9, 0.1, 1) forwards;
+}
+
+@keyframes exit-icon-launch {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+        filter: blur(0);
+    }
+
+    100% {
+        transform: translateY(-80vh) scale(0.8, 2.5);
+        opacity: 0;
+        filter: blur(30px);
+    }
+}
+
+.animate-exit-icon {
+    animation: exit-icon-launch 0.8s cubic-bezier(0.5, 0, 0.2, 1) forwards !important;
+}
+
+@keyframes exit-text-dismiss {
+    0% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    20% {
+        transform: translateX(-20px);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateX(40vw) skewX(-20deg);
+        opacity: 0;
+        filter: blur(30px);
+    }
+}
+
+.animate-exit-text {
+    animation: exit-text-dismiss 0.8s cubic-bezier(0.6, -0.28, 0.735, 0.045) forwards !important;
+}
+
+.char-span {
+    display: inline-block;
+    opacity: 0;
+    transform-origin: bottom;
+}
+
+.char-reveal-anim {
+    animation: char-reveal 1.0s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes char-reveal {
+    0% {
+        opacity: 0;
+        transform: translateY(40px) rotateX(-90deg);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) rotateX(0deg);
+    }
+}
+
+/* Starfield starts hidden */
+#starfield {
+    opacity: 0;
+    transition: opacity 3s ease-in-out;
+}
+
+/* Scrollbar Hiding */
+::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+}
+
+/* Global overrides for this component */
+body.intro-experience-active,
+html.intro-experience-active {
+    scrollbar-width: none !important;
+}

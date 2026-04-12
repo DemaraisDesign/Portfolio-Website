@@ -522,7 +522,7 @@ const computeLayout = (w, h, focusedId, isLaunched, isLeftHanded = false) => {
 
                 const gridStartX = gridCenterX - ((totalColsInThisRow - 1) * colSpacing) / 2;
                 const totalRows = Math.ceil(sec.children.length / maxCols);
-                const gridStartY = gridCenterY - ((totalRows - 1) * rowSpacing) / 2 - (w < 768 ? 40 : 10);
+                const gridStartY = gridCenterY - ((totalRows - 1) * rowSpacing) / 2 - (w < 768 ? 0 : 10);
 
                 cxChild = gridStartX + (col * colSpacing);
                 cyChild = gridStartY + (row * rowSpacing);

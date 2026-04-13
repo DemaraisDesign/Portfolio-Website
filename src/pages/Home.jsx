@@ -374,7 +374,7 @@ const Explorations = () => {
           <motion.div
             key={item.id}
             onClick={() => handleCardClick(item.id)}
-            className="group cursor-pointer flex flex-col h-full shrink-0 snap-center w-[85vw] [@media(max-height:500px)]:w-[45vw] lg:w-auto"
+            className="group cursor-pointer flex flex-col h-full shrink-0 snap-center w-[85vw] [@media(max-height:500px)]:w-[35vw] lg:w-auto"
             initial={{ opacity: 0, rotateY: -90 }}
             whileInView={{ opacity: 1, rotateY: 0 }}
             viewport={{ once: true, margin: "-10%" }}
@@ -403,12 +403,12 @@ const Explorations = () => {
             </div>
 
             {/* Text Container - Orange Background */}
-            <div className="bg-brand-orange p-6 md:p-8 rounded-b-theme-sm flex flex-col gap-2 flex-1 transition-colors duration-300">
+            <div className="bg-brand-orange p-6 lg:p-8 [@media(max-height:500px)]:p-4 rounded-b-theme-sm flex flex-col gap-2 [@media(max-height:500px)]:gap-1 flex-1 transition-colors duration-300">
               <span className="text-white/80 text-[10px] font-bold uppercase tracking-widest">{item.cat}</span>
-              <h3 className="text-2xl font-outfit font-bold text-white mb-2">{item.title}</h3>
-              {item.subhead && <p className="text-white/90 text-sm font-medium leading-relaxed mb-6">{item.subhead}</p>}
+              <h3 className="text-2xl [@media(max-height:500px)]:text-xl font-outfit font-bold text-white mb-2 [@media(max-height:500px)]:mb-1">{item.title}</h3>
+              {item.subhead && <p className="text-white/90 text-sm [@media(max-height:500px)]:text-xs font-medium leading-relaxed mb-6 [@media(max-height:500px)]:mb-3 [@media(max-height:500px)]:leading-snug">{item.subhead}</p>}
 
-              <div className="mt-auto flex items-center gap-2 text-[#f1f1f1] text-sm font-bold uppercase tracking-widest group/link hover:opacity-80 transition-opacity">
+              <div className="mt-auto flex items-center gap-2 text-[#f1f1f1] text-sm [@media(max-height:500px)]:text-xs font-bold uppercase tracking-widest group/link hover:opacity-80 transition-opacity">
                 {getProject(item.id)?.isConstruction ? (
                   <>
                     <span className="flex items-center">

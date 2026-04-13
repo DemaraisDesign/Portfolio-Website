@@ -369,12 +369,12 @@ const Explorations = () => {
         </Link>
       </div>
 
-      <div className="w-full max-w-[1400px] mx-auto px-9 md:px-12 lg:px-24 flex gap-6 overflow-x-auto snap-x lg:grid lg:grid-cols-3 lg:gap-8 perspective-[1000px] pb-6 scrollbar-hide">
+      <div className="w-full max-w-[1400px] mx-auto px-9 md:px-12 lg:px-24 flex gap-6 overflow-x-auto snap-x lg:grid lg:grid-cols-3 lg:gap-8 perspective-[1000px] pb-6 scrollbar-hide [@media(max-height:500px)]:flex-col [@media(max-height:500px)]:overflow-visible">
         {experiments.map((item, i) => (
           <motion.div
             key={item.id}
             onClick={() => handleCardClick(item.id)}
-            className="group cursor-pointer flex flex-col [@media(max-height:500px)]:flex-row h-full shrink-0 snap-center w-[85vw] lg:w-auto"
+            className="group cursor-pointer flex flex-col [@media(max-height:500px)]:flex-row h-full shrink-0 snap-center w-[85vw] [@media(max-height:500px)]:w-full lg:w-auto"
             initial={{ opacity: 0, rotateY: -90 }}
             whileInView={{ opacity: 1, rotateY: 0 }}
             viewport={{ once: true, margin: "-10%" }}

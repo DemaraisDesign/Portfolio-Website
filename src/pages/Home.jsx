@@ -234,9 +234,9 @@ const ListProjectCard = ({ project, index }) => {
       }}
       onMouseEnter={() => audio.playDeepHover()}
     >
-      <div className="grid grid-cols-1 max-lg:landscape:grid-cols-2 lg:grid-cols-12 gap-8 max-lg:landscape:gap-6 lg:gap-12 items-start max-lg:landscape:items-center lg:items-center">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start lg:items-center">
         <div className={`relative lg:col-span-7 ${index % 2 === 1 ? 'lg:order-2' : ''}`} style={{ clipPath: "inset(0 round 7px)", WebkitClipPath: "inset(0 round 7px)" }}>
-          <div className="aspect-video relative bg-[#16161D] overflow-hidden rounded-theme-sm max-h-[60vh] lg:max-h-none">
+          <div className="relative bg-[#16161D] overflow-hidden rounded-theme-sm h-64 md:h-80 lg:h-auto lg:aspect-video w-full">
             <motion.div 
               className="absolute inset-0 w-full h-full" 
               initial={false}
@@ -250,7 +250,7 @@ const ListProjectCard = ({ project, index }) => {
             </motion.div>
           </div>
         </div>
-        <div className={`flex flex-col w-full text-left max-lg:landscape:col-span-1 lg:col-span-5 ${index % 2 === 0 ? 'lg:order-1 items-start' : 'lg:order-1 lg:items-end items-start'}`}>
+        <div className={`flex flex-col w-full text-left lg:col-span-5 ${index % 2 === 0 ? 'lg:order-1 items-start' : 'lg:order-1 lg:items-end items-start'}`}>
           <SectionPreheader
             text={project.cat}
             color={getBrandColor(project.discipline)}
@@ -374,7 +374,7 @@ const Explorations = () => {
           <motion.div
             key={item.id}
             onClick={() => handleCardClick(item.id)}
-            className="group cursor-pointer flex flex-col h-full shrink-0 snap-center w-[85vw] max-lg:landscape:w-[45vw] md:w-[60vw] lg:w-auto"
+            className="group cursor-pointer flex flex-col h-full shrink-0 snap-center w-[85vw] lg:w-auto"
             initial={{ opacity: 0, rotateY: -90 }}
             whileInView={{ opacity: 1, rotateY: 0 }}
             viewport={{ once: true, margin: "-10%" }}
@@ -387,7 +387,7 @@ const Explorations = () => {
             }}
           >
             {/* Image Container - Attached to bottom text */}
-            <div className={`aspect-[16/9] w-full overflow-hidden rounded-t-theme-sm relative ${item.bgClass || ''}`}>
+            <div className={`h-64 lg:h-auto lg:aspect-[16/9] w-full overflow-hidden rounded-t-theme-sm relative ${item.bgClass || ''}`}>
               <div className="absolute inset-0 transition-colors duration-500 z-10" />
               <div className="w-full h-full transition-transform duration-700 ease-out group-hover:scale-110">
                 <img

@@ -374,7 +374,7 @@ const Explorations = () => {
           <motion.div
             key={item.id}
             onClick={() => handleCardClick(item.id)}
-            className="group cursor-pointer flex flex-col h-full shrink-0 snap-center w-[85vw] [@media(max-height:500px)]:w-[35vw] lg:w-auto"
+            className="group cursor-pointer flex flex-col [@media(max-height:500px)]:flex-row h-full shrink-0 snap-center w-[85vw] lg:w-auto"
             initial={{ opacity: 0, rotateY: -90 }}
             whileInView={{ opacity: 1, rotateY: 0 }}
             viewport={{ once: true, margin: "-10%" }}
@@ -387,7 +387,7 @@ const Explorations = () => {
             }}
           >
             {/* Image Container - Attached to bottom text */}
-            <div className={`aspect-[16/9] w-full overflow-hidden rounded-t-theme-sm relative ${item.bgClass || ''}`}>
+            <div className={`aspect-[16/9] w-full [@media(max-height:500px)]:w-[45%] overflow-hidden rounded-t-theme-sm [@media(max-height:500px)]:rounded-t-none [@media(max-height:500px)]:rounded-l-theme-sm relative ${item.bgClass || ''}`}>
               <div className="absolute inset-0 transition-colors duration-500 z-10" />
               <div className="w-full h-full transition-transform duration-700 ease-out group-hover:scale-110">
                 <img
@@ -403,7 +403,7 @@ const Explorations = () => {
             </div>
 
             {/* Text Container - Orange Background */}
-            <div className="bg-brand-orange p-6 lg:p-8 [@media(max-height:500px)]:p-4 rounded-b-theme-sm flex flex-col gap-2 [@media(max-height:500px)]:gap-1 flex-1 transition-colors duration-300">
+            <div className="bg-brand-orange p-6 lg:p-8 [@media(max-height:500px)]:p-6 rounded-b-theme-sm [@media(max-height:500px)]:rounded-b-none [@media(max-height:500px)]:rounded-r-theme-sm flex flex-col gap-2 [@media(max-height:500px)]:w-[55%] flex-1 transition-colors duration-300">
               <span className="text-white/80 text-[10px] font-bold uppercase tracking-widest">{item.cat}</span>
               <h3 className="text-2xl [@media(max-height:500px)]:text-xl font-outfit font-bold text-white mb-2 [@media(max-height:500px)]:mb-1">{item.title}</h3>
               {item.subhead && <p className="text-white/90 text-sm [@media(max-height:500px)]:text-xs font-medium leading-relaxed mb-6 [@media(max-height:500px)]:mb-3 [@media(max-height:500px)]:leading-snug">{item.subhead}</p>}

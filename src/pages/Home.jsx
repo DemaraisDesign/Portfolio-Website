@@ -120,7 +120,7 @@ const AboutMe = () => {
   const itemVariants = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } } };
 
   return (
-    <section className="py-24 lg:py-32 bg-white relative">
+    <section className="py-12 md:py-24 lg:py-32 bg-white relative">
       <div className="w-full max-w-[1400px] mx-auto px-9 md:px-12 lg:px-24">
         <div className="flex flex-col md:flex-row justify-between items-start gap-12 md:gap-16">
           <div className="w-full md:flex-1 order-2 md:order-1">
@@ -161,7 +161,7 @@ const AboutMe = () => {
               </DebugFlexCol>
             </div>
           </div>
-          <div className="w-full md:w-auto shrink-0 md:sticky md:top-32 order-1 md:order-2 h-fit flex justify-start md:block z-[45]">
+          <div className="w-full md:w-auto shrink-0 md:sticky md:top-32 md:[@media(max-height:500px)]:static order-1 md:order-2 h-fit flex justify-start md:block z-[45]">
             <div className="relative w-48 h-48 md:w-56 md:h-56">
               {/* 
                   Shared Layout Transition:
@@ -303,7 +303,7 @@ const Works = () => {
   // Preload/keep alive slightly offscreen
 
   return (
-    <section ref={ref} id="works" className="bg-[#16161D] text-white py-24 lg:py-32 overflow-hidden relative">
+    <section ref={ref} id="works" className="bg-[#16161D] text-white py-12 md:py-24 lg:py-32 overflow-hidden relative">
 
 
       <div className="w-full max-w-[1400px] mx-auto px-9 md:px-12 lg:px-24 mb-12 lg:mb-20 relative z-10">
@@ -339,7 +339,7 @@ const Explorations = () => {
   };
 
   return (
-    <section className="bg-white py-24 lg:py-32 relative">
+    <section className="bg-white py-12 md:py-24 lg:py-32 relative">
       <div className="w-full max-w-[1400px] mx-auto px-9 md:px-12 lg:px-24 flex flex-col-reverse md:flex-row items-start justify-between mb-16 gap-12">
         <div>
           <h2 className="text-5xl md:text-7xl font-extrabold text-brand-ink font-outfit uppercase tracking-tight mb-6">
@@ -369,7 +369,7 @@ const Explorations = () => {
         </Link>
       </div>
 
-      <div className="w-full max-w-[1400px] mx-auto px-9 md:px-12 lg:px-24 grid grid-cols-1 md:grid-cols-3 gap-8 perspective-[1000px]">
+      <div className="w-full max-w-[1400px] mx-auto px-9 md:px-12 lg:px-24 grid grid-cols-1 lg:grid-cols-3 gap-8 perspective-[1000px]">
         {experiments.map((item, i) => (
           <motion.div
             key={item.id}

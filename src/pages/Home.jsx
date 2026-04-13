@@ -896,11 +896,11 @@ const Home = () => {
       <main className="relative">
 
         {/* HERO SECTION */}
-        <div ref={heroRef} className="relative h-screen w-full overflow-hidden">
+        <div ref={heroRef} className="relative min-h-[100svh] lg:h-screen w-full overflow-hidden flex items-center">
           <canvas ref={canvasRef} className="block w-full h-full absolute inset-0 z-0" />
 
           {/* Hero Text Overlay */}
-          <div className="absolute h-full top-0 left-0 w-full pointer-events-none z-10 flex items-center justify-start pl-6 md:pl-20">
+          <div className="relative z-10 flex items-center justify-start pl-6 md:pl-20 py-24 lg:py-0 w-full h-full pointer-events-none">
             <motion.div
               ref={heroTextRef}
               style={{ opacity: heroOpacity, y: heroY }}

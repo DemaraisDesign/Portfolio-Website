@@ -338,9 +338,11 @@ const computeLayout = (w, h, focusedId, isLaunched, isLeftHanded = false) => {
     const cy = h / 2;
     const minDim = Math.min(w, h);
 
+    const isSmallMobile = w <= 430 || h <= 430;
+
     const SIZES = {
         home: (focusedId || (isLaunched && w < 768)) ? 60 : (isLaunched && w >= 768 ? 55 : 110),
-        sectionActive: 110,
+        sectionActive: isSmallMobile ? 80 : 110,
         sectionBg: focusedId ? 35 : 110, // Always 110 unless minimized as background nodes
         subPetalActive: 55,
         subPetalDefault: w >= 768 ? 55 : 14,
@@ -503,9 +505,17 @@ const computeLayout = (w, h, focusedId, isLaunched, isLeftHanded = false) => {
                 const colSpacing = w < 768 ? 100 : 140;
                 const rowSpacing = w < 768 ? 85 : (h < 768 ? 160 : 180);
 
-                // 1. Calculate safe center between the true diagonal anchors
+                // 1. Calculate true visual center using available bounding empty space
                 const gridCenterX = (activeX + hx) / 2;
-                const gridCenterY = (activeY + hy) / 2;
+
+                const topCeiling = activeY + (SIZES.sectionActive / 2);
+                
+                const orbitOffset = (w < 768 ? 15 : 35);
+                const homeOrbitRadius = (SIZES.home / 2) + (SIZES.sectionBg / 2) + orbitOffset;
+                const homeClusterRadius = homeOrbitRadius + (SIZES.sectionBg / 2);
+                const bottomFloor = hy - homeClusterRadius;
+
+                const gridCenterY = (topCeiling + bottomFloor) / 2;
 
                 // 2. Dynamically solve arrangement based on true physical width strictly preventing X-overlaps
                 let paddingX = w >= 1024 ? 96 : (w >= 768 ? 48 : 20); // Reduce mobile side padding
@@ -522,7 +532,7 @@ const computeLayout = (w, h, focusedId, isLaunched, isLeftHanded = false) => {
 
                 const gridStartX = gridCenterX - ((totalColsInThisRow - 1) * colSpacing) / 2;
                 const totalRows = Math.ceil(sec.children.length / maxCols);
-                const gridStartY = gridCenterY - ((totalRows - 1) * rowSpacing) / 2 - (w < 768 ? -25 : 10);
+                const gridStartY = gridCenterY - ((totalRows - 1) * rowSpacing) / 2;
 
                 cxChild = gridStartX + (col * colSpacing);
                 cyChild = gridStartY + (row * rowSpacing);

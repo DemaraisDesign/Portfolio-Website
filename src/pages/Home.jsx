@@ -236,7 +236,7 @@ const ListProjectCard = ({ project, index }) => {
     >
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start lg:items-center">
         <div className={`relative lg:col-span-7 ${index % 2 === 1 ? 'lg:order-2' : ''}`} style={{ clipPath: "inset(0 round 7px)", WebkitClipPath: "inset(0 round 7px)" }}>
-          <div className="aspect-video relative bg-[#16161D] overflow-hidden rounded-theme-sm">
+          <div className="aspect-video relative bg-[#16161D] overflow-hidden rounded-theme-sm max-h-[60vh] lg:max-h-none">
             <motion.div 
               className="absolute inset-0 w-full h-full" 
               initial={false}
@@ -369,12 +369,12 @@ const Explorations = () => {
         </Link>
       </div>
 
-      <div className="w-full max-w-[1400px] mx-auto px-9 md:px-12 lg:px-24 grid grid-cols-1 lg:grid-cols-3 gap-8 perspective-[1000px]">
+      <div className="w-full max-w-[1400px] mx-auto px-9 md:px-12 lg:px-24 flex gap-6 overflow-x-auto snap-x lg:grid lg:grid-cols-3 lg:gap-8 perspective-[1000px] pb-6 scrollbar-hide">
         {experiments.map((item, i) => (
           <motion.div
             key={item.id}
             onClick={() => handleCardClick(item.id)}
-            className="group cursor-pointer flex flex-col h-full"
+            className="group cursor-pointer flex flex-col h-full shrink-0 snap-center w-[85vw] md:w-[60vw] lg:w-auto"
             initial={{ opacity: 0, rotateY: -90 }}
             whileInView={{ opacity: 1, rotateY: 0 }}
             viewport={{ once: true, margin: "-10%" }}
@@ -904,9 +904,9 @@ const Home = () => {
             <motion.div
               ref={heroTextRef}
               style={{ opacity: heroOpacity, y: heroY }}
-              className="text-left w-full max-w-4xl flex flex-col items-start justify-center text-brand-ink transition-colors duration-300 pointer-events-auto"
+              className="text-left w-full max-w-4xl flex flex-col items-start justify-center text-brand-ink transition-colors duration-300 pointer-events-auto pt-16 lg:pt-0"
             >
-              <h1 className="font-outfit font-medium text-brand-ink tracking-tight mb-6 text-[clamp(2.75rem,8vmin,5.5rem)] leading-none">
+              <h1 className="font-outfit font-medium text-brand-ink tracking-tight mb-2 lg:mb-6 text-[clamp(2.75rem,8vmin,5.5rem)] leading-none">
                 I'm Joseph <SmokyText text="Demarais." phonetic="(dem-uh-RAY)." />
               </h1>
 
@@ -917,7 +917,7 @@ const Home = () => {
               <motion.a
                 href="#portfolio"
                 whileTap={{ scale: 0.98 }}
-                className="inline-block mt-8 bg-[#16161D]/50 backdrop-blur-[2px] text-white border border-transparent px-8 py-3 rounded-full font-outfit font-medium uppercase tracking-[0.2em] hover:bg-[#050508] hover:border-white/20 hover:text-white transition-all duration-300 focus:ring-1 focus:ring-offset-1 focus:ring-brand-highlight focus:outline-none pointer-events-auto cursor-pointer"
+                className="inline-block mt-4 lg:mt-8 bg-[#16161D]/50 backdrop-blur-[2px] text-white border border-transparent px-8 py-3 rounded-full font-outfit font-medium uppercase tracking-[0.2em] hover:bg-[#050508] hover:border-white/20 hover:text-white transition-all duration-300 focus:ring-1 focus:ring-offset-1 focus:ring-brand-highlight focus:outline-none pointer-events-auto cursor-pointer"
               >
                 Portfolio
               </motion.a>

@@ -34,7 +34,7 @@ const PERSONAS = [
     {
         name: "Rob Matthews",
         tagline: "Chicago Community Theater House Manager",
-        photo: "https://res.cloudinary.com/dqabyzuzf/image/upload/a_hflip/v1774372168/charles-braico-cso20230406_043_jxn5bo.jpg",
+        photo: "https://res.cloudinary.com/dqabyzuzf/image/upload/a_hflip,f_auto/v1774372168/charles-braico-cso20230406_043_jxn5bo.jpg",
         story: {
             text: "As the House Manager of a non-profit storefront theater in Chicago, Rob's had a tough year. As his employer struggles to adjust programming to online spaces and outdoor performances, he's constantly worried the theater will shut down permanently. He's now in charge of audience safety during a pandemic.",
             bullets: [

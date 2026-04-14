@@ -70,19 +70,19 @@ export const CASE_STUDIES = {
       images: [
         {
           id: 1,
-          src: "https://res.cloudinary.com/dqabyzuzf/image/upload/w_1600,q_90/v1766176237/DDWebsite_Home_UX_Desktop_rzqa9y.jpg",
+          src: "https://res.cloudinary.com/dqabyzuzf/image/upload/w_1600,q_90,f_auto/v1766176237/DDWebsite_Home_UX_Desktop_rzqa9y.jpg",
           title: "Failure: A Love Story",
           credit: "Scenic Design by JR Bruce",
         },
         {
           id: 2,
-          src: "https://res.cloudinary.com/dqabyzuzf/image/upload/w_1600,q_90/v1766616800/DDWebsite_Home_Sound_Desktop_ql27cj.jpg",
+          src: "https://res.cloudinary.com/dqabyzuzf/image/upload/w_1600,q_90,f_auto/v1766616800/DDWebsite_Home_Sound_Desktop_ql27cj.jpg",
           title: "The Yellow Wallpaper",
           credit: "Lighting by Bo Tindell",
         },
         {
           id: 3,
-          src: "https://res.cloudinary.com/dqabyzuzf/image/upload/w_1600,q_90/v1765815845/DDWebsite_Home_Direction_Desktop_icc3g9.jpg",
+          src: "https://res.cloudinary.com/dqabyzuzf/image/upload/w_1600,q_90,f_auto/v1765815845/DDWebsite_Home_Direction_Desktop_icc3g9.jpg",
           title: "Romeo & Juliet",
           credit: "Core Company Ensemble",
         },
@@ -180,17 +180,17 @@ export const CASE_STUDIES = {
         images: [
           {
             id: 1,
-            src: "https://res.cloudinary.com/dqabyzuzf/image/upload/w_1200,q_80/v1766176237/DDWebsite_Home_UX_Desktop_rzqa9y.jpg",
+            src: "https://res.cloudinary.com/dqabyzuzf/image/upload/w_1200,q_80,f_auto/v1766176237/DDWebsite_Home_UX_Desktop_rzqa9y.jpg",
             alt: "Production Photo 1",
           },
           {
             id: 2,
-            src: "https://res.cloudinary.com/dqabyzuzf/image/upload/w_1200,q_80/v1766616800/DDWebsite_Home_Sound_Desktop_ql27cj.jpg",
+            src: "https://res.cloudinary.com/dqabyzuzf/image/upload/w_1200,q_80,f_auto/v1766616800/DDWebsite_Home_Sound_Desktop_ql27cj.jpg",
             alt: "Production Photo 2",
           },
           {
             id: 3,
-            src: "https://res.cloudinary.com/dqabyzuzf/image/upload/w_1200,q_80/v1765815845/DDWebsite_Home_Direction_Desktop_icc3g9.jpg",
+            src: "https://res.cloudinary.com/dqabyzuzf/image/upload/w_1200,q_80,f_auto/v1765815845/DDWebsite_Home_Direction_Desktop_icc3g9.jpg",
             alt: "Production Photo 3",
           },
           {

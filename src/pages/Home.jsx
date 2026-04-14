@@ -120,7 +120,7 @@ const AboutMe = () => {
   const itemVariants = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } } };
 
   return (
-    <section className="py-8 md:py-24 lg:py-32 bg-white relative">
+    <section className="py-12 md:py-24 lg:py-32 bg-white relative">
       <div className="w-full max-w-[1400px] mx-auto px-9 md:px-12 lg:px-24">
         <div className="flex flex-col md:flex-row justify-between items-start gap-12 md:gap-16">
           <div className="w-full md:flex-1 order-2 md:order-1">
@@ -303,7 +303,7 @@ const Works = () => {
   // Preload/keep alive slightly offscreen
 
   return (
-    <section ref={ref} id="works" className="bg-[#16161D] text-white py-8 md:py-24 lg:py-32 overflow-hidden relative">
+    <section ref={ref} id="works" className="bg-[#16161D] text-white py-12 md:py-24 lg:py-32 overflow-hidden relative">
 
 
       <div className="w-full max-w-[1400px] mx-auto px-9 md:px-12 lg:px-24 mb-12 lg:mb-20 relative z-10">
@@ -339,7 +339,7 @@ const Explorations = () => {
   };
 
   return (
-    <section className="bg-white py-8 md:py-24 lg:py-32 relative">
+    <section className="bg-white py-12 md:py-24 lg:py-32 relative">
       <div className="w-full max-w-[1400px] mx-auto px-9 md:px-12 lg:px-24 flex flex-col-reverse md:flex-row items-start justify-between mb-16 gap-12">
         <div>
           <h2 className="text-5xl md:text-7xl font-extrabold text-brand-ink font-outfit uppercase tracking-tight mb-6">
@@ -930,8 +930,8 @@ const Home = () => {
 
 
         {/* FLUID MODULES SECTION */}
-        <section className="relative bg-brand-light w-full py-24 lg:py-32">
-          <div className="w-full px-6 md:px-12 lg:px-24 mb-20">
+        <section className="relative bg-brand-light w-full pt-24 pb-12 md:py-24 lg:py-32">
+          <div className="w-full px-6 md:px-12 lg:px-24 mb-12 lg:mb-20">
             <h2 id="portfolio" className="text-5xl md:text-7xl font-extrabold text-brand-ink tracking-tight mb-6 font-outfit uppercase">Portfolio</h2>
             <AnimatedDivider className="mt-8" />
           </div>

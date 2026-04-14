@@ -685,7 +685,7 @@ const OrganicPath = React.memo(({ x1, y1, x2, y2, color, isDashed, isActive, wid
     );
 });
 
-const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, className = "", isChild, zIndex, showIcon, isResizing, initialOpacity = 0, isDimmed, labelData, disableAnimation, isShortViewport, isParentFocused, flipDelay = 0 }) => {
+const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, className = "", isChild, zIndex, showIcon, isResizing, initialOpacity = 0, isDimmed, labelData, disableAnimation, isShortViewport, flipKey, flipDelay = 0, noFlyTransition = false }) => {
     const { isProjectUnlocked } = usePasswordGate();
     const [hover, setHover] = useState(false);
     const [tapped, setTapped] = useState(false);
@@ -715,8 +715,6 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
 
     const isLabelVisible = showIcon && labelData && labelData.show && (!isShortViewport || hover || tapped);
 
-    const noFlyTransition = isChild && isParentFocused;
-
     return (
         <button
             type="button"
@@ -737,16 +735,17 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                 transform: 'translate(-50%, -50%)', zIndex: zIndex,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 cursor: onClick ? 'pointer' : 'default',
+                perspective: '1000px',
                 transition: isResizing ? 'none' : `${noFlyTransition ? '' : 'top 1.0s cubic-bezier(0.25, 1, 0.5, 1), left 1.0s cubic-bezier(0.25, 1, 0.5, 1), '}width 0.6s ease-out, height 0.6s ease-out, opacity 0.8s ease`
             }}
         >
             <motion.div
-                key={isParentFocused ? 'focused' : 'unfocused'}
-                initial={(isChild && isParentFocused) ? { opacity: 0, rotateY: -90, scale: 0.8 } : false}
-                animate={(isChild && isParentFocused) ? { opacity: 1, rotateY: 0, scale: 1 } : { opacity: 1, rotateY: 0, scale: 1 }}
+                key={flipKey || 'default'}
+                initial={flipKey ? { opacity: 0, rotateY: -90 } : false}
+                animate={flipKey ? { opacity: 1, rotateY: 0 } : { opacity: 1, rotateY: 0 }}
                 whileHover={!disableAnimation ? { scale: 1.05 } : {}}
                 whileTap={!disableAnimation ? { scale: 0.95 } : {}}
-                transition={(isChild && isParentFocused) ? { delay: flipDelay, type: "spring", stiffness: 60, damping: 12, mass: 0.8 } : { type: "spring", stiffness: 400, damping: 25 }}
+                transition={flipKey ? { delay: flipDelay, type: "spring", stiffness: 60, damping: 12, mass: 0.8 } : { type: "spring", stiffness: 400, damping: 25 }}
                 style={{
                     width: '100%', height: '100%', borderRadius: '50%',
                     background: (isChild && !isDimmed && labelData?.img && labelData?.contain) ? THEME.white : color,

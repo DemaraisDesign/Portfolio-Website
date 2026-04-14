@@ -366,7 +366,7 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
 
     if (w < 768) {
         // Unconditionally anchor the mobile home button to its cluster target to avoid unnecessary travel
-        const paddingBottom = -50;
+        const paddingBottom = -80;
         const orbitOffset = 15;
         const homeOrbitRadius = (SIZES.home / 2) + (SIZES.sectionBg / 2) + orbitOffset;
         const homeClusterRadius = homeOrbitRadius + (SIZES.sectionBg / 2);

@@ -102,7 +102,7 @@ const StickyProjectCard = ({
         <div ref={cardRef} className={`w-full h-full ${mainBgClass} relative overflow-hidden flex flex-col lg:grid ${isEven ? 'lg:grid-cols-[40%_60%]' : 'lg:grid-cols-[60%_40%]'}`} style={containerStyle}>
 
             {/* TEXT COLUMN */}
-            <div className={`relative flex flex-col items-start justify-center px-9 py-12 lg:p-16 pt-12 lg:pt-[96px] z-30 order-2 ${isEven ? 'lg:order-1' : 'lg:order-2'}`}>
+            <div className={`relative flex flex-col items-start justify-center px-9 py-12 lg:px-24 lg:py-16 pt-12 lg:pt-[96px] z-30 order-2 ${isEven ? 'lg:order-1' : 'lg:order-2'}`}>
                 <div className={`max-w-xl ${primaryText} w-full`}>
                     <SectionPreheader
                         text={project.cat || "Project Category"}

@@ -988,7 +988,7 @@ const Home = () => {
             w-full
             flex gap-6 px-9
             overflow-x-auto pb-0 pt-12
-            lg:grid lg:grid-cols-3 lg:gap-8 lg:overflow-visible lg:px-24 lg:pb-0 lg:pt-0
+            lg:grid lg:grid-cols-3 lg:gap-8 lg:overflow-visible lg:px-24 lg:pb-0 lg:pt-12
             scrollbar-hide
             perspective-[1200px]
           "

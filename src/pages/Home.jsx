@@ -361,7 +361,7 @@ const Explorations = () => {
   return (
     <section className="bg-white relative">
       <DebugSpacer id="Home_Explorations_Top" defaultMobile={80} defaultDesktop={96} />
-      <div className="w-full max-w-[1400px] mx-auto px-9 md:px-12 lg:px-24 flex flex-col-reverse md:flex-row items-start justify-between mb-16 gap-12">
+      <div className="w-full max-w-[1400px] mx-auto px-9 md:px-12 lg:px-24 flex flex-col-reverse md:flex-row items-start justify-between mb-16 gap-6 md:gap-12">
         <div>
           <h2 className="text-[40px] sm:text-5xl md:text-7xl font-extrabold text-brand-ink font-outfit uppercase tracking-tight mb-6 break-words">
             <Link to="/explorations" className="cursor-pointer hover:text-brand-orange transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange rounded">

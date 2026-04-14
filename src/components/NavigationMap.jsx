@@ -933,10 +933,11 @@ export default function NavigationMap({ closeMenu }) {
         handleResize();
         window.addEventListener('resize', handleResize);
 
-        const t1 = setTimeout(() => setAnimPhase(1), 950);  // 1. Categories & Home animate in
-        const t2 = setTimeout(() => setAnimPhase(2), 1950); // 2. Case study circles appear
-        const t3 = setTimeout(() => setAnimPhase(3), 2350); // Labels
-        const t4 = setTimeout(() => setAnimPhase(4), 2650); // 3. Connector lines extend
+        const isMobileDevice = window.innerWidth < 768;
+        const t1 = setTimeout(() => setAnimPhase(1), isMobileDevice ? 950 : 950);
+        const t2 = setTimeout(() => setAnimPhase(2), isMobileDevice ? 1100 : 1950);
+        const t3 = setTimeout(() => setAnimPhase(3), isMobileDevice ? 1200 : 2350);
+        const t4 = setTimeout(() => setAnimPhase(4), isMobileDevice ? 1300 : 2650);
 
         return () => {
             window.removeEventListener('resize', handleResize);
@@ -1149,8 +1150,8 @@ export default function NavigationMap({ closeMenu }) {
                                     isShortViewport={isShortDesktop || (viewport.w >= 768 && viewport.w < 1024)}
                                     noFlyTransition={sec.isFocused && isNoFly}
                                     flipKey={sec.isFocused ? currentFlipKey : null}
-                                    flipDelay={sec.isFocused && focusedId ? 1.0 : (!focusedId ? secIdx * 0.15 : 0)}
-                                    sizeDelay={sec.isFocused && focusedId ? 1.0 : (!focusedId ? secIdx * 0.15 : 0)}
+                                    flipDelay={viewport.w < 768 ? 0 : (sec.isFocused && focusedId ? 1.0 : (!focusedId ? secIdx * 0.15 : 0))}
+                                    sizeDelay={viewport.w < 768 ? 0 : (sec.isFocused && focusedId ? 1.0 : (!focusedId ? secIdx * 0.15 : 0))}
                                 />
                                 <AnimatePresence mode="popLayout">
                                     {(sec.isFocused || !focusedId) && sec.subPetals.map((sp, idx) => {
@@ -1162,7 +1163,43 @@ export default function NavigationMap({ closeMenu }) {
                                         const isLargeUnfocused = (viewport.w >= 768 && !focusedId);
                                         const nodeDelay = (sec.isFocused && focusedId ? 1.0 : 0.3 + (secIdx * 0.15)) + (idx * 0.08);
 
-                                        return (
+                                        const isMobileViewport = viewport.w < 768;
+                                        const nodeContent = (
+                                            <div style={{ pointerEvents: 'auto' }}>
+                                                <Node
+                                                    x={sp.x} y={sp.y} size={sp.size}
+                                                    color={sp.color} ringColor={sp.parentColor} iconColor={THEME.white}
+                                                    onClick={() => {
+                                                        const path = sp.link || sp.path || `/work/${sp.id}`;
+                                                        if (getProject(sp.id)?.isConstruction) {
+                                                            requestConstructionAccess(path);
+                                                        } else if (isProjectUnlocked(sp.id)) {
+                                                            if (closeMenu) closeMenu();
+                                                            navigate(path);
+                                                        } else {
+                                                            requestAccess(path);
+                                                        }
+                                                    }}
+                                                    className={sec.isFocused || isLargeUnfocused ? "depth-active" : ""}
+                                                    zIndex={sec.isFocused || isLargeUnfocused ? 12 : 2}
+                                                    showIcon={isSettled && (sec.isFocused || isLargeUnfocused)} useElastic={isSettled}
+                                                    isResizing={isResizing} isChild={true} initialOpacity={opacityMul}
+                                                    isDimmed={!sec.isFocused && !isLargeUnfocused}
+                                                    labelData={isLargeUnfocused ? { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: ((isShortDesktop || (viewport.w >= 768 && viewport.w < 1024)) && sec.quadrant.includes('b')) ? 'top' : 'center', img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: showLabels } : { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: (isShortDesktop && sec.quadrant.includes('b')) ? 'top' : (viewport.w < 768 ? 'center' : sp.alignLabel), img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: showLabels }}
+                                                    isShortViewport={isShortDesktop || viewport.w < 1024}
+                                                    noFlyTransition={isNoFly}
+                                                />
+                                            </div>
+                                        );
+
+                                        return isMobileViewport ? (
+                                            <div
+                                                key={`wrapper-${sp.id}-${sec.isFocused ? 'focus' : 'bg'}`}
+                                                style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none' }}
+                                            >
+                                                {nodeContent}
+                                            </div>
+                                        ) : (
                                             <motion.div
                                                 key={`wrapper-${sp.id}-${sec.isFocused ? 'focus' : 'bg'}`}
                                                 initial={{ opacity: 0, rotateY: -90 }}
@@ -1171,32 +1208,7 @@ export default function NavigationMap({ closeMenu }) {
                                                 transition={{ delay: focusedId ? nodeDelay : 0, type: "spring", stiffness: 60, damping: 12, mass: 0.8 }}
                                                 style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', perspective: '1000px' }}
                                             >
-                                                <div style={{ pointerEvents: 'auto' }}>
-                                                    <Node
-                                                        x={sp.x} y={sp.y} size={sp.size}
-                                                        color={sp.color} ringColor={sp.parentColor} iconColor={THEME.white}
-                                                        onClick={() => {
-                                                            const path = sp.link || sp.path || `/work/${sp.id}`;
-                                                            
-                                                            if (getProject(sp.id)?.isConstruction) {
-                                                                requestConstructionAccess(path);
-                                                            } else if (isProjectUnlocked(sp.id)) {
-                                                                if (closeMenu) closeMenu();
-                                                                navigate(path);
-                                                            } else {
-                                                                requestAccess(path);
-                                                            }
-                                                        }}
-                                                        className={sec.isFocused || isLargeUnfocused ? "depth-active" : ""}
-                                                        zIndex={sec.isFocused || isLargeUnfocused ? 12 : 2}
-                                                        showIcon={isSettled && (sec.isFocused || isLargeUnfocused)} useElastic={isSettled}
-                                                        isResizing={isResizing} isChild={true} initialOpacity={opacityMul}
-                                                        isDimmed={!sec.isFocused && !isLargeUnfocused}
-                                                        labelData={isLargeUnfocused ? { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: ((isShortDesktop || (viewport.w >= 768 && viewport.w < 1024)) && sec.quadrant.includes('b')) ? 'top' : 'center', img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: showLabels } : { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: (isShortDesktop && sec.quadrant.includes('b')) ? 'top' : (viewport.w < 768 ? 'center' : sp.alignLabel), img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: showLabels }}
-                                                        isShortViewport={isShortDesktop || viewport.w < 1024}
-                                                        noFlyTransition={isNoFly}
-                                                    />
-                                                </div>
+                                                {nodeContent}
                                             </motion.div>
                                         );
                                     })}

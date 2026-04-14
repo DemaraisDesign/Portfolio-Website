@@ -713,7 +713,7 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
         setTapped(false);
     };
 
-    const isLabelVisible = showIcon && labelData && labelData.show && (!isShortViewport || hover || tapped);
+    const isLabelVisible = showIcon && labelData && labelData.show && (isShortViewport ? isFocused : (hover || tapped || isFocused));
 
     return (
         <button

@@ -1147,11 +1147,11 @@ export default function NavigationMap({ closeMenu }) {
                                     isShortViewport={isShortDesktop || (viewport.w >= 768 && viewport.w < 1024)}
                                     noFlyTransition={sec.isFocused && isNoFly}
                                     flipKey={sec.isFocused ? currentFlipKey : null}
-                                    flipDelay={sec.isFocused && focusedId ? 1.0 : 0}
-                                    sizeDelay={sec.isFocused && focusedId ? 1.0 : 0}
+                                    flipDelay={sec.isFocused && focusedId ? 1.0 : (!focusedId ? secIdx * 0.1 : 0)}
+                                    sizeDelay={sec.isFocused && focusedId ? 1.0 : (!focusedId ? secIdx * 0.1 : 0)}
                                 />
                                 <AnimatePresence mode="popLayout">
-                                    {(sec.isFocused || !focusedId) && sec.subPetals.map((sp, idx) => {
+                                    {(sec.isFocused || (!focusedId && viewport.w >= 768)) && sec.subPetals.map((sp, idx) => {
                                         if (!sp.visible) return null;
 
                                         const isInitialLoadDelay = !isSettled; // Only show sub-petals when in Phase 2

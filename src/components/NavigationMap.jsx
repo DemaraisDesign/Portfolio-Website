@@ -685,7 +685,7 @@ const OrganicPath = React.memo(({ x1, y1, x2, y2, color, isDashed, isActive, wid
     );
 });
 
-const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, className = "", isChild, zIndex, showIcon, isResizing, initialOpacity = 0, isDimmed, labelData, disableAnimation, isShortViewport, flipKey, flipDelay = 0, noFlyTransition = false }) => {
+const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, className = "", isChild, zIndex, showIcon, isResizing, initialOpacity = 0, isDimmed, labelData, disableAnimation, isShortViewport, flipKey, flipDelay = 0, noFlyTransition = false, sizeDelay = 0 }) => {
     const { isProjectUnlocked } = usePasswordGate();
     const [hover, setHover] = useState(false);
     const [tapped, setTapped] = useState(false);
@@ -736,7 +736,7 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 cursor: onClick ? 'pointer' : 'default',
                 perspective: '1000px',
-                transition: isResizing ? 'none' : `${noFlyTransition ? '' : 'top 1.0s cubic-bezier(0.25, 1, 0.5, 1), left 1.0s cubic-bezier(0.25, 1, 0.5, 1), '}width 0.6s ease-out, height 0.6s ease-out, opacity 0.8s ease`
+                transition: isResizing ? 'none' : `${noFlyTransition ? '' : 'top 1.0s cubic-bezier(0.25, 1, 0.5, 1), left 1.0s cubic-bezier(0.25, 1, 0.5, 1), '}width 0.8s cubic-bezier(0.25, 1, 0.5, 1) ${sizeDelay}s, height 0.8s cubic-bezier(0.25, 1, 0.5, 1) ${sizeDelay}s, opacity 0.8s ease`
             }}
         >
             <motion.div
@@ -1116,7 +1116,7 @@ export default function NavigationMap({ closeMenu }) {
                             isResizing={isResizing} initialOpacity={1} zIndex={!focusedId ? 20 : 5}
                             isShortViewport={isShortDesktop}
                             disableAnimation={viewport.w < 768}
-                            flipKey={currentFlipKey} noFlyTransition={isNoFly} flipDelay={0.45 + (0.1 * 4)}
+                            flipKey={currentFlipKey} noFlyTransition={isNoFly} flipDelay={0.55 + (0.1 * 4)}
                         />
 
                         {layout.sections.map((sec, secIdx) => (
@@ -1141,6 +1141,7 @@ export default function NavigationMap({ closeMenu }) {
                                     }}
                                     isShortViewport={isShortDesktop || (viewport.w >= 768 && viewport.w < 1024)}
                                     noFlyTransition={isNoFly}
+                                    sizeDelay={sec.isFocused && focusedId ? 0.25 : 0}
                                 />
                                 <AnimatePresence mode="popLayout">
                                     {(sec.isFocused || !focusedId) && sec.subPetals.map((sp, idx) => {
@@ -1150,7 +1151,7 @@ export default function NavigationMap({ closeMenu }) {
                                         const opacityMul = (isInitialLoadDelay || sec.isBg) ? 0 : 1;
 
                                         const isLargeUnfocused = (viewport.w >= 768 && !focusedId);
-                                        const nodeDelay = 0.1 + (idx * 0.08);
+                                        const nodeDelay = 0.3 + (idx * 0.08);
 
                                         return (
                                             <motion.div

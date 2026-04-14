@@ -740,9 +740,12 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
             }}
         >
             <motion.div
+                key={flipKey || 'default'}
+                initial={flipKey ? { opacity: 0, rotateY: -90 } : false}
+                animate={flipKey ? { opacity: 1, rotateY: 0 } : { opacity: 1, rotateY: 0 }}
                 whileHover={!disableAnimation ? { scale: 1.05 } : {}}
                 whileTap={!disableAnimation ? { scale: 0.95 } : {}}
-                transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                transition={flipKey ? { delay: flipDelay, type: "spring", stiffness: 60, damping: 12, mass: 0.8 } : { type: "spring", stiffness: 400, damping: 25 }}
                 style={{
                     width: '100%', height: '100%', borderRadius: '50%',
                     background: (isChild && !isDimmed && labelData?.img && labelData?.contain) ? THEME.white : color,
@@ -857,7 +860,7 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                     width: isShortViewport ? 'auto' : '180px',
                     minWidth: isShortViewport ? '140px' : 'auto',
                     opacity: isLabelVisible ? 1 : 0,
-                    transition: 'opacity 0.4s ease, transform 0.4s ease',
+                    transition: `opacity 0.4s ease ${sizeDelay}s, transform 0.4s ease ${sizeDelay}s`,
                     display: 'flex',
                     flexDirection: isShortViewport ? 'row' : 'column',
                     alignItems: isShortViewport ? 'center' : (labelData.align === 'right' ? 'flex-start' : (labelData.align === 'left' ? 'flex-end' : 'center')),

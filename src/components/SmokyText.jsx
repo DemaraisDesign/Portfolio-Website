@@ -78,9 +78,9 @@ const SmokyText = ({ text = "Demarais.", phonetic = "(dem-uh-RAY).", className =
         <motion.span
             layout
             className={`inline-flex items-center gap-3 group relative ${className}`}
-            onMouseEnter={() => { setIsHovered(true); audio.playHover(); }}
-            onMouseLeave={() => setIsHovered(false)}
-            onClick={() => { setIsHovered(!isHovered); audio.playClick(); }}
+            onPointerEnter={(e) => { if (e.pointerType === 'mouse') { setIsHovered(true); audio.playHover(); } }}
+            onPointerLeave={(e) => { if (e.pointerType === 'mouse') { setIsHovered(false); } }}
+            onClick={(e) => { e.preventDefault(); setIsHovered(!isHovered); audio.playClick(); }}
             transition={{ layout: { duration: 0.3, ease: "easeInOut" } }}
         >
             <motion.span
@@ -114,9 +114,6 @@ const SmokyText = ({ text = "Demarais.", phonetic = "(dem-uh-RAY).", className =
             <SpeakingHeadIcon
                 isHovered={isHovered}
                 className="w-[0.65em] h-[0.65em] cursor-pointer opacity-80 hover:opacity-100 transition-opacity p-1 -m-1 translate-y-[8%] md:translate-y-0"
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
-                onClick={(e) => { e.stopPropagation(); setIsHovered(!isHovered); }}
             />
         </motion.span>
     );

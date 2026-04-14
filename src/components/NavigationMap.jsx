@@ -685,7 +685,7 @@ const OrganicPath = React.memo(({ x1, y1, x2, y2, color, isDashed, isActive, wid
     );
 });
 
-const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, className = "", isChild, zIndex, showIcon, isResizing, initialOpacity = 0, isDimmed, labelData, disableAnimation, isShortViewport }) => {
+const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, className = "", isChild, zIndex, showIcon, isResizing, initialOpacity = 0, isDimmed, labelData, disableAnimation, isShortViewport, isParentFocused, flipDelay = 0 }) => {
     const { isProjectUnlocked } = usePasswordGate();
     const [hover, setHover] = useState(false);
     const [tapped, setTapped] = useState(false);
@@ -715,6 +715,8 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
 
     const isLabelVisible = showIcon && labelData && labelData.show && (!isShortViewport || hover || tapped);
 
+    const noFlyTransition = isChild && isParentFocused;
+
     return (
         <button
             type="button"
@@ -735,13 +737,16 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                 transform: 'translate(-50%, -50%)', zIndex: zIndex,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 cursor: onClick ? 'pointer' : 'default',
-                transition: isResizing ? 'none' : 'top 1.0s cubic-bezier(0.25, 1, 0.5, 1), left 1.0s cubic-bezier(0.25, 1, 0.5, 1), width 0.6s ease-out, height 0.6s ease-out, opacity 0.8s ease'
+                transition: isResizing ? 'none' : `${noFlyTransition ? '' : 'top 1.0s cubic-bezier(0.25, 1, 0.5, 1), left 1.0s cubic-bezier(0.25, 1, 0.5, 1), '}width 0.6s ease-out, height 0.6s ease-out, opacity 0.8s ease`
             }}
         >
             <motion.div
+                key={isParentFocused ? 'focused' : 'unfocused'}
+                initial={(isChild && isParentFocused) ? { opacity: 0, rotateY: -90, scale: 0.8 } : false}
+                animate={(isChild && isParentFocused) ? { opacity: 1, rotateY: 0, scale: 1 } : { opacity: 1, rotateY: 0, scale: 1 }}
                 whileHover={!disableAnimation ? { scale: 1.05 } : {}}
                 whileTap={!disableAnimation ? { scale: 0.95 } : {}}
-                transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                transition={(isChild && isParentFocused) ? { delay: flipDelay, type: "spring", stiffness: 60, damping: 12, mass: 0.8 } : { type: "spring", stiffness: 400, damping: 25 }}
                 style={{
                     width: '100%', height: '100%', borderRadius: '50%',
                     background: (isChild && !isDimmed && labelData?.img && labelData?.contain) ? THEME.white : color,
@@ -1133,7 +1138,7 @@ export default function NavigationMap({ closeMenu }) {
                         }}
                         isShortViewport={isShortDesktop || (viewport.w >= 768 && viewport.w < 1024)}
                     />
-                    {sec.subPetals.map((sp) => {
+                    {sec.subPetals.map((sp, idx) => {
                         if (!sp.visible) return null;
 
                         const isInitialLoadDelay = !isSettled; // Only show sub-petals when in Phase 2
@@ -1162,6 +1167,8 @@ export default function NavigationMap({ closeMenu }) {
                                 showIcon={isSettled && (sec.isFocused || isLargeUnfocused)} useElastic={isSettled}
                                 isResizing={isResizing} isChild={true} initialOpacity={opacityMul}
                                 isDimmed={!sec.isFocused && !isLargeUnfocused}
+                                isParentFocused={sec.isFocused}
+                                flipDelay={0.1 + (idx * 0.08)}
                                 labelData={isLargeUnfocused ? { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: ((isShortDesktop || (viewport.w >= 768 && viewport.w < 1024)) && sec.quadrant.includes('b')) ? 'top' : 'center', img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: showLabels } : { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: (isShortDesktop && sec.quadrant.includes('b')) ? 'top' : (viewport.w < 768 ? 'center' : sp.alignLabel), img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: showLabels }}
                                 isShortViewport={isShortDesktop || viewport.w < 1024}
                             />

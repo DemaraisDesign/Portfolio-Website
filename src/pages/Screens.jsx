@@ -128,7 +128,7 @@ const Screens = () => {
                     <div ref={textContainerRef} className="text-lg text-gray-700 leading-relaxed font-sans min-w-0">
                         <React.Fragment>
                             <SectionPreheader text="My Philosophy" color={BRAND_COLORS.screens} align="left" />
-                            <DebugSpacer id="Screens_Story_PreHeaderGap" defaultMobile={2} defaultDesktop={2} />
+                            <DebugSpacer id="Screens_Story_PreHeaderGap" defaultMobile={0} defaultDesktop={0} />
                         </React.Fragment>
 
                         <h2 className="text-3xl md:text-4xl font-bold font-outfit text-brand-ink mb-0">
@@ -139,13 +139,13 @@ const Screens = () => {
                         <p className="m-0">
                             Research and discovery is where I'm most alive. That combination of empathetic listening and analytical problem solving. The challenge of sitting with someone and tuning in not just to what they say, but to what they can't quite articulate yet. The spontaneous reactions. The little details about their lives that quietly shape their perspective on everything. I'm drawn to problems without obvious solutions—the ones where you have to look at the challenge from several angles before a novel path appears.
                         </p>
-                        <DebugSpacer id="Screens_Story_Quote_Top" defaultMobile={24} defaultDesktop={24} />
+                        <DebugSpacer id="Screens_Story_Quote_Top" defaultMobile={20} defaultDesktop={30} />
 
                         <PullQuote 
                             content="I'm drawn to problems without obvious solutions—the ones where you have to look at the challenge from several angles before a novel path appears."
                             color={BRAND_COLORS.screens}
                         />
-                        <DebugSpacer id="Screens_Story_Quote_Bottom" defaultMobile={24} defaultDesktop={24} />
+                        <DebugSpacer id="Screens_Story_Quote_Bottom" defaultMobile={20} defaultDesktop={30} />
 
                         <p className="m-0">
                             The first time I was aware of design was my father's entertainment system remote. It was a labyrinth of multicolored buttons, cryptic labels, modes inside modes. I remember the specific feeling of being a kid who was supposed to be good with technology and still not being able to turn the TV on without help. 

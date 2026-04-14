@@ -125,7 +125,7 @@ const Sounds = () => {
 
             {/* ARTIST STATEMENT BODY */}
             <section className="bg-white text-brand-ink px-9 md:px-12 lg:px-24 flex flex-col items-center">
-                <DebugSpacer id="Main_Section_Gap_1" defaultMobile={80} defaultDesktop={120} />
+                <DebugSpacer id="Main_Section_Gap_1" defaultMobile={100} defaultDesktop={120} />
 
                 <div className="w-full max-w-3xl mx-auto">
                     <div className="text-lg text-gray-700 leading-relaxed font-sans min-w-0">

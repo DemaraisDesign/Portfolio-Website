@@ -195,7 +195,7 @@ const Stage = () => {
 
             {/* Main Stage Content */}
             <section className="bg-white text-brand-ink px-9 md:px-12 lg:px-24 flex flex-col items-center">
-                <DebugSpacer id="Main_Section_Gap_1" defaultMobile={80} defaultDesktop={120} />
+                <DebugSpacer id="Main_Section_Gap_1" defaultMobile={100} defaultDesktop={120} />
 
                 {/* ARTIST STATEMENT SECTION */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-16 w-full max-w-4xl mx-auto">

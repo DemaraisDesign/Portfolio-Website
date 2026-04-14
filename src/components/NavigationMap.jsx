@@ -368,9 +368,9 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
         if (w >= 768) {
             hy = visualCenterY + 30; // Shift ONLY the home icon down on desktop
         } else {
-            // Symmetrical Center Home position on mobile
+            // Bottom center position on mobile
             hx = cx;
-            hy = visualCenterY + 20;
+            hy = h - 40;
         }
     }
 

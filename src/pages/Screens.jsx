@@ -93,7 +93,7 @@ const Screens = () => {
                                     onClick={() => document.getElementById('case-studies')?.scrollIntoView({ behavior: 'smooth' })}
                                     className="inline-block mt-12 md:mt-16 bg-[#16161D]/50 backdrop-blur-[2px] text-white border border-transparent px-8 py-3 rounded-full font-outfit font-medium uppercase tracking-[0.2em] hover:bg-[#050508] hover:border-white/20 hover:text-white transition-all duration-300 focus:ring-1 focus:ring-offset-1 focus:ring-brand-screens focus:outline-none pointer-events-auto cursor-pointer"
                                 >
-                                    Case Studies
+                                    Selected work
                                 </motion.button>
                             </div>
                         </div>
@@ -191,9 +191,9 @@ const Screens = () => {
             </section>
 
             {/* NEW GRID LAYOUT SECTION */}
-            <section id="case-studies" className="w-full px-9 md:px-12 lg:px-24 py-16 lg:py-32 relative z-10 scroll-mt-32">
+            <section className="w-full px-9 md:px-12 lg:px-24 py-16 lg:py-32 relative z-10">
                 {/* Scaled down by 15%: max width reduced from 1600px to 1360px, width kept proportional to 85% on desktop */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 max-w-[1400px] mx-auto">
+                <div id="case-studies" className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 max-w-[1400px] mx-auto scroll-mt-24 md:scroll-mt-[100px]">
                     {DATA.map((project, i) => {
                         let p = project;
                         if (project.id === 'display-now') p = { ...project, img: 'https://res.cloudinary.com/dqabyzuzf/image/upload/v1774880743/Group_148_jszprn.png' };

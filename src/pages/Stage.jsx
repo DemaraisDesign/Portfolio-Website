@@ -160,6 +160,13 @@ const Stage = () => {
                                         <em className="italic text-base md:text-lg">William Shakespeare</em>
                                     </p>
                                 </div>
+                                <motion.button
+                                    whileTap={{ scale: 0.98 }}
+                                    onClick={() => document.getElementById('case-studies')?.scrollIntoView({ behavior: 'smooth' })}
+                                    className="inline-block mt-12 md:mt-16 bg-[#16161D]/50 backdrop-blur-[2px] text-white border border-transparent px-8 py-3 rounded-full font-outfit font-medium uppercase tracking-[0.2em] hover:bg-[#050508] hover:border-white/20 hover:text-white transition-all duration-300 focus:ring-1 focus:ring-offset-1 focus:ring-brand-stage focus:outline-none pointer-events-auto cursor-pointer"
+                                >
+                                    Selected work
+                                </motion.button>
                             </div>
                         </div>
                     </div>
@@ -287,6 +294,7 @@ const Stage = () => {
                 <DebugSpacer id="Main_Section_Gap_Bottom" defaultMobile={100} defaultDesktop={120} />
             </section>
 
+            <div id="case-studies" className="scroll-mt-[80px] md:scroll-mt-[100px]" />
             <StickyScrollingSection className="" style={{ backgroundColor: BRAND_COLORS.black }}>
                 {DATA.map((project, i) => (
                     <StickyProjectCard

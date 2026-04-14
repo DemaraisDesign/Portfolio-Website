@@ -685,7 +685,7 @@ const OrganicPath = React.memo(({ x1, y1, x2, y2, color, isDashed, isActive, wid
     );
 });
 
-const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, className = "", isChild, zIndex, showIcon, isResizing, initialOpacity = 0, isDimmed, labelData, disableAnimation, isShortViewport, flipKey, flipDelay = 0, noFlyTransition = false, sizeDelay = 0 }) => {
+const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, className = "", isChild, zIndex, showIcon, isFocused, isResizing, initialOpacity = 0, isDimmed, labelData, disableAnimation, isShortViewport, flipKey, flipDelay = 0, noFlyTransition = false, sizeDelay = 0 }) => {
     const { isProjectUnlocked } = usePasswordGate();
     const [hover, setHover] = useState(false);
     const [tapped, setTapped] = useState(false);

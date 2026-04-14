@@ -20,7 +20,7 @@ const Layout = () => {
   const location = useLocation();
 
   return (
-    <div className="flex flex-col min-h-screen bg-brand-light text-brand-ink transition-colors duration-500 overflow-x-hidden">
+    <div className="flex flex-col min-h-screen bg-brand-light text-brand-ink transition-colors duration-500 overflow-x-clip">
       <Navbar show={true} />
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>

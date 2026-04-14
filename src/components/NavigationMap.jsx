@@ -1135,7 +1135,7 @@ export default function NavigationMap({ closeMenu }) {
                                     showIcon={isLaunched} useElastic={isLaunched}
                                     isResizing={isResizing} initialOpacity={1}
                                     disableAnimation={sec.isBg}
-                                    labelData={(sec.isBg && viewport.w < 768) ? null : {
+                                    labelData={{
                                         title: sec.label,
                                         desc: sec.desc,
                                         subDesc: "Case Studies",

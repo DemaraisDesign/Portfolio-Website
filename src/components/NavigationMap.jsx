@@ -504,7 +504,7 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
                 const rowSpacing = w < 768 ? 85 : (h < 768 ? 160 : 180);
 
                 // 1. Calculate true visual center using available bounding empty space
-                const gridCenterX = (activeX + hx) / 2;
+                const gridCenterX = w < 768 ? cx : (activeX + hx) / 2;
 
                 const topCeiling = activeY + (SIZES.sectionActive / 2);
                 

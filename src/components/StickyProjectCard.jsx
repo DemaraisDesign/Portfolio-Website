@@ -117,7 +117,7 @@ const StickyProjectCard = ({
                                     <circle cx="12" cy="12" r="10" fill="currentColor" stroke="none" />
                                     <polyline points="12 6 12 12 15.5 15.5" stroke={customBgColor || BRAND_COLORS.dark} strokeWidth="3" fill="none" />
                                 </svg>
-                                View Case Study
+                                Under Construction
                             </>
                         ) : unlocked ? (
                             <>

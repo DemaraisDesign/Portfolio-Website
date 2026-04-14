@@ -437,7 +437,7 @@ const Explorations = () => {
                           <circle cx="12" cy="12" r="10" fill="currentColor" stroke="none" />
                           <polyline points="12 6 12 12 15.5 15.5" stroke="#E07A3A" strokeWidth="3" fill="none" />
                       </svg>
-                      View
+                      Under Construction
                     </span>
                     <ArrowRight className="w-4 h-4 transition-transform group-hover/link:translate-x-1" />
                   </>

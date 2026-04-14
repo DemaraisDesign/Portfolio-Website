@@ -80,7 +80,7 @@ const ProjectCard = ({ project, theme = 'blue', customBgColor }) => {
                         <>
                             <ClockIcon bgColor={customBgColor || BRAND_COLORS.dark} />
                             <span className={`text-xs font-bold uppercase tracking-widest transition-colors ${THEMES[theme]?.groupHover || THEMES.blue.groupHover}`}>
-                                {ctaText}
+                                Under Construction
                             </span>
                         </>
                     ) : unlocked ? (

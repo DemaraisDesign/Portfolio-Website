@@ -209,6 +209,13 @@ const ListProjectCard = ({ project, index }) => {
   const y = useTransform(scrollYProgress, [0, 1], ["-10%", "10%"]);
   const isInView = useInView(ref, { once: true, margin: "0px 0px -25% 0px" });
 
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const handleNavigate = () => {
     const path = `/work/${project.id}`;
     if (isConstruction) {
@@ -241,8 +248,8 @@ const ListProjectCard = ({ project, index }) => {
               className="absolute inset-0 w-full h-full" 
               initial={false}
               animate={{ 
-                clipPath: isInView ? "circle(150% at 50% 50%)" : "circle(0% at 50% 50%)", 
-                WebkitClipPath: isInView ? "circle(150% at 50% 50%)" : "circle(0% at 50% 50%)" 
+                clipPath: (isMobile || isInView) ? "circle(150% at 50% 50%)" : "circle(0% at 50% 50%)", 
+                WebkitClipPath: (isMobile || isInView) ? "circle(150% at 50% 50%)" : "circle(0% at 50% 50%)" 
               }} 
               transition={{ duration: 1.8, ease: [0.65, 0, 0.35, 1], delay: 0.1 }}
             >

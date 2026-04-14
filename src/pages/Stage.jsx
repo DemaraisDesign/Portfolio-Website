@@ -195,7 +195,7 @@ const Stage = () => {
 
             {/* Main Stage Content */}
             <section className="bg-white text-brand-ink px-9 md:px-12 lg:px-24 flex flex-col items-center">
-                <DebugSpacer id="Main_Section_Gap_1" defaultMobile={82} defaultDesktop={117} />
+                <DebugSpacer id="Main_Section_Gap_1" defaultMobile={80} defaultDesktop={120} />
 
                 {/* ARTIST STATEMENT SECTION */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-16 w-full max-w-4xl mx-auto">
@@ -225,13 +225,13 @@ const Stage = () => {
                         <p className="m-0">
                             I co-founded Coeurage Theatre Company in Los Angeles with classmates, and spent over a decade helping build an ensemble that earned national recognition on an average production budget of $7,000–$10,000, including rent and rights. I came to directing sideways: a slot opened that needed to be filled, and I stepped in expecting it to be a one-time gig. Honestly, I was terrified.
                         </p>
-                        <DebugSpacer id="Stage_Story_Quote_Top" defaultMobile={24} defaultDesktop={24} />
+                        <DebugSpacer id="Stage_Story_Quote_Top" defaultMobile={20} defaultDesktop={30} />
 
                         <PullQuote 
                             content="I came to directing sideways: a slot opened that needed to be filled, and I stepped in expecting it to be a one-time gig. Honestly, I was terrified."
                             color={BRAND_COLORS.stage}
                         />
-                        <DebugSpacer id="Stage_Story_Quote_Bottom" defaultMobile={24} defaultDesktop={24} />
+                        <DebugSpacer id="Stage_Story_Quote_Bottom" defaultMobile={20} defaultDesktop={30} />
 
                         <p className="m-0">
                             My first production earned an Ovation Award nomination — Los Angeles's then equivalent of the Tony Awards. The second received effusive press across the board. The third earned me a Best Direction nomination alongside directors from the city's largest institutional theaters. The fourth brought a slew of Stage Raw nominations and another Ovation nomination. <strong className="font-bold text-brand-ink">Stage &amp; Cinema called me "the best director of his age working in Los Angeles."</strong>

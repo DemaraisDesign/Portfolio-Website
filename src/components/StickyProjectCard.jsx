@@ -29,19 +29,12 @@ const StickyProjectCard = ({
     const isInView = useInView(cardRef, { once: true, margin: "-5%" });
 
     useEffect(() => {
-        // Fallback for index 0: since scrollYProgress=0 can mean both "above" and "locked",
-        // we use physical viewport intersection for the absolute first card to guarantee instantaneous reveal on anchor jump.
-        if (index === 0 && isInView && !isRevealed) {
+        // Universal fallback for ALL cards: Since index > 0 artificially slide up into the viewport from 100vh, 
+        // the physical intersection observer flawlessly triggers the exact moment they enter frame naturally.
+        if (isInView && !isRevealed) {
             setIsRevealed(true);
         }
-    }, [index, isInView, isRevealed]);
-
-    useMotionValueEvent(pageProgress, "change", (latest) => {
-        // For cards > 0, they are physically stacked out of sight, so we MUST rely on the math trigger points.
-        if (!isRevealed && latest >= (triggerPoint || 0)) {
-            setIsRevealed(true);
-        }
-    });
+    }, [isInView, isRevealed]);
 
     // Helper for brand colors
     const getBrandColor = (d) => {

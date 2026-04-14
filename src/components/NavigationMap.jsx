@@ -860,7 +860,7 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                     width: isShortViewport ? 'auto' : '180px',
                     minWidth: isShortViewport ? '140px' : 'auto',
                     opacity: isLabelVisible ? 1 : 0,
-                    transition: `opacity 0.4s ease ${sizeDelay}s, transform 0.4s ease ${sizeDelay}s`,
+                    transition: `opacity ${isLabelVisible ? '0.4s' : '0.1s'} ease ${isLabelVisible ? sizeDelay : 0}s, transform ${isLabelVisible ? '0.4s' : '0.1s'} ease ${isLabelVisible ? sizeDelay : 0}s`,
                     display: 'flex',
                     flexDirection: isShortViewport ? 'row' : 'column',
                     alignItems: isShortViewport ? 'center' : (labelData.align === 'right' ? 'flex-start' : (labelData.align === 'left' ? 'flex-end' : 'center')),
@@ -1135,7 +1135,7 @@ export default function NavigationMap({ closeMenu }) {
                                     showIcon={isLaunched} useElastic={isLaunched}
                                     isResizing={isResizing} initialOpacity={1}
                                     disableAnimation={sec.isBg}
-                                    labelData={{
+                                    labelData={(sec.isBg && viewport.w < 768) ? null : {
                                         title: sec.label,
                                         desc: sec.desc,
                                         subDesc: "Case Studies",

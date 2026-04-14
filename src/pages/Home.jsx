@@ -121,7 +121,7 @@ const AboutMe = () => {
 
   return (
     <section className="bg-white relative">
-      <DebugSpacer id="Home_AboutMe_Top" defaultMobile={50} defaultDesktop={96} />
+      <DebugSpacer id="Home_AboutMe_Top" defaultMobile={50} defaultDesktop={100} />
       <div className="w-full max-w-[1400px] mx-auto px-9 md:px-12 lg:px-24">
         <div className="flex flex-col md:flex-row justify-between items-start gap-12 md:gap-16">
           <div className="w-full md:flex-1 order-2 md:order-1">
@@ -134,7 +134,7 @@ const AboutMe = () => {
                 </span>
               </h2>
               <motion.div initial={{ width: 0 }} whileInView={{ width: 96 }} viewport={{ once: true }} transition={{ duration: 1, ease: "circOut" }} className="h-1 bg-gradient-to-r from-brand-blue via-brand-teal to-brand-purple rounded-full mt-8"></motion.div>
-              <DebugFlexCol as={motion.div} idPrefix="Home_About" defaultMobile={24} defaultDesktop={24} className="flex flex-col text-brand-ink-body text-lg leading-relaxed mt-12" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-10%" }}>
+              <DebugFlexCol as={motion.div} idPrefix="Home_About" defaultMobile={20} defaultDesktop={30} className="flex flex-col text-brand-ink-body text-lg leading-relaxed mt-12" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-10%" }}>
                 <motion.p variants={itemVariants}>
                   If you laid my career out on a table it might look like someone emptied three different puzzles into one pile. As it turns out, the pieces fit together quite well. Each rewards the same habits: prepare obsessively, listen deeply, and cut anything that isn't earning its place.
                 </motion.p>
@@ -185,7 +185,7 @@ const AboutMe = () => {
       </div>
 
 
-      <DebugSpacer id="Home_AboutMe_Bottom" defaultMobile={80} defaultDesktop={128} />
+      <DebugSpacer id="Home_AboutMe_Bottom" defaultMobile={50} defaultDesktop={100} />
     </section>
   );
 };
@@ -313,7 +313,7 @@ const Works = () => {
 
   return (
     <section ref={ref} id="works" className="bg-[#16161D] text-white overflow-hidden relative">
-      <DebugSpacer id="Home_SelectedWork_Top" defaultMobile={80} defaultDesktop={96} />
+      <DebugSpacer id="Home_SelectedWork_Top" defaultMobile={50} defaultDesktop={100} />
 
       <div className="w-full max-w-[1400px] mx-auto px-9 md:px-12 lg:px-24 mb-12 lg:mb-20 relative z-10">
         <h2 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 font-outfit uppercase">Selected <br />Work</h2>
@@ -322,7 +322,7 @@ const Works = () => {
       <div className="flex flex-col space-y-[40px] lg:space-y-20 px-9 md:px-12 lg:px-24 relative z-10 divide-y divide-white/20 lg:divide-y-0 max-w-[1400px] mx-auto">
         {projects.map((p, i) => (<ListProjectCard key={p.id} project={p} index={i} />))}
       </div>
-      <DebugSpacer id="Home_SelectedWork_Bottom" defaultMobile={80} defaultDesktop={128} />
+      <DebugSpacer id="Home_SelectedWork_Bottom" defaultMobile={50} defaultDesktop={100} />
     </section>
   );
 };
@@ -360,7 +360,7 @@ const Explorations = () => {
 
   return (
     <section className="bg-white relative">
-      <DebugSpacer id="Home_Explorations_Top" defaultMobile={80} defaultDesktop={96} />
+      <DebugSpacer id="Home_Explorations_Top" defaultMobile={50} defaultDesktop={100} />
       <div className="w-full max-w-[1400px] mx-auto px-9 md:px-12 lg:px-24 flex flex-col-reverse md:flex-row items-start justify-between mb-16 gap-6 md:gap-12">
         <div>
           <h2 className="text-[40px] sm:text-5xl md:text-7xl font-extrabold text-brand-ink font-outfit uppercase tracking-tight mb-6 break-words">
@@ -464,7 +464,7 @@ const Explorations = () => {
 
       {/* Bottom button removed */}
 
-      <DebugSpacer id="Home_Explorations_Bottom" defaultMobile={80} defaultDesktop={128} />
+      <DebugSpacer id="Home_Explorations_Bottom" defaultMobile={80} defaultDesktop={120} />
     </section>
   );
 };
@@ -953,7 +953,7 @@ const Home = () => {
 
         {/* FLUID MODULES SECTION */}
         <section className="relative bg-brand-light w-full">
-          <DebugSpacer id="Home_FluidModules_Top" defaultMobile={50} defaultDesktop={96} />
+          <DebugSpacer id="Home_FluidModules_Top" defaultMobile={50} defaultDesktop={100} />
           <div className="w-full max-w-[1400px] mx-auto px-9 md:px-12 lg:px-24 mb-16 md:mb-24 lg:mb-32 relative z-10">
             <h2 id="portfolio" className="text-5xl md:text-7xl font-extrabold text-brand-ink tracking-tight mb-6 font-outfit uppercase">Portfolio</h2>
             <AnimatedDivider className="mt-8" />
@@ -1076,7 +1076,7 @@ const Home = () => {
           </motion.div>
 
 
-          <DebugSpacer id="Home_FluidModules_Bottom" defaultMobile={50} defaultDesktop={128} />
+          <DebugSpacer id="Home_FluidModules_Bottom" defaultMobile={50} defaultDesktop={100} />
         </section>
 
         <AboutMe />

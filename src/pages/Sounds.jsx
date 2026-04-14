@@ -142,43 +142,43 @@ const Sounds = () => {
                         <p className="m-0">
                             For me, the measure of a design is the degree to which audiences stop thinking about the sound and starts living in the story. The choices that land are those that serve the material and the creative team…not those that call attention to themselves.
                         </p>
-                        <DebugSpacer id="Sounds_Story_P1" defaultMobile={16} defaultDesktop={24} />
+                        <DebugSpacer id="Sounds_Story_P1" defaultMobile={20} defaultDesktop={30} />
 
                         <p className="m-0">
                             It starts with the script. I read it the way an actor would—identifying the themes, the story structure and character arcs. By the time I sit down with a director, I've already formed instincts that I'm ready to abandon. Those conversations are some of my favorite parts of the process. 
                         </p>
-                        <DebugSpacer id="Sounds_Story_P2" defaultMobile={16} defaultDesktop={24} />
+                        <DebugSpacer id="Sounds_Story_P2" defaultMobile={20} defaultDesktop={30} />
 
                         <p className="m-0">
                             In my experience directors vary enormously in how much they've considered sound. Some arrive with detailed references; others have an instinct they haven't put words to yet. Both are great starting places.
                         </p>
-                        <DebugSpacer id="Sounds_Story_P3" defaultMobile={16} defaultDesktop={24} />
+                        <DebugSpacer id="Sounds_Story_P3" defaultMobile={20} defaultDesktop={30} />
 
                         <p className="m-0">
                             I'll take anything: a half formed thought, an image, a mood, five seconds of a song…anything. A director once told me she couldn't articulate what she wanted but that it felt like "baseball bats hitting electrified steel drums." I built an entire design from that starting place. The more instinctual and abstract a direction, the more interesting it is to explore. It bypasses the obvious and points somewhere unexpected.
                         </p>
-                        <DebugSpacer id="Sounds_Story_Quote_Top" defaultMobile={24} defaultDesktop={24} />
+                        <DebugSpacer id="Sounds_Story_Quote_Top" defaultMobile={20} defaultDesktop={30} />
 
                         <PullQuote 
                             content="A director once told me she couldn't articulate what she wanted but that it felt like &quot;baseball bats hitting electrified steel drums.&quot; I built an entire design from that starting place."
                             color={BRAND_COLORS.sound}
                         />
-                        <DebugSpacer id="Sounds_Story_Quote_Bottom" defaultMobile={24} defaultDesktop={24} />
+                        <DebugSpacer id="Sounds_Story_Quote_Bottom" defaultMobile={20} defaultDesktop={30} />
 
                         <p className="m-0">
                             From there I build sonic collages — layers of found sound and music assembled to capture the tonal world of the script rather than map it literally. Depending on the material it might be languid and atmospheric, or something far more abrasive and rhythmic — whatever serves the emotional world of the script. It's a pitch for a direction, something I can play for a director or a collaborator and ask: does this feel right? I'll often play a version at the first read-through so performers get a sense of the world they're inhabiting.
                         </p>
-                        <DebugSpacer id="Sounds_Story_P4" defaultMobile={16} defaultDesktop={24} />
+                        <DebugSpacer id="Sounds_Story_P4" defaultMobile={20} defaultDesktop={30} />
 
                         <p className="m-0">
                             Because I've spent as much of my career acting and directing as designing, I watch performers differently than many sound designers do. I'm tracking character drives and psychology alongside the cue sheet, and I try to make choices that support that work — sometimes metaphorically, sometimes by simply giving a performer a cue that helps them get where they need to go emotionally.
                         </p>
-                        <DebugSpacer id="Sounds_Story_P5" defaultMobile={16} defaultDesktop={24} />
+                        <DebugSpacer id="Sounds_Story_P5" defaultMobile={20} defaultDesktop={30} />
 
                         <p className="m-0">
                             Then I start building the clearest moments first and begin talking with other designers (particularly lighting) about where our instincts overlap. We talk arcs and how they relate to our choices, pace, tone, transitions, dynamics…it starts to feel like music composition. <strong className="font-bold text-brand-ink">When sound and light are truly working well together they are inseparable.</strong>
                         </p>
-                        <DebugSpacer id="Sounds_Story_P6" defaultMobile={16} defaultDesktop={24} />
+                        <DebugSpacer id="Sounds_Story_P6" defaultMobile={20} defaultDesktop={30} />
 
                         <p className="m-0">
                             And then there's what you don't use. Silence can land harder than any effect or piece of music if used skillfully. Knowing when to pull back, when to let a performer or a lighting shift carry the moment, how to build toward a silence that actually lands…these are often the most challenging and important choices. Some of the most powerful moments in shows I've worked on came from cutting something I was proud of.

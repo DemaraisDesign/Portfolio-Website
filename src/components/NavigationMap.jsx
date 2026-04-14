@@ -1105,77 +1105,87 @@ export default function NavigationMap({ closeMenu }) {
                 })}
             </svg>
 
-            <Node
-                x={layout.home.x}
-                y={layout.home.y}
-                size={layout.home.size}
-                color={THEME.dark} iconColor={THEME.white} icon={StaticHome}
-                onClick={handleHomeClick} isFocused={!focusedId} showIcon={true}
-                isResizing={isResizing} initialOpacity={1} zIndex={!focusedId ? 20 : 5}
-                isShortViewport={isShortDesktop}
-                disableAnimation={viewport.w < 768}
-            />
+            {(() => {
+                const currentFlipKey = focusedId ? `flip-${focusedId}` : null;
+                const isNoFly = !!focusedId;
 
-            {layout.sections.map((sec) => (
-                <React.Fragment key={sec.id}>
-                    <Node
-                        x={sec.x}
-                        y={sec.y}
-                        size={sec.size}
-                        color={sec.color} iconColor={THEME.white} icon={sec.icon}
-                        onClick={() => handleSectionClick(sec.id)}
-                        className={`${sec.isBg ? "depth-bg" : "depth-active"} ${isLaunched && !focusedId ? 'launched-node' : ''}`}
-                        isFocused={sec.isFocused} zIndex={sec.isFocused ? 15 : 12}
-                        showIcon={isLaunched} useElastic={isLaunched}
-                        isResizing={isResizing} initialOpacity={1}
-                        disableAnimation={sec.isBg}
-                        labelData={(sec.isBg && viewport.w < 768) ? null : {
-                            title: sec.label,
-                            desc: sec.desc,
-                            subDesc: "Case Studies",
-                            show: showLabels,
-                            align: viewport.w < 768 ? (sec.isFocused ? 'right' : 'center') : (isShortDesktop && sec.quadrant.includes('b') ? 'top' : 'center')
-                        }}
-                        isShortViewport={isShortDesktop || (viewport.w >= 768 && viewport.w < 1024)}
-                    />
-                    {sec.subPetals.map((sp, idx) => {
-                        if (!sp.visible) return null;
+                return (
+                    <>
+                        <Node
+                            x={layout.home.x}
+                            y={layout.home.y}
+                            size={layout.home.size}
+                            color={THEME.dark} iconColor={THEME.white} icon={StaticHome}
+                            onClick={handleHomeClick} isFocused={!focusedId} showIcon={true}
+                            isResizing={isResizing} initialOpacity={1} zIndex={!focusedId ? 20 : 5}
+                            isShortViewport={isShortDesktop}
+                            disableAnimation={viewport.w < 768}
+                            flipKey={currentFlipKey} noFlyTransition={isNoFly} flipDelay={0.45 + (0.1 * 4)}
+                        />
 
-                        const isInitialLoadDelay = !isSettled; // Only show sub-petals when in Phase 2
-                        const opacityMul = (isInitialLoadDelay || sec.isBg) ? 0 : 1;
+                        {layout.sections.map((sec, secIdx) => (
+                            <React.Fragment key={sec.id}>
+                                <Node
+                                    x={sec.x}
+                                    y={sec.y}
+                                    size={sec.size}
+                                    color={sec.color} iconColor={THEME.white} icon={sec.icon}
+                                    onClick={() => handleSectionClick(sec.id)}
+                                    className={`${sec.isBg ? "depth-bg" : "depth-active"} ${isLaunched && !focusedId ? 'launched-node' : ''}`}
+                                    isFocused={sec.isFocused} zIndex={sec.isFocused ? 15 : 12}
+                                    showIcon={isLaunched} useElastic={isLaunched}
+                                    isResizing={isResizing} initialOpacity={1}
+                                    disableAnimation={sec.isBg}
+                                    labelData={(sec.isBg && viewport.w < 768) ? null : {
+                                        title: sec.label,
+                                        desc: sec.desc,
+                                        subDesc: "Case Studies",
+                                        show: showLabels,
+                                        align: viewport.w < 768 ? (sec.isFocused ? 'right' : 'center') : (isShortDesktop && sec.quadrant.includes('b') ? 'top' : 'center')
+                                    }}
+                                    isShortViewport={isShortDesktop || (viewport.w >= 768 && viewport.w < 1024)}
+                                    flipKey={currentFlipKey} noFlyTransition={isNoFly} flipDelay={sec.isFocused ? 0 : 0.45 + (secIdx * 0.1)}
+                                />
+                                {sec.subPetals.map((sp, idx) => {
+                                    if (!sp.visible) return null;
 
-                        const isLargeUnfocused = (viewport.w >= 768 && !focusedId);
+                                    const isInitialLoadDelay = !isSettled; // Only show sub-petals when in Phase 2
+                                    const opacityMul = (isInitialLoadDelay || sec.isBg) ? 0 : 1;
 
-                        return (
-                            <Node
-                                key={sp.id} x={sp.x} y={sp.y} size={sp.size}
-                                color={sp.color} ringColor={sp.parentColor} iconColor={THEME.white}
-                                onClick={() => {
-                                    const path = sp.link || sp.path || `/work/${sp.id}`;
-                                    
-                                    if (getProject(sp.id)?.isConstruction) {
-                                        requestConstructionAccess(path);
-                                    } else if (isProjectUnlocked(sp.id)) {
-                                        if (closeMenu) closeMenu();
-                                        navigate(path);
-                                    } else {
-                                        requestAccess(path);
-                                    }
-                                }}
-                                className={sec.isFocused || isLargeUnfocused ? "depth-active" : ""}
-                                zIndex={sec.isFocused || isLargeUnfocused ? 12 : 2}
-                                showIcon={isSettled && (sec.isFocused || isLargeUnfocused)} useElastic={isSettled}
-                                isResizing={isResizing} isChild={true} initialOpacity={opacityMul}
-                                isDimmed={!sec.isFocused && !isLargeUnfocused}
-                                isParentFocused={sec.isFocused}
-                                flipDelay={0.1 + (idx * 0.08)}
-                                labelData={isLargeUnfocused ? { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: ((isShortDesktop || (viewport.w >= 768 && viewport.w < 1024)) && sec.quadrant.includes('b')) ? 'top' : 'center', img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: showLabels } : { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: (isShortDesktop && sec.quadrant.includes('b')) ? 'top' : (viewport.w < 768 ? 'center' : sp.alignLabel), img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: showLabels }}
-                                isShortViewport={isShortDesktop || viewport.w < 1024}
-                            />
-                        );
-                    })}
-                </React.Fragment>
-            ))}
+                                    const isLargeUnfocused = (viewport.w >= 768 && !focusedId);
+
+                                    return (
+                                        <Node
+                                            key={sp.id} x={sp.x} y={sp.y} size={sp.size}
+                                            color={sp.color} ringColor={sp.parentColor} iconColor={THEME.white}
+                                            onClick={() => {
+                                                const path = sp.link || sp.path || `/work/${sp.id}`;
+                                                
+                                                if (getProject(sp.id)?.isConstruction) {
+                                                    requestConstructionAccess(path);
+                                                } else if (isProjectUnlocked(sp.id)) {
+                                                    if (closeMenu) closeMenu();
+                                                    navigate(path);
+                                                } else {
+                                                    requestAccess(path);
+                                                }
+                                            }}
+                                            className={sec.isFocused || isLargeUnfocused ? "depth-active" : ""}
+                                            zIndex={sec.isFocused || isLargeUnfocused ? 12 : 2}
+                                            showIcon={isSettled && (sec.isFocused || isLargeUnfocused)} useElastic={isSettled}
+                                            isResizing={isResizing} isChild={true} initialOpacity={opacityMul}
+                                            isDimmed={!sec.isFocused && !isLargeUnfocused}
+                                            labelData={isLargeUnfocused ? { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: ((isShortDesktop || (viewport.w >= 768 && viewport.w < 1024)) && sec.quadrant.includes('b')) ? 'top' : 'center', img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: showLabels } : { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: (isShortDesktop && sec.quadrant.includes('b')) ? 'top' : (viewport.w < 768 ? 'center' : sp.alignLabel), img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: showLabels }}
+                                            isShortViewport={isShortDesktop || viewport.w < 1024}
+                                            flipKey={currentFlipKey} noFlyTransition={isNoFly} flipDelay={0.1 + (idx * 0.08)}
+                                        />
+                                    );
+                                })}
+                            </React.Fragment>
+                        ))}
+                    </>
+                );
+            })()}
 
 
 

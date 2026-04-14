@@ -28,18 +28,22 @@ const StickyProjectCard = ({
     const cardRef = useRef(null);
     const isInView = useInView(cardRef, { once: true, margin: "-5%" });
 
-    // Universal hook safety: Framer Motion requires a valid MotionValue.
-    // If this card is organic (Explorations) and lacks pageProgress, supply a static dummy hook.
-    const dummyProgress = useMotionValue(0);
-    const activeProgress = pageProgress || dummyProgress;
-
-    useMotionValueEvent(activeProgress, "change", (latest) => {
-        // For carousel cards > 0, IntersectionObserver struggles to read transform-based reveals through overflow locks.
-        // We MUST rely on the mathematical scroll progression triggers.
-        if (pageProgress && !isRevealed && latest >= (triggerPoint || 0)) {
-            setIsRevealed(true);
-        }
-    });
+    // Explicit Native Subscription: 
+    // useMotionValueEvent can silently drop hooks during rapid rapid re-renders on deep components.
+    // We manually bind natively just like StickyScroll does for audio locks.
+    useEffect(() => {
+        if (!pageProgress) return;
+        
+        const unsubscribe = pageProgress.on("change", (latest) => {
+            if (latest >= (triggerPoint || 0)) {
+                setIsRevealed(prev => {
+                    if (!prev) return true;
+                    return prev;
+                });
+            }
+        });
+        return unsubscribe;
+    }, [pageProgress, triggerPoint]);
 
     useEffect(() => {
         // For organic components (no pageProgress) OR the absolute first carousel card (index 0), 

@@ -113,7 +113,7 @@ const SmokyText = ({ text = "Demarais.", phonetic = "(dem-uh-RAY).", className =
 
             <SpeakingHeadIcon
                 isHovered={isHovered}
-                className="w-[0.55em] h-[0.55em] cursor-pointer opacity-80 hover:opacity-100 transition-opacity p-1 -m-1"
+                className="w-[0.65em] h-[0.65em] cursor-pointer opacity-80 hover:opacity-100 transition-opacity p-1 -m-1 translate-y-[8%] md:translate-y-0"
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
                 onClick={(e) => { e.stopPropagation(); setIsHovered(!isHovered); }}

@@ -931,10 +931,10 @@ export default function NavigationMap({ closeMenu }) {
         handleResize();
         window.addEventListener('resize', handleResize);
 
-        const t1 = setTimeout(() => setAnimPhase(1), 500);  // 1. Categories & Home animate in
-        const t2 = setTimeout(() => setAnimPhase(2), 1500); // 2. Case study circles appear
-        const t3 = setTimeout(() => setAnimPhase(3), 1900); // Labels
-        const t4 = setTimeout(() => setAnimPhase(4), 2200); // 3. Connector lines extend
+        const t1 = setTimeout(() => setAnimPhase(1), 950);  // 1. Categories & Home animate in
+        const t2 = setTimeout(() => setAnimPhase(2), 1950); // 2. Case study circles appear
+        const t3 = setTimeout(() => setAnimPhase(3), 2350); // Labels
+        const t4 = setTimeout(() => setAnimPhase(4), 2650); // 3. Connector lines extend
 
         return () => {
             window.removeEventListener('resize', handleResize);

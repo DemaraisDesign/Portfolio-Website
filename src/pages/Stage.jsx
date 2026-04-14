@@ -294,7 +294,7 @@ const Stage = () => {
                 <DebugSpacer id="Main_Section_Gap_Bottom" defaultMobile={100} defaultDesktop={120} />
             </section>
 
-            <div id="case-studies" className="scroll-mt-[80px] md:scroll-mt-[100px]" />
+            <div id="case-studies" />
             <StickyScrollingSection className="" style={{ backgroundColor: BRAND_COLORS.black }}>
                 {DATA.map((project, i) => (
                     <StickyProjectCard

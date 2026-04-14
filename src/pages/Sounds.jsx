@@ -190,7 +190,7 @@ const Sounds = () => {
             </section>
 
             {/* Sticky Stack Section */}
-            <div id="case-studies" className="scroll-mt-[80px] md:scroll-mt-[100px]" />
+            <div id="case-studies" />
             <StickyScrollingSection className="" style={{ backgroundColor: BRAND_COLORS.black }}>
                 {DATA.map((project, i) => (
                     <StickyProjectCard

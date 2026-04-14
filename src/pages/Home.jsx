@@ -930,8 +930,8 @@ const Home = () => {
 
 
         {/* FLUID MODULES SECTION */}
-        <section className="relative bg-brand-light w-full pt-24 pb-1 md:py-24 lg:py-32">
-          <div className="w-full px-6 md:px-12 lg:px-24 mb-2 lg:mb-20">
+        <section className="relative bg-brand-light w-full pt-24 pb-6 md:py-24 lg:py-32">
+          <div className="w-full px-6 md:px-12 lg:px-24 mb-4 lg:mb-20">
             <h2 id="portfolio" className="text-5xl md:text-7xl font-extrabold text-brand-ink tracking-tight mb-6 font-outfit uppercase">Portfolio</h2>
             <AnimatedDivider className="mt-8" />
           </div>
@@ -964,7 +964,7 @@ const Home = () => {
             className="
             w-full
             flex gap-6 px-9
-            overflow-x-auto pb-6 pt-12
+            overflow-x-auto pb-6 pt-8
             lg:grid lg:grid-cols-3 lg:gap-8 lg:overflow-visible lg:px-24 lg:pb-0 lg:pt-0
             scrollbar-hide
             perspective-[1200px]

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { ArrowRight, ExternalLink, Clock, Lock } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { getProject } from '../data/projects';
 import { usePasswordGate } from './PasswordGate';
 import { useConstructionGate } from './ConstructionGate';
@@ -740,12 +740,9 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
             }}
         >
             <motion.div
-                key={flipKey || 'default'}
-                initial={flipKey ? { opacity: 0, rotateY: -90 } : false}
-                animate={flipKey ? { opacity: 1, rotateY: 0 } : { opacity: 1, rotateY: 0 }}
                 whileHover={!disableAnimation ? { scale: 1.05 } : {}}
                 whileTap={!disableAnimation ? { scale: 0.95 } : {}}
-                transition={flipKey ? { delay: flipDelay, type: "spring", stiffness: 60, damping: 12, mass: 0.8 } : { type: "spring", stiffness: 400, damping: 25 }}
+                transition={{ type: "spring", stiffness: 400, damping: 25 }}
                 style={{
                     width: '100%', height: '100%', borderRadius: '50%',
                     background: (isChild && !isDimmed && labelData?.img && labelData?.contain) ? THEME.white : color,
@@ -1143,43 +1140,57 @@ export default function NavigationMap({ closeMenu }) {
                                         align: viewport.w < 768 ? (sec.isFocused ? 'right' : 'center') : (isShortDesktop && sec.quadrant.includes('b') ? 'top' : 'center')
                                     }}
                                     isShortViewport={isShortDesktop || (viewport.w >= 768 && viewport.w < 1024)}
-                                    flipKey={currentFlipKey} noFlyTransition={isNoFly} flipDelay={sec.isFocused ? 0 : 0.45 + (secIdx * 0.1)}
+                                    noFlyTransition={isNoFly}
                                 />
-                                {sec.subPetals.map((sp, idx) => {
-                                    if (!sp.visible) return null;
+                                <AnimatePresence mode="popLayout">
+                                    {(sec.isFocused || !focusedId) && sec.subPetals.map((sp, idx) => {
+                                        if (!sp.visible) return null;
 
-                                    const isInitialLoadDelay = !isSettled; // Only show sub-petals when in Phase 2
-                                    const opacityMul = (isInitialLoadDelay || sec.isBg) ? 0 : 1;
+                                        const isInitialLoadDelay = !isSettled; // Only show sub-petals when in Phase 2
+                                        const opacityMul = (isInitialLoadDelay || sec.isBg) ? 0 : 1;
 
-                                    const isLargeUnfocused = (viewport.w >= 768 && !focusedId);
+                                        const isLargeUnfocused = (viewport.w >= 768 && !focusedId);
+                                        const nodeDelay = 0.1 + (idx * 0.08);
 
-                                    return (
-                                        <Node
-                                            key={sp.id} x={sp.x} y={sp.y} size={sp.size}
-                                            color={sp.color} ringColor={sp.parentColor} iconColor={THEME.white}
-                                            onClick={() => {
-                                                const path = sp.link || sp.path || `/work/${sp.id}`;
-                                                
-                                                if (getProject(sp.id)?.isConstruction) {
-                                                    requestConstructionAccess(path);
-                                                } else if (isProjectUnlocked(sp.id)) {
-                                                    if (closeMenu) closeMenu();
-                                                    navigate(path);
-                                                } else {
-                                                    requestAccess(path);
-                                                }
-                                            }}
-                                            className={sec.isFocused || isLargeUnfocused ? "depth-active" : ""}
-                                            zIndex={sec.isFocused || isLargeUnfocused ? 12 : 2}
-                                            showIcon={isSettled && (sec.isFocused || isLargeUnfocused)} useElastic={isSettled}
-                                            isResizing={isResizing} isChild={true} initialOpacity={opacityMul}
-                                            isDimmed={!sec.isFocused && !isLargeUnfocused}
-                                            labelData={isLargeUnfocused ? { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: ((isShortDesktop || (viewport.w >= 768 && viewport.w < 1024)) && sec.quadrant.includes('b')) ? 'top' : 'center', img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: showLabels } : { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: (isShortDesktop && sec.quadrant.includes('b')) ? 'top' : (viewport.w < 768 ? 'center' : sp.alignLabel), img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: showLabels }}
-                                            isShortViewport={isShortDesktop || viewport.w < 1024}
-                                            flipKey={currentFlipKey} noFlyTransition={isNoFly} flipDelay={0.1 + (idx * 0.08)}
-                                        />
-                                    );
-                                })}
+                                        return (
+                                            <motion.div
+                                                key={`wrapper-${sp.id}-${sec.isFocused ? 'focus' : 'bg'}`}
+                                                initial={{ opacity: 0, rotateY: -90 }}
+                                                animate={{ opacity: 1, rotateY: 0 }}
+                                                exit={{ opacity: 0, rotateY: 90 }}
+                                                transition={{ delay: focusedId ? nodeDelay : 0, type: "spring", stiffness: 60, damping: 12, mass: 0.8 }}
+                                                style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', perspective: '1000px' }}
+                                            >
+                                                <div style={{ pointerEvents: 'auto' }}>
+                                                    <Node
+                                                        x={sp.x} y={sp.y} size={sp.size}
+                                                        color={sp.color} ringColor={sp.parentColor} iconColor={THEME.white}
+                                                        onClick={() => {
+                                                            const path = sp.link || sp.path || `/work/${sp.id}`;
+                                                            
+                                                            if (getProject(sp.id)?.isConstruction) {
+                                                                requestConstructionAccess(path);
+                                                            } else if (isProjectUnlocked(sp.id)) {
+                                                                if (closeMenu) closeMenu();
+                                                                navigate(path);
+                                                            } else {
+                                                                requestAccess(path);
+                                                            }
+                                                        }}
+                                                        className={sec.isFocused || isLargeUnfocused ? "depth-active" : ""}
+                                                        zIndex={sec.isFocused || isLargeUnfocused ? 12 : 2}
+                                                        showIcon={isSettled && (sec.isFocused || isLargeUnfocused)} useElastic={isSettled}
+                                                        isResizing={isResizing} isChild={true} initialOpacity={opacityMul}
+                                                        isDimmed={!sec.isFocused && !isLargeUnfocused}
+                                                        labelData={isLargeUnfocused ? { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: ((isShortDesktop || (viewport.w >= 768 && viewport.w < 1024)) && sec.quadrant.includes('b')) ? 'top' : 'center', img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: showLabels } : { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: (isShortDesktop && sec.quadrant.includes('b')) ? 'top' : (viewport.w < 768 ? 'center' : sp.alignLabel), img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: showLabels }}
+                                                        isShortViewport={isShortDesktop || viewport.w < 1024}
+                                                        noFlyTransition={isNoFly}
+                                                    />
+                                                </div>
+                                            </motion.div>
+                                        );
+                                    })}
+                                </AnimatePresence>
                             </React.Fragment>
                         ))}
                     </>

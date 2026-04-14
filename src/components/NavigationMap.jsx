@@ -1140,7 +1140,9 @@ export default function NavigationMap({ closeMenu }) {
                                         align: viewport.w < 768 ? (sec.isFocused ? 'right' : 'center') : (isShortDesktop && sec.quadrant.includes('b') ? 'top' : 'center')
                                     }}
                                     isShortViewport={isShortDesktop || (viewport.w >= 768 && viewport.w < 1024)}
-                                    noFlyTransition={isNoFly}
+                                    noFlyTransition={sec.isFocused && isNoFly}
+                                    flipKey={sec.isFocused ? currentFlipKey : null}
+                                    flipDelay={sec.isFocused && focusedId ? 0.25 : 0}
                                     sizeDelay={sec.isFocused && focusedId ? 0.25 : 0}
                                 />
                                 <AnimatePresence mode="popLayout">

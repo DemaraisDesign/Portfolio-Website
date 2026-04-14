@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useMotionValueEvent, motion } from "framer-motion";
+import React, { useState, useRef, useEffect } from 'react';
+import { useMotionValueEvent, motion, useInView } from "framer-motion";
 import { ArrowRight, Clock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { usePasswordGate } from './PasswordGate';
@@ -25,12 +25,19 @@ const StickyProjectCard = ({
 
     // Initialize as false for ALL cards to ensure we wait for the trigger point
     const [isRevealed, setIsRevealed] = useState(false);
+    const cardRef = useRef(null);
+    const isInView = useInView(cardRef, { once: true, margin: "-5%" });
 
-
+    useEffect(() => {
+        // Fallback for index 0: since scrollYProgress=0 can mean both "above" and "locked",
+        // we use physical viewport intersection for the absolute first card to guarantee instantaneous reveal on anchor jump.
+        if (index === 0 && isInView && !isRevealed) {
+            setIsRevealed(true);
+        }
+    }, [index, isInView, isRevealed]);
 
     useMotionValueEvent(pageProgress, "change", (latest) => {
-        // If we haven't revealed yet, and we pass the trigger point
-        // For the first card, triggerPoint is small (e.g. 0.05)
+        // For cards > 0, they are physically stacked out of sight, so we MUST rely on the math trigger points.
         if (!isRevealed && latest >= (triggerPoint || 0)) {
             setIsRevealed(true);
         }
@@ -82,7 +89,7 @@ const StickyProjectCard = ({
 
     return (
         // Grid always enforced: Fixed 60/40 Split
-        <div className={`w-full h-full ${mainBgClass} relative overflow-hidden flex flex-col lg:grid ${isEven ? 'lg:grid-cols-[40%_60%]' : 'lg:grid-cols-[60%_40%]'}`} style={containerStyle}>
+        <div ref={cardRef} className={`w-full h-full ${mainBgClass} relative overflow-hidden flex flex-col lg:grid ${isEven ? 'lg:grid-cols-[40%_60%]' : 'lg:grid-cols-[60%_40%]'}`} style={containerStyle}>
 
             {/* TEXT COLUMN */}
             <div className={`relative flex flex-col items-start justify-center px-9 py-12 lg:p-16 pt-12 lg:pt-[96px] z-30 order-2 ${isEven ? 'lg:order-1' : 'lg:order-2'}`}>

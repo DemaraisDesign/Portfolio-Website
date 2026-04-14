@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useMotionValueEvent, motion, useInView } from "framer-motion";
+import { useMotionValueEvent, motion, useInView, useMotionValue } from "framer-motion";
 import { ArrowRight, Clock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { usePasswordGate } from './PasswordGate';
@@ -28,13 +28,26 @@ const StickyProjectCard = ({
     const cardRef = useRef(null);
     const isInView = useInView(cardRef, { once: true, margin: "-5%" });
 
-    useEffect(() => {
-        // Universal fallback for ALL cards: Since index > 0 artificially slide up into the viewport from 100vh, 
-        // the physical intersection observer flawlessly triggers the exact moment they enter frame naturally.
-        if (isInView && !isRevealed) {
+    // Universal hook safety: Framer Motion requires a valid MotionValue.
+    // If this card is organic (Explorations) and lacks pageProgress, supply a static dummy hook.
+    const dummyProgress = useMotionValue(0);
+    const activeProgress = pageProgress || dummyProgress;
+
+    useMotionValueEvent(activeProgress, "change", (latest) => {
+        // For carousel cards > 0, IntersectionObserver struggles to read transform-based reveals through overflow locks.
+        // We MUST rely on the mathematical scroll progression triggers.
+        if (pageProgress && !isRevealed && latest >= (triggerPoint || 0)) {
             setIsRevealed(true);
         }
-    }, [isInView, isRevealed]);
+    });
+
+    useEffect(() => {
+        // For organic components (no pageProgress) OR the absolute first carousel card (index 0), 
+        // they physically live in the root viewport organically, so intersection flawlessly detects them.
+        if ((!pageProgress || index === 0) && isInView && !isRevealed) {
+            setIsRevealed(true);
+        }
+    }, [isInView, isRevealed, pageProgress, index]);
 
     // Helper for brand colors
     const getBrandColor = (d) => {

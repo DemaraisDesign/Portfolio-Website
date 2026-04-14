@@ -120,7 +120,7 @@ const AboutMe = () => {
   const itemVariants = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } } };
 
   return (
-    <section className="py-[50px] md:py-24 lg:py-32 bg-white relative">
+    <section className="pt-[50px] pb-[80px] md:py-24 lg:py-32 bg-white relative">
       <div className="w-full max-w-[1400px] mx-auto px-9 md:px-12 lg:px-24">
         <div className="flex flex-col md:flex-row justify-between items-start gap-12 md:gap-16">
           <div className="w-full md:flex-1 order-2 md:order-1">
@@ -228,7 +228,7 @@ const ListProjectCard = ({ project, index }) => {
   return (
     <div
       ref={ref}
-      className="relative w-full max-w-[1400px] mx-auto cursor-pointer focus-within:outline-none pt-16 lg:pt-0"
+      className="relative w-full max-w-[1400px] mx-auto cursor-pointer focus-within:outline-none pt-[40px] lg:pt-0"
       role="button"
       tabIndex={0}
       onClick={handleNavigate}
@@ -310,14 +310,14 @@ const Works = () => {
   // Preload/keep alive slightly offscreen
 
   return (
-    <section ref={ref} id="works" className="bg-[#16161D] text-white py-[50px] md:py-24 lg:py-32 overflow-hidden relative">
+    <section ref={ref} id="works" className="bg-[#16161D] text-white py-[80px] md:py-24 lg:py-32 overflow-hidden relative">
 
 
       <div className="w-full max-w-[1400px] mx-auto px-9 md:px-12 lg:px-24 mb-12 lg:mb-20 relative z-10">
         <h2 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 font-outfit uppercase">Selected <br />Work</h2>
         <AnimatedDivider />
       </div>
-      <div className="flex flex-col space-y-16 lg:space-y-20 px-9 md:px-12 lg:px-24 relative z-10 divide-y divide-white/20 lg:divide-y-0 max-w-[1400px] mx-auto">
+      <div className="flex flex-col space-y-[40px] lg:space-y-20 px-9 md:px-12 lg:px-24 relative z-10 divide-y divide-white/20 lg:divide-y-0 max-w-[1400px] mx-auto">
         {projects.map((p, i) => (<ListProjectCard key={p.id} project={p} index={i} />))}
       </div>
     </section>
@@ -346,7 +346,7 @@ const Explorations = () => {
   };
 
   return (
-    <section className="bg-white py-[50px] md:py-24 lg:py-32 relative">
+    <section className="bg-white py-[80px] md:py-24 lg:py-32 relative">
       <div className="w-full max-w-[1400px] mx-auto px-9 md:px-12 lg:px-24 flex flex-col-reverse md:flex-row items-start justify-between mb-16 gap-12">
         <div>
           <h2 className="text-5xl md:text-7xl font-extrabold text-brand-ink font-outfit uppercase tracking-tight mb-6">

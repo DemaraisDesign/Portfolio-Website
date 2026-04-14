@@ -722,7 +722,7 @@ export const CASE_STUDIES = {
       }
     },
     section3: {
-      title: "The client’s hypothesis was inaccurate",
+      title: "A hypothesis turned out to be inaccurate",
       preheader: "Discovery & Research",
       body: [
         "The business goal was clear: increase trial sign-ups and reduce early drop-off. The user need was equally clear: people needed to be able to understand what the product did and actually try it without hitting a wall. Those two goals were completely aligned… the product just wasn't delivering on either. The client's hypothesis was that adding a calendar feature would improve retention. Our mandate was to test that assumption rigorously before building anything new.",

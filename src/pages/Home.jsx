@@ -930,8 +930,8 @@ const Home = () => {
 
 
         {/* FLUID MODULES SECTION */}
-        <section className="relative bg-brand-light w-full pt-24 pb-12 md:py-24 lg:py-32">
-          <div className="w-full px-6 md:px-12 lg:px-24 mb-12 lg:mb-20">
+        <section className="relative bg-brand-light w-full pt-24 pb-4 md:py-24 lg:py-32">
+          <div className="w-full px-6 md:px-12 lg:px-24 mb-2 lg:mb-20">
             <h2 id="portfolio" className="text-5xl md:text-7xl font-extrabold text-brand-ink tracking-tight mb-6 font-outfit uppercase">Portfolio</h2>
             <AnimatedDivider className="mt-8" />
           </div>

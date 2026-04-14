@@ -70,7 +70,8 @@ const renderVisualAid = (data, color) => {
       return <InteractiveUserFlow color={color} />;
     case "PaddedImage":
       return (
-        <div className="w-full bg-brand-light p-6 md:p-10 -mx-6 md:-mx-12 lg:-mx-24 rounded-none lg:rounded-theme-md mt-12 mb-8">
+        <div className="w-full bg-brand-light px-6 md:px-10 py-[1px] -mx-6 md:-mx-12 lg:-mx-24 rounded-none lg:rounded-theme-md mt-12 mb-8">
+          <DebugSpacer id="PaddedImage_Top" defaultMobile={24} defaultDesktop={40} />
           {(data.kicker || data.title) && (
              <div className="mb-8">
                {data.kicker && <h4 className="text-[11px] font-bold uppercase tracking-widest text-[#6e8291] mb-2">{data.kicker}</h4>}
@@ -84,6 +85,7 @@ const renderVisualAid = (data, color) => {
               className="w-full h-auto block"
             />
           </div>
+          <DebugSpacer id="PaddedImage_Bottom" defaultMobile={24} defaultDesktop={40} />
         </div>
       );
     case "Image":
@@ -147,10 +149,11 @@ const SidebarSection = ({
       id={id}
       className={
         isHighlight
-          ? "bg-brand-light p-6 md:p-10 -mx-6 md:-mx-12 lg:-mx-24 rounded-none lg:rounded-theme-md"
+          ? "bg-brand-light px-6 md:px-10 py-[1px] -mx-6 md:-mx-12 lg:-mx-24 rounded-none lg:rounded-theme-md"
           : ""
       }
     >
+      {isHighlight && <DebugSpacer id={`Section_${id}_Highlight_Top`} defaultMobile={24} defaultDesktop={40} />}
       {(data.preheader || isHighlight) && (
         <React.Fragment>
           <SectionPreheader
@@ -523,6 +526,7 @@ const SidebarSection = ({
             />
           </>
         )}
+      {isHighlight && <DebugSpacer id={`Section_${id}_Highlight_Bottom`} defaultMobile={24} defaultDesktop={40} />}
     </section>
   );
 };

@@ -17,7 +17,7 @@ import AnimatedDivider from '../components/AnimatedDivider';
 import { BRAND_COLORS as BRAND } from '../utils/theme';
 import SmokyText from '../components/SmokyText';
 import PullQuote from '../components/PullQuote';
-import { DebugFlexCol } from '../components/LayoutDebugger';
+import { DebugFlexCol, DebugSpacer } from '../components/LayoutDebugger';
 
 // --- ASSETS ---
 const IMAGES = {
@@ -120,7 +120,8 @@ const AboutMe = () => {
   const itemVariants = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } } };
 
   return (
-    <section className="pt-[50px] pb-[80px] md:py-24 lg:py-32 bg-white relative">
+    <section className="bg-white relative">
+      <DebugSpacer id="Home_AboutMe_Top" defaultMobile={50} defaultDesktop={96} />
       <div className="w-full max-w-[1400px] mx-auto px-9 md:px-12 lg:px-24">
         <div className="flex flex-col md:flex-row justify-between items-start gap-12 md:gap-16">
           <div className="w-full md:flex-1 order-2 md:order-1">
@@ -184,6 +185,7 @@ const AboutMe = () => {
       </div>
 
 
+      <DebugSpacer id="Home_AboutMe_Bottom" defaultMobile={80} defaultDesktop={128} />
     </section>
   );
 };
@@ -310,8 +312,8 @@ const Works = () => {
   // Preload/keep alive slightly offscreen
 
   return (
-    <section ref={ref} id="works" className="bg-[#16161D] text-white py-[80px] md:py-24 lg:py-32 overflow-hidden relative">
-
+    <section ref={ref} id="works" className="bg-[#16161D] text-white overflow-hidden relative">
+      <DebugSpacer id="Home_SelectedWork_Top" defaultMobile={80} defaultDesktop={96} />
 
       <div className="w-full max-w-[1400px] mx-auto px-9 md:px-12 lg:px-24 mb-12 lg:mb-20 relative z-10">
         <h2 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 font-outfit uppercase">Selected <br />Work</h2>
@@ -320,6 +322,7 @@ const Works = () => {
       <div className="flex flex-col space-y-[40px] lg:space-y-20 px-9 md:px-12 lg:px-24 relative z-10 divide-y divide-white/20 lg:divide-y-0 max-w-[1400px] mx-auto">
         {projects.map((p, i) => (<ListProjectCard key={p.id} project={p} index={i} />))}
       </div>
+      <DebugSpacer id="Home_SelectedWork_Bottom" defaultMobile={80} defaultDesktop={128} />
     </section>
   );
 };
@@ -346,7 +349,8 @@ const Explorations = () => {
   };
 
   return (
-    <section className="bg-white py-[80px] md:py-24 lg:py-32 relative">
+    <section className="bg-white relative">
+      <DebugSpacer id="Home_Explorations_Top" defaultMobile={80} defaultDesktop={96} />
       <div className="w-full max-w-[1400px] mx-auto px-9 md:px-12 lg:px-24 flex flex-col-reverse md:flex-row items-start justify-between mb-16 gap-12">
         <div>
           <h2 className="text-5xl md:text-7xl font-extrabold text-brand-ink font-outfit uppercase tracking-tight mb-6">
@@ -450,6 +454,7 @@ const Explorations = () => {
 
       {/* Bottom button removed */}
 
+      <DebugSpacer id="Home_Explorations_Bottom" defaultMobile={80} defaultDesktop={128} />
     </section>
   );
 };
@@ -937,8 +942,9 @@ const Home = () => {
 
 
         {/* FLUID MODULES SECTION */}
-        <section className="relative bg-brand-light w-full py-[50px] md:py-24 lg:py-32">
-          <div className="w-full px-6 md:px-12 lg:px-24 mb-12 lg:mb-20">
+        <section className="relative bg-brand-light w-full">
+          <DebugSpacer id="Home_FluidModules_Top" defaultMobile={50} defaultDesktop={96} />
+          <div className="w-full max-w-[1400px] mx-auto px-9 md:px-12 lg:px-24 mb-16 md:mb-24 lg:mb-32 relative z-10">
             <h2 id="portfolio" className="text-5xl md:text-7xl font-extrabold text-brand-ink tracking-tight mb-6 font-outfit uppercase">Portfolio</h2>
             <AnimatedDivider className="mt-8" />
           </div>
@@ -1060,6 +1066,7 @@ const Home = () => {
           </motion.div>
 
 
+          <DebugSpacer id="Home_FluidModules_Bottom" defaultMobile={50} defaultDesktop={128} />
         </section>
 
         <AboutMe />

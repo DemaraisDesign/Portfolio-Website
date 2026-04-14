@@ -338,6 +338,8 @@ const Explorations = () => {
     { ...getProject('ai-media'), subhead: "Experiments with various media forms. Some created with standard workflows and some with AI assistance." }
   ];
 
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+
   const handleCardClick = (id) => {
     const path = `/work/${id}`;
     const targetProject = getProject(id);
@@ -385,8 +387,8 @@ const Explorations = () => {
           <motion.div
             key={item.id}
             onClick={() => handleCardClick(item.id)}
-            className="group cursor-pointer flex flex-col [@media(max-height:500px)]:flex-row h-full shrink-0 snap-center w-[85vw] [@media(max-height:500px)]:w-full lg:w-auto"
-            initial={{ opacity: 0, rotateY: -90 }}
+            className="group cursor-pointer flex flex-col [@media(max-height:500px)]:flex-row h-auto shrink-0 snap-center w-[78vw] [@media(max-height:500px)]:w-full lg:w-auto"
+            initial={{ opacity: 0, rotateY: isMobile ? 0 : -90 }}
             whileInView={{ opacity: 1, rotateY: 0 }}
             viewport={{ once: true, margin: "-10%" }}
             transition={{
@@ -414,10 +416,10 @@ const Explorations = () => {
             </div>
 
             {/* Text Container - Orange Background */}
-            <div className="bg-brand-orange p-6 lg:p-8 [@media(max-height:500px)]:p-6 rounded-b-theme-sm [@media(max-height:500px)]:rounded-b-none [@media(max-height:500px)]:rounded-r-theme-sm flex flex-col gap-2 [@media(max-height:500px)]:w-[55%] flex-1 transition-colors duration-300">
-              <span className="text-white/80 text-[10px] font-bold uppercase tracking-widest">{item.cat}</span>
-              <h3 className="text-2xl [@media(max-height:500px)]:text-xl font-outfit font-bold text-white mb-2 [@media(max-height:500px)]:mb-1">{item.title}</h3>
-              {item.subhead && <p className="text-white/90 text-sm [@media(max-height:500px)]:text-xs font-medium leading-relaxed mb-6 [@media(max-height:500px)]:mb-3 [@media(max-height:500px)]:leading-snug">{item.subhead}</p>}
+            <div className="bg-brand-orange p-8 [@media(max-height:500px)]:p-6 rounded-b-theme-sm [@media(max-height:500px)]:rounded-b-none [@media(max-height:500px)]:rounded-r-theme-sm flex flex-col gap-2 [@media(max-height:500px)]:w-[55%] flex-1 transition-colors duration-300">
+              <span className="text-white/80 text-[10px] md:text-sm font-bold uppercase tracking-widest">{item.cat}</span>
+              <h3 className="text-2xl lg:text-3xl [@media(max-height:500px)]:text-xl font-outfit font-bold text-white mb-2 [@media(max-height:500px)]:mb-1">{item.title}</h3>
+              {item.subhead && <p className="text-white/90 text-sm md:text-base [@media(max-height:500px)]:text-xs font-medium leading-relaxed mb-6 [@media(max-height:500px)]:mb-3 [@media(max-height:500px)]:leading-snug">{item.subhead}</p>}
 
               <div className="mt-auto flex items-center gap-2 text-[#f1f1f1] text-sm [@media(max-height:500px)]:text-xs font-bold uppercase tracking-widest group/link hover:opacity-80 transition-opacity">
                 {getProject(item.id)?.isConstruction ? (

@@ -158,7 +158,7 @@ const StickyCardWrapper = ({ children, index, total, pageProgress, transitionFac
     const childWithProps = React.cloneElement(children, {
         dwellProgress,
         pageProgress, // RAW MotionValue
-        triggerPoint: index === 0 ? 0.05 : entryEnd
+        triggerPoint: index === 0 ? 0 : entryEnd
     });
 
     const isLast = index === total - 1;

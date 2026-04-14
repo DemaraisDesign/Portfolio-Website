@@ -338,12 +338,11 @@ const Explorations = () => {
     { ...getProject('ai-media'), subhead: "Experiments with various media forms. Some created with standard workflows and some with AI assistance." }
   ];
 
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => {
+    return typeof window !== 'undefined' ? window.innerWidth < 768 : false;
+  });
 
   useEffect(() => {
-    setIsMobile(window.innerWidth < 768);
-    
-    // Optional: Update on resize if they rotate the phone
     const handleResize = () => setIsMobile(window.innerWidth < 768);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
@@ -391,12 +390,12 @@ const Explorations = () => {
         </Link>
       </div>
 
-      <div className="w-full max-w-[1400px] mx-auto px-9 md:px-12 lg:px-24 flex gap-6 overflow-x-auto snap-x lg:grid lg:grid-cols-3 lg:gap-8 perspective-[1000px] pb-6 scrollbar-hide [@media(max-height:500px)]:flex-col [@media(max-height:500px)]:overflow-visible">
+      <div className="w-full max-w-[1400px] mx-auto px-9 md:px-12 lg:px-24 grid grid-flow-col auto-cols-[82vw] md:auto-cols-[45vw] lg:auto-cols-auto lg:grid-flow-row lg:grid-cols-3 gap-6 lg:gap-8 overflow-x-auto snap-x perspective-[1000px] pb-6 scrollbar-hide [@media(max-height:500px)]:flex [@media(max-height:500px)]:flex-col [@media(max-height:500px)]:overflow-visible">
         {experiments.map((item, i) => (
           <motion.div
             key={item.id}
             onClick={() => handleCardClick(item.id)}
-            className="group cursor-pointer flex flex-col [@media(max-height:500px)]:flex-row h-auto min-h-full shrink-0 snap-center w-[78vw] [@media(max-height:500px)]:w-full lg:w-auto"
+            className="group cursor-pointer flex flex-col [@media(max-height:500px)]:flex-row h-full w-full snap-center"
             initial={{ opacity: 0, rotateY: isMobile ? 0 : -90 }}
             whileInView={{ opacity: 1, rotateY: 0 }}
             viewport={{ once: true, margin: "-10%" }}

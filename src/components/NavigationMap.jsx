@@ -364,14 +364,15 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
     let hx = cx;
     let hy = visualCenterY;
 
-    if (isLaunched && !focusedId) {
-        if (w >= 768) {
-            hy = visualCenterY + 30; // Shift ONLY the home icon down on desktop
-        } else {
-            // Bottom center position on mobile
-            hx = cx;
-            hy = h - 40;
-        }
+    if (w < 768) {
+        // Unconditionally anchor the mobile home button to its cluster target to avoid unnecessary travel
+        const paddingBottom = -50;
+        const orbitOffset = 15;
+        const homeOrbitRadius = (SIZES.home / 2) + (SIZES.sectionBg / 2) + orbitOffset;
+        const homeClusterRadius = homeOrbitRadius + (SIZES.sectionBg / 2);
+        hy = h - (paddingBottom + homeClusterRadius);
+    } else if (isLaunched && !focusedId) {
+        hy = visualCenterY + 30; // Shift ONLY the home icon down on desktop
     }
 
     // Display position strictly matches computed origin

@@ -715,7 +715,7 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
 
     const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
     const isLabelVisible = showIcon && labelData && labelData.show && (isMobile ? isFocused : (hover || tapped || isFocused));
-    const flyDelay = (!isFocused && isMobile) ? 0.2 : 0;
+    const flyDelay = (!isFocused && isMobile) ? 0.3 : 0;
 
     return (
         <button

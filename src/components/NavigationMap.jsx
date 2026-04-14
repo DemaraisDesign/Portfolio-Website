@@ -436,7 +436,7 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
         let sy = visualCenterY + Math.sin(dynamicLayoutAngle) * DISTANCES.unlaunched;
 
         const currentSectionSize = !focusedId ? SIZES.sectionBg : (isFocused ? SIZES.sectionActive : SIZES.sectionBg);
-        const currentPetalSize = !focusedId ? SIZES.subPetalDefault : (isFocused ? SIZES.subPetalActive : SIZES.subPetalBg);
+        const currentPetalSize = !focusedId ? SIZES.subPetalDefault : SIZES.subPetalActive;
 
         if (isLaunched) {
             let targetX = cx;
@@ -498,7 +498,7 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
             let gridRow = null;
             let gridCol = null;
 
-            if (isLaunched && isFocused) {
+            if (isLaunched && focusedId) {
                 // Ensure mobile colSpacing and rowSpacing compactly reflect the new popup label system
                 const colSpacing = w < 768 ? 100 : 140;
                 const rowSpacing = w < 768 ? 85 : (h < 768 ? 160 : 180);

@@ -2,9 +2,7 @@ import React, { useRef, useLayoutEffect, useState, useEffect } from 'react';
 // eslint-disable-next-line no-unused-vars
 import { useAnimation, useInView, motion } from "framer-motion";
 
-
-
-const SectionPreheader = ({ text, color = "#171717", textColor, customTrigger, align = 'left', mobileAlign = null, showCircles = true }) => {
+const animatedInstances = new Set();const SectionPreheader = ({ text, color = "#171717", textColor, customTrigger, align = 'left', mobileAlign = null, showCircles = true }) => {
     const containerRef = useRef(null);
     const textRef = useRef(null);
     const controlsLeft = useAnimation();
@@ -30,12 +28,15 @@ const SectionPreheader = ({ text, color = "#171717", textColor, customTrigger, a
             const es = 4;
             const eo = ((cw * es) - cw) / 2;
 
-            setDimensions({
-                circleWidth: cw,
-                gap: g,
-                expandScale: es,
-                expandOffset: eo,
-                isMobile: isMobile
+            setDimensions(prev => {
+                if (prev.isMobile === isMobile && prev.circleWidth === cw) return prev;
+                return {
+                    circleWidth: cw,
+                    gap: g,
+                    expandScale: es,
+                    expandOffset: eo,
+                    isMobile: isMobile
+                };
             });
         };
 
@@ -68,11 +69,9 @@ const SectionPreheader = ({ text, color = "#171717", textColor, customTrigger, a
         }
     }, [text, d, isMeasured]); // Re-measure when text OR dimensions change
 
-    const hasAnimated = useRef(false);
-
     React.useEffect(() => {
-        if (shouldAnimate && isMeasured && !hasAnimated.current) {
-            hasAnimated.current = true;
+        if (shouldAnimate && isMeasured && !animatedInstances.has(text)) {
+            animatedInstances.add(text);
             const animate = async () => {
                 // 0. Initial State: Center (x=0 relative to flex center)
                 controlsLeft.set({ scale: 0, x: 0, opacity: 1 });

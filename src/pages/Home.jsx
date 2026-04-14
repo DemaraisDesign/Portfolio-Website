@@ -363,7 +363,7 @@ const Explorations = () => {
       <DebugSpacer id="Home_Explorations_Top" defaultMobile={80} defaultDesktop={96} />
       <div className="w-full max-w-[1400px] mx-auto px-9 md:px-12 lg:px-24 flex flex-col-reverse md:flex-row items-start justify-between mb-16 gap-12">
         <div>
-          <h2 className="text-5xl md:text-7xl font-extrabold text-brand-ink font-outfit uppercase tracking-tight mb-6">
+          <h2 className="text-[40px] sm:text-5xl md:text-7xl font-extrabold text-brand-ink font-outfit uppercase tracking-tight mb-6 break-words">
             <Link to="/explorations" className="cursor-pointer hover:text-brand-orange transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange rounded">
               Explorations
             </Link>
@@ -390,7 +390,7 @@ const Explorations = () => {
         </Link>
       </div>
 
-      <div className="w-full max-w-[1400px] mx-auto px-9 md:px-12 lg:px-24 grid grid-flow-col auto-cols-[82vw] md:auto-cols-[45vw] lg:auto-cols-auto lg:grid-flow-row lg:grid-cols-3 gap-6 lg:gap-8 overflow-x-auto snap-x perspective-[1000px] pb-6 scrollbar-hide [@media(max-height:500px)]:flex [@media(max-height:500px)]:flex-col [@media(max-height:500px)]:overflow-visible">
+      <div className="w-full max-w-[1400px] mx-auto px-9 md:px-12 lg:px-24 grid grid-flow-col auto-cols-[70vw] md:auto-cols-[45vw] lg:auto-cols-auto lg:grid-flow-row lg:grid-cols-3 gap-6 lg:gap-8 overflow-x-auto snap-x perspective-[1000px] pb-6 scrollbar-hide [@media(max-height:500px)]:flex [@media(max-height:500px)]:flex-col [@media(max-height:500px)]:overflow-visible">
         {experiments.map((item, i) => (
           <motion.div
             key={item.id}

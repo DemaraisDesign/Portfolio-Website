@@ -1142,8 +1142,8 @@ export default function NavigationMap({ closeMenu }) {
                                     isShortViewport={isShortDesktop || (viewport.w >= 768 && viewport.w < 1024)}
                                     noFlyTransition={sec.isFocused && isNoFly}
                                     flipKey={sec.isFocused ? currentFlipKey : null}
-                                    flipDelay={sec.isFocused && focusedId ? 0.25 : 0}
-                                    sizeDelay={sec.isFocused && focusedId ? 0.25 : 0}
+                                    flipDelay={sec.isFocused && focusedId ? 0.9 : 0}
+                                    sizeDelay={sec.isFocused && focusedId ? 0.9 : 0}
                                 />
                                 <AnimatePresence mode="popLayout">
                                     {(sec.isFocused || !focusedId) && sec.subPetals.map((sp, idx) => {
@@ -1153,7 +1153,7 @@ export default function NavigationMap({ closeMenu }) {
                                         const opacityMul = (isInitialLoadDelay || sec.isBg) ? 0 : 1;
 
                                         const isLargeUnfocused = (viewport.w >= 768 && !focusedId);
-                                        const nodeDelay = 0.3 + (idx * 0.08);
+                                        const nodeDelay = (sec.isFocused && focusedId ? 1.0 : 0.3) + (idx * 0.08);
 
                                         return (
                                             <motion.div

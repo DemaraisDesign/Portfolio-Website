@@ -686,7 +686,7 @@ const OrganicPath = React.memo(({ x1, y1, x2, y2, color, isDashed, isActive, wid
     );
 });
 
-const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, className = "", isChild, zIndex, showIcon, isFocused, isResizing, initialOpacity = 0, isDimmed, labelData, disableAnimation, isShortViewport, flipKey, flipDelay = 0, noFlyTransition = false, sizeDelay = 0 }) => {
+const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, className = "", isChild, zIndex, showIcon, isFocused, isBg, isResizing, initialOpacity = 0, isDimmed, labelData, disableAnimation, isShortViewport, flipKey, flipDelay = 0, noFlyTransition = false, sizeDelay = 0 }) => {
     const { isProjectUnlocked } = usePasswordGate();
     const [hover, setHover] = useState(false);
     const [tapped, setTapped] = useState(false);
@@ -715,8 +715,9 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
     };
 
     const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-    const isLabelVisible = showIcon && labelData && labelData.show && (isMobile ? isFocused : (hover || tapped || isFocused));
-    const flyDelay = (!isFocused && isMobile) ? 0.3 : 0;
+    const isActiveLayout = isFocused || (isBg === false);
+    const isLabelVisible = showIcon && labelData && labelData.show && (isMobile ? isActiveLayout : (hover || tapped || isActiveLayout));
+    const flyDelay = (isBg && isMobile) ? 0.3 : 0;
 
     return (
         <button
@@ -1134,7 +1135,7 @@ export default function NavigationMap({ closeMenu }) {
                                     color={sec.color} iconColor={THEME.white} icon={sec.icon}
                                     onClick={() => handleSectionClick(sec.id)}
                                     className={`${sec.isBg ? "depth-bg" : "depth-active"} ${isLaunched && !focusedId ? 'launched-node' : ''}`}
-                                    isFocused={sec.isFocused} zIndex={sec.isFocused ? 15 : 12}
+                                    isFocused={sec.isFocused} isBg={sec.isBg} zIndex={sec.isFocused ? 15 : 12}
                                     showIcon={isLaunched} useElastic={isLaunched}
                                     isResizing={isResizing} initialOpacity={1}
                                     disableAnimation={sec.isBg}
@@ -1148,18 +1149,18 @@ export default function NavigationMap({ closeMenu }) {
                                     isShortViewport={isShortDesktop || (viewport.w >= 768 && viewport.w < 1024)}
                                     noFlyTransition={sec.isFocused && isNoFly}
                                     flipKey={sec.isFocused ? currentFlipKey : null}
-                                    flipDelay={sec.isFocused && focusedId ? 1.0 : (!focusedId ? secIdx * 0.1 : 0)}
-                                    sizeDelay={sec.isFocused && focusedId ? 1.0 : (!focusedId ? secIdx * 0.1 : 0)}
+                                    flipDelay={sec.isFocused && focusedId ? 1.0 : (!focusedId ? secIdx * 0.15 : 0)}
+                                    sizeDelay={sec.isFocused && focusedId ? 1.0 : (!focusedId ? secIdx * 0.15 : 0)}
                                 />
                                 <AnimatePresence mode="popLayout">
-                                    {(sec.isFocused || (!focusedId && viewport.w >= 768)) && sec.subPetals.map((sp, idx) => {
+                                    {(sec.isFocused || !focusedId) && sec.subPetals.map((sp, idx) => {
                                         if (!sp.visible) return null;
 
                                         const isInitialLoadDelay = !isSettled; // Only show sub-petals when in Phase 2
                                         const opacityMul = (isInitialLoadDelay || sec.isBg) ? 0 : 1;
 
                                         const isLargeUnfocused = (viewport.w >= 768 && !focusedId);
-                                        const nodeDelay = (sec.isFocused && focusedId ? 1.0 : 0.3) + (idx * 0.08);
+                                        const nodeDelay = (sec.isFocused && focusedId ? 1.0 : 0.3 + (secIdx * 0.15)) + (idx * 0.08);
 
                                         return (
                                             <motion.div

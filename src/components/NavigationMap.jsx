@@ -713,7 +713,9 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
         setTapped(false);
     };
 
-    const isLabelVisible = showIcon && labelData && labelData.show && (isShortViewport ? isFocused : (hover || tapped || isFocused));
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+    const isLabelVisible = showIcon && labelData && labelData.show && (isMobile ? isFocused : (hover || tapped || isFocused));
+    const flyDelay = (!isFocused && isMobile) ? 0.2 : 0;
 
     return (
         <button
@@ -736,7 +738,7 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 cursor: onClick ? 'pointer' : 'default',
                 perspective: '1000px',
-                transition: isResizing ? 'none' : `${noFlyTransition ? '' : 'top 1.0s cubic-bezier(0.25, 1, 0.5, 1), left 1.0s cubic-bezier(0.25, 1, 0.5, 1), '}width 0.8s cubic-bezier(0.25, 1, 0.5, 1) ${sizeDelay}s, height 0.8s cubic-bezier(0.25, 1, 0.5, 1) ${sizeDelay}s, opacity 0.8s ease`
+                transition: isResizing ? 'none' : `${noFlyTransition ? '' : `top 1.0s cubic-bezier(0.25, 1, 0.5, 1) ${flyDelay}s, left 1.0s cubic-bezier(0.25, 1, 0.5, 1) ${flyDelay}s, `}width 0.8s cubic-bezier(0.25, 1, 0.5, 1) ${sizeDelay}s, height 0.8s cubic-bezier(0.25, 1, 0.5, 1) ${sizeDelay}s, opacity 0.8s ease`
             }}
         >
             <motion.div
@@ -860,7 +862,7 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                     width: isShortViewport ? 'auto' : '180px',
                     minWidth: isShortViewport ? '140px' : 'auto',
                     opacity: isLabelVisible ? 1 : 0,
-                    transition: `opacity ${isLabelVisible ? '0.4s' : '0.3s'} ease ${isLabelVisible ? sizeDelay : 0}s, transform ${isLabelVisible ? '0.4s' : '0.3s'} ease ${isLabelVisible ? sizeDelay : 0}s`,
+                    transition: `opacity ${isLabelVisible ? '0.4s' : '0.2s'} ease ${isLabelVisible ? sizeDelay : 0}s, transform ${isLabelVisible ? '0.4s' : '0.2s'} ease ${isLabelVisible ? sizeDelay : 0}s`,
                     display: 'flex',
                     flexDirection: isShortViewport ? 'row' : 'column',
                     alignItems: isShortViewport ? 'center' : (labelData.align === 'right' ? 'flex-start' : (labelData.align === 'left' ? 'flex-end' : 'center')),
@@ -1145,8 +1147,8 @@ export default function NavigationMap({ closeMenu }) {
                                     isShortViewport={isShortDesktop || (viewport.w >= 768 && viewport.w < 1024)}
                                     noFlyTransition={sec.isFocused && isNoFly}
                                     flipKey={sec.isFocused ? currentFlipKey : null}
-                                    flipDelay={sec.isFocused && focusedId ? 0.9 : 0}
-                                    sizeDelay={sec.isFocused && focusedId ? 0.9 : 0}
+                                    flipDelay={sec.isFocused && focusedId ? 1.0 : 0}
+                                    sizeDelay={sec.isFocused && focusedId ? 1.0 : 0}
                                 />
                                 <AnimatePresence mode="popLayout">
                                     {(sec.isFocused || !focusedId) && sec.subPetals.map((sp, idx) => {

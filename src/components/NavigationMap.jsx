@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import { ArrowRight, ExternalLink, Hand, Clock, Lock } from "lucide-react";
+import { ArrowRight, ExternalLink, Clock, Lock } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 import { motion } from "framer-motion";
 import { getProject } from '../data/projects';
@@ -333,7 +333,7 @@ const SECTIONS = [
 // ═══════════════════════════════════════════════════
 //  SMART LAYOUT ENGINE
 // ═══════════════════════════════════════════════════
-const computeLayout = (w, h, focusedId, isLaunched, isLeftHanded = false) => {
+const computeLayout = (w, h, focusedId, isLaunched) => {
     const cx = w / 2;
     const cy = h / 2;
     const minDim = Math.min(w, h);
@@ -368,18 +368,15 @@ const computeLayout = (w, h, focusedId, isLaunched, isLeftHanded = false) => {
         if (w >= 768) {
             hy = visualCenterY + 30; // Shift ONLY the home icon down on desktop
         } else {
-            // Permanently lock Home position on mobile
-            hx = w - 116; // w - (paddingX:36 + focusClusterRadius:80)
-            hy = h - 40;
+            // Symmetrical Center Home position on mobile
+            hx = cx;
+            hy = visualCenterY + 20;
         }
     }
 
-    // Separate display position for the home cluster (mirrors for handedness)
+    // Display position strictly matches computed origin
     let hx_display = hx;
     let hy_display = hy;
-    if (w < 768 && isLeftHanded && isLaunched) {
-        hx_display = w < 768 ? 116 : hx;
-    }
 
     let activeX = cx;
     let activeY = visualCenterY;
@@ -400,23 +397,24 @@ const computeLayout = (w, h, focusedId, isLaunched, isLeftHanded = false) => {
 
         // 3. Absolute corner anchors guaranteed to respect site padding
         let active_TL = { x: paddingX + activeRadius, y: paddingTop + activeRadius };
-        // Home cluster always uses default right-side position for grid math
-        let home_BR = { x: w - (paddingX + homeClusterRadius), y: h - (paddingBottom + homeClusterRadius) };
+        
+        let home_Target;
+        if (w < 768) {
+            // Lock horizontally to center screen, vertically to bottom
+            home_Target = { x: cx, y: h - (paddingBottom + homeClusterRadius) };
+        } else {
+            // Lock to bottom-right corner
+            home_Target = { x: w - (paddingX + homeClusterRadius), y: h - (paddingBottom + homeClusterRadius) };
+        }
 
-        // 4. Standardize all focus views to use the "Stages" layout geometry (active node top-left, home cluster bottom-right)
+        // 4. Standardize all focus views to use the layout geometry
         activeX = active_TL.x;
         activeY = active_TL.y;
-        hx = home_BR.x;
-        hy = home_BR.y;
+        hx = home_Target.x;
+        hy = home_Target.y;
 
-        // Mirror only the display position for the home cluster
-        if (w < 768 && isLeftHanded) {
-            hx_display = paddingX + homeClusterRadius;
-            hy_display = home_BR.y;
-        } else {
-            hx_display = home_BR.x;
-            hy_display = home_BR.y;
-        }
+        hx_display = hx;
+        hy_display = hy;
     }
 
     const sections = SECTIONS.map((sec) => {
@@ -912,7 +910,6 @@ export default function NavigationMap({ closeMenu }) {
 
     const [isResizing, setIsResizing] = useState(false);
     const [viewport, setViewport] = useState({ w: 1200, h: 800 });
-    const [isLeftHanded, setIsLeftHanded] = useState(false);
     const resizeTimer = useRef(null);
     const containerRef = useRef(null);
 
@@ -950,8 +947,8 @@ export default function NavigationMap({ closeMenu }) {
     }, [viewport.w, focusedId]);
 
     const layout = useMemo(() =>
-        computeLayout(viewport.w, viewport.h, focusedId, isLaunched, isLeftHanded),
-        [viewport, focusedId, isLaunched, isLeftHanded]
+        computeLayout(viewport.w, viewport.h, focusedId, isLaunched),
+        [viewport, focusedId, isLaunched]
     );
 
     const handleSectionClick = (id) => {
@@ -1173,43 +1170,7 @@ export default function NavigationMap({ closeMenu }) {
                 </React.Fragment>
             ))}
 
-            {/* Mobile-only handedness toggle */}
-            {viewport.w < 768 && isLaunched && (
-                <button
-                    aria-label={isLeftHanded ? "Switch to right hand" : "Switch to left hand"}
-                    onClick={() => setIsLeftHanded(prev => !prev)}
-                    style={{
-                        position: 'absolute',
-                        bottom: 40,
-                        left: isLeftHanded ? (viewport.w - 116) : 116,
-                        transform: 'translate(-50%, 50%)',
-                        width: 46,
-                        height: 46,
-                        background: 'none',
-                        border: 'none',
-                        cursor: 'pointer',
-                        zIndex: 25,
-                        opacity: showLabels ? 0.55 : 0,
-                        transition: 'opacity 0.4s ease, left 0.6s cubic-bezier(0.25, 1, 0.5, 1), right 0.6s cubic-bezier(0.25, 1, 0.5, 1)',
-                        padding: 0,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: 2,
-                    }}
-                >
-                    <Hand
-                        size={32}
-                        color="#767676"
-                        strokeWidth={1.5}
-                        style={{ transform: isLeftHanded ? 'scaleX(1)' : 'scaleX(-1)' }}
-                    />
-                    <span style={{ fontSize: 10, fontWeight: 700, color: '#767676', letterSpacing: 1, fontFamily: 'Outfit, sans-serif' }}>
-                        {isLeftHanded ? 'R' : 'L'}
-                    </span>
-                </button>
-            )}
+
 
         </div>
     );

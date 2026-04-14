@@ -68,8 +68,11 @@ const SectionPreheader = ({ text, color = "#171717", textColor, customTrigger, a
         }
     }, [text, d, isMeasured]); // Re-measure when text OR dimensions change
 
+    const hasAnimated = useRef(false);
+
     React.useEffect(() => {
-        if (shouldAnimate && isMeasured) {
+        if (shouldAnimate && isMeasured && !hasAnimated.current) {
+            hasAnimated.current = true;
             const animate = async () => {
                 // 0. Initial State: Center (x=0 relative to flex center)
                 controlsLeft.set({ scale: 0, x: 0, opacity: 1 });

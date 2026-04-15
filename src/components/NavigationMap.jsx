@@ -1244,7 +1244,7 @@ export default function NavigationMap({ closeMenu }) {
                                         desc: sec.desc,
                                         subDesc: "Case Studies",
                                         show: showLabels,
-                                        align: viewport.w < 1024 ? (sec.isFocused ? 'right' : (sec.quadrant.includes('l') ? 'right' : 'left')) : (isShortDesktop && sec.quadrant.includes('b') ? 'top' : 'center')
+                                        align: viewport.w < 1024 ? (sec.isFocused ? 'right' : 'center') : (isShortDesktop && sec.quadrant.includes('b') ? 'top' : 'center')
                                     }}
                                     isShortViewport={isShortDesktop}
                                     noFlyTransition={sec.isFocused && isNoFly}

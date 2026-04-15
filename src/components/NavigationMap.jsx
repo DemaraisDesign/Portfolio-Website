@@ -627,8 +627,11 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
                         fanCenterAngle = Math.atan2(sy - hy, sx - hx);
                     }
 
-                    const startAngle = fanCenterAngle - fanSpread / 2;
-                    const step = count > 1 ? fanSpread / (count - 1) : 0;
+                    // Use fixed step to match Screens section spacing (6 petals, PI/5 per step)
+                    const screensStep = Math.PI / 5;
+                    const step = count > 1 ? screensStep : 0;
+                    const totalArc = step * (count - 1);
+                    const startAngle = fanCenterAngle - totalArc / 2;
 
                     const petalAngle = startAngle + (step * i);
 

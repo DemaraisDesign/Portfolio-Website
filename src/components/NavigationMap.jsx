@@ -1277,7 +1277,7 @@ export default function NavigationMap({ closeMenu }) {
                                         return (isMobileViewport && !focusedId) ? (
                                             <div
                                                 key={`wrapper-${sp.id}-${sec.isFocused ? 'focus' : 'bg'}`}
-                                                style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none' }}
+                                                style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', opacity: selectedPetalData?.id === sp.id ? 0 : 1 }}
                                             >
                                                 {nodeContent}
                                             </div>

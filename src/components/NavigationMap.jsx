@@ -934,6 +934,8 @@ export default function NavigationMap({ closeMenu }) {
     const [focusedId, setFocusedId] = useState(null);
     const [animPhase, setAnimPhase] = useState(0);
     const [selectedPetalData, setSelectedPetalData] = useState(null); // mobile fly-to-cover animation
+    const [isReversing, setIsReversing] = useState(false);            // true while petal is flying back
+    const pendingPetalFn = React.useRef(null);                        // next petal to fly after reverse
     const isLaunched = animPhase >= 1;
     const isSettled = animPhase >= 2;
     const showLabels = animPhase >= 3;
@@ -1008,25 +1010,28 @@ export default function NavigationMap({ closeMenu }) {
         navigate("/");
     };
 
-    // Mobile-only: spring the tapped petal down to cover the section icon, then navigate
+    // Mobile-only: fly petal to section icon center and park it there.
+    // Tapping another petal reverses the current one first, then flies the new one.
     const handleMobilePetalClick = (sp, sec) => {
-        if (selectedPetalData?.id === sp.id) return; // prevent double-fire
-        const path = sp.link || sp.path || `/work/${sp.id}`;
-        setSelectedPetalData({
-            id: sp.id,
-            startX: sp.x, startY: sp.y, startSize: sp.size,
-            targetX: sec.x, targetY: sec.y, targetSize: sec.size,
-            img: sp.img, color: sp.color || sec.deep, path
-        });
-        // After the spring settles: navigate if unlocked, reset silently otherwise
-        setTimeout(() => {
-            setSelectedPetalData(null);
-            if (!getProject(sp.id)?.isConstruction && isProjectUnlocked(sp.id)) {
-                if (closeMenu) closeMenu();
-                navigate(path);
-            }
-            // Locked / construction: fly animation plays but no modal — handled elsewhere
-        }, 750);
+        if (selectedPetalData?.id === sp.id && !isReversing) return; // already parked here
+
+        const doFly = () => {
+            setIsReversing(false);
+            setSelectedPetalData({
+                id: sp.id,
+                startX: sp.x, startY: sp.y, startSize: sp.size,
+                targetX: sec.x, targetY: sec.y, targetSize: sec.size,
+                img: sp.img, color: sp.color || sec.deep
+            });
+        };
+
+        if (selectedPetalData && !isReversing) {
+            // Reverse the parked petal, then fly the new one
+            pendingPetalFn.current = doFly;
+            setIsReversing(true);
+        } else {
+            doFly();
+        }
     };
 
     const isShortDesktop = viewport.h < 680 && viewport.w >= 768;
@@ -1161,8 +1166,22 @@ export default function NavigationMap({ closeMenu }) {
                             y: selectedPetalData.startY - selectedPetalData.targetY,
                             scale: selectedPetalData.startSize / selectedPetalData.targetSize,
                         }}
-                        animate={{ x: 0, y: 0, scale: 1 }}
-                        transition={{ type: 'spring', stiffness: 260, damping: 16, mass: 0.9, delay: 0.15 }}
+                        animate={isReversing ? {
+                            x: selectedPetalData.startX - selectedPetalData.targetX,
+                            y: selectedPetalData.startY - selectedPetalData.targetY,
+                            scale: selectedPetalData.startSize / selectedPetalData.targetSize,
+                        } : { x: 0, y: 0, scale: 1 }}
+                        onAnimationComplete={() => {
+                            if (isReversing) {
+                                setSelectedPetalData(null);
+                                setIsReversing(false);
+                                if (pendingPetalFn.current) {
+                                    pendingPetalFn.current();
+                                    pendingPetalFn.current = null;
+                                }
+                            }
+                        }}
+                        transition={{ type: 'spring', stiffness: 260, damping: 16, mass: 0.9, delay: isReversing ? 0 : 0.15 }}
                         style={{
                             position: 'absolute',
                             top: selectedPetalData.targetY,
@@ -1274,7 +1293,13 @@ export default function NavigationMap({ closeMenu }) {
                                         return (isMobileViewport && !focusedId) ? (
                                             <div
                                                 key={`wrapper-${sp.id}-${sec.isFocused ? 'focus' : 'bg'}`}
-                                                style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', opacity: selectedPetalData?.id === sp.id ? 0 : 1 }}
+                                                style={{
+                                                    position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+                                                    pointerEvents: 'none',
+                                                    // Hide when flying away; fade back in during reversal
+                                                    opacity: (selectedPetalData?.id === sp.id && !isReversing) ? 0 : 1,
+                                                    transition: (selectedPetalData?.id === sp.id && isReversing) ? 'opacity 0.35s ease 0.25s' : 'none',
+                                                }}
                                             >
                                                 {nodeContent}
                                             </div>

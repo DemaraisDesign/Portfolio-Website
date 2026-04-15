@@ -702,8 +702,9 @@ const computeLayout = (w, h, focusedId, isLaunched = true, isParkedReady = false
                         }
 
                         // Add the vertical drop as the final resting point!
+                        const dropShift = sec.quadrant.includes('l') ? -40 : 40;
                         const verticalSpacing = 28;
-                        const finalX = sx;
+                        const finalX = sx + dropShift;
                         const finalY = sy + effectiveRadius + 18 + (dropRank * verticalSpacing);
 
                         const dxDrop = finalX - pathX[pathX.length - 1];

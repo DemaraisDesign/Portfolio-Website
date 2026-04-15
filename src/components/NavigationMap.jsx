@@ -783,21 +783,13 @@ const computeLayout = (w, h, focusedId, isLaunched = true, isParkedReady = false
             const q = activeSec.quadrant;
             let top, left, width, height;
             
-            if (q === 'tl') {
-                top = activeSec.y; left = activeSec.x;
-                width = clusterRight - activeSec.x;
-                height = clusterBottom - activeSec.y;
-            } else if (q === 'tr') {
+            if (q === 'tl' || q === 'tr') {
                 top = activeSec.y; left = clusterLeft;
-                width = activeSec.x - clusterLeft;
+                width = clusterRight - clusterLeft;
                 height = clusterBottom - activeSec.y;
-            } else if (q === 'bl') {
-                top = clusterTop; left = activeSec.x;
-                width = clusterRight - activeSec.x;
-                height = activeSec.y - clusterTop;
-            } else if (q === 'br') {
+            } else if (q === 'bl' || q === 'br') {
                 top = clusterTop; left = clusterLeft;
-                width = activeSec.x - clusterLeft;
+                width = clusterRight - clusterLeft;
                 height = activeSec.y - clusterTop;
             }
 
@@ -1007,7 +999,7 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                         }}
                         transition={{ 
                             type: 'spring', stiffness: 260, damping: 16, mass: 0.9, delay: 0.15,
-                            boxShadow: { duration: 0.4, ease: "easeInOut", delay: isParkedReady ? 0.85 : 0 }
+                            boxShadow: { duration: 0.6, ease: "easeOut", delay: isParkedReady ? 0.85 : 0 }
                         }}
                         style={{
                             position: 'absolute',
@@ -1319,6 +1311,28 @@ export default function NavigationMap({ closeMenu }) {
                 })}
             </svg>
 
+            {/* Dark Masking Box for Parked State */}
+            <AnimatePresence>
+                {layout.parkedBox && (
+                    <motion.div
+                        key="parked-mask-box"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.6, ease: "easeOut", delay: 0.3 }}
+                        style={{
+                            position: 'absolute',
+                            top: layout.parkedBox.top,
+                            left: layout.parkedBox.left,
+                            width: layout.parkedBox.width,
+                            height: layout.parkedBox.height,
+                            backgroundColor: layout.parkedBox.color || THEME.dark,
+                            borderRadius: '24px',
+                            zIndex: 5
+                        }}
+                    />
+                )}
+            </AnimatePresence>
 
             {/* Mobile petal overlays — both run simultaneously when switching */}
 

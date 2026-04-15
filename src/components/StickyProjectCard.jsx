@@ -188,6 +188,14 @@ const StickyProjectCard = ({
                     )}
                 </motion.div>
 
+                {/* Photo Credit specific to Surrija */}
+                {project.id === 'surrija' && (
+                    <div className="absolute bottom-3 right-4 lg:bottom-4 lg:right-6 z-20 pointer-events-none">
+                        <span className="text-[10px] md:text-xs italic text-white/70 font-outfit drop-shadow-md">
+                            Image by Samuel Jørgensen &amp; Tom Campbell
+                        </span>
+                    </div>
+                )}
             </div>
 
             {/* GRADIENT METER LINE - Full Width Bottom */}

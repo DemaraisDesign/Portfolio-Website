@@ -377,7 +377,7 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
 
     // Display position strictly matches computed origin
     let hx_display = hx;
-    let hy_display = hy;
+    let hy_display = w < 768 ? (h - (SIZES.home / 2) - 5) : hy;
 
     let activeX = cx;
     let activeY = visualCenterY;
@@ -415,7 +415,7 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
         hy = home_Target.y;
 
         hx_display = hx;
-        hy_display = hy;
+        hy_display = w < 768 ? (h - (SIZES.home / 2) - 5) : hy;
     }
 
     const sections = SECTIONS.map((sec) => {
@@ -631,8 +631,12 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
                     // tl (Stages) + bl (Screens): rightmost petal at 12 o'clock
                     // tr (Sounds) + br (Explorations): leftmost petal at 12 o'clock
                     const isLeftQuadrant = sec.quadrant === 'tl' || sec.quadrant === 'bl';
+                    
+                    // Only reverse mapping on mobile for Stages & Screens so data order matches 
+                    const visualIndex = (sec.id === 'stage' || sec.id === 'ux') ? (count - 1 - i) : i;
+                    
                     const anchorIdx = isLeftQuadrant ? count - 1 : 0;
-                    isAnchorPetal = i === anchorIdx;
+                    isAnchorPetal = visualIndex === anchorIdx;
 
                     // Variable step: wider gap around the anchor (big circle), tighter between small petals
                     const smallStep = Math.PI / 6;  // 30° between small petals
@@ -651,7 +655,7 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
                     const anchorAngleInFan = angles[anchorIdx];
                     const fanStart = (-Math.PI / 2) - anchorAngleInFan;
 
-                    const petalAngle = fanStart + angles[i];
+                    const petalAngle = fanStart + angles[visualIndex];
 
                     // Wider orbit radius for the anchor so it clears the section icon edge
                     const anchorOrbitRadius = (currentSectionSize / 2) + (SIZES.subPetalActive / 2);
@@ -706,7 +710,7 @@ const OrganicPath = React.memo(({ x1, y1, x2, y2, color, isDashed, isActive, wid
     );
 });
 
-const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, className = "", isChild, zIndex, showIcon, isFocused, isBg, isResizing, initialOpacity = 0, isDimmed, labelData, disableAnimation, isShortViewport, flipKey, flipDelay = 0, noFlyTransition = false, sizeDelay = 0 }) => {
+const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, className = "", isChild, zIndex, showIcon, isFocused, isBg, isResizing, initialOpacity = 0, isDimmed, labelData, disableAnimation, isShortViewport, flipKey, flipDelay = 0, noFlyTransition = false, sizeDelay = 0, alwaysShowLabel = false }) => {
     const { isProjectUnlocked } = usePasswordGate();
     const [hover, setHover] = useState(false);
     const [tapped, setTapped] = useState(false);
@@ -737,7 +741,7 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
     const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
     // On mobile with no section focused, isBg is null (not false), so we need the extra isMobile && !isBg check.
     // !isChild ensures sub-petal case study circles don't inherit this and show their label popups.
-    const isActiveLayout = isFocused || (isBg === false) || (isMobile && !isBg && !isChild);
+    const isActiveLayout = isFocused || (isBg === false) || (isMobile && !isBg && !isChild) || alwaysShowLabel;
     const isLabelVisible = showIcon && labelData && labelData.show && (isMobile ? isActiveLayout : (hover || tapped || isActiveLayout));
     const flyDelay = (isBg && isMobile) ? 0.3 : 0;
 
@@ -1053,7 +1057,7 @@ export default function NavigationMap({ closeMenu }) {
 
             {/* SVG Connector Lines for Grid View */}
             <svg style={{
-                position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 1,
+                position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 0,
                 overflow: 'visible',
                 opacity: isLaunched && !focusedId && viewport.w >= 768 ? 1 : 0,
                 transition: isResizing ? 'none' : 'opacity 0.8s ease 0.4s'
@@ -1222,17 +1226,7 @@ export default function NavigationMap({ closeMenu }) {
 
                 return (
                     <>
-                        <Node
-                            x={layout.home.x}
-                            y={layout.home.y}
-                            size={layout.home.size}
-                            color={THEME.dark} iconColor={THEME.white} icon={RoundedFilledHome}
-                            onClick={handleHomeClick} isFocused={!focusedId} showIcon={true}
-                            isResizing={isResizing} initialOpacity={1} zIndex={!focusedId ? 20 : 5}
-                            isShortViewport={isShortDesktop}
-                            disableAnimation={viewport.w < 768}
-                            flipKey={currentFlipKey} noFlyTransition={isNoFly} flipDelay={0.55 + (0.1 * 4)}
-                        />
+
 
                         {layout.sections.map((sec, secIdx) => (
                             <React.Fragment key={sec.id}>
@@ -1299,6 +1293,7 @@ export default function NavigationMap({ closeMenu }) {
                                                     labelData={isLargeUnfocused ? { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: ((isShortDesktop || (viewport.w >= 768 && viewport.w < 1024)) && sec.quadrant.includes('b')) ? 'top' : 'center', img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: showLabels } : { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: (isShortDesktop && sec.quadrant.includes('b')) ? 'top' : (viewport.w < 768 ? 'center' : sp.alignLabel), img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: (viewport.w < 768 && !focusedId) ? false : showLabels }}
                                                     isShortViewport={isShortDesktop || viewport.w < 1024}
                                                     noFlyTransition={isNoFly}
+                                                    alwaysShowLabel={isLargeUnfocused && !(isShortDesktop || viewport.w < 1024)}
                                                 />
                                             </div>
                                         );

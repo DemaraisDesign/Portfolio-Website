@@ -958,11 +958,14 @@ export default function NavigationMap({ closeMenu }) {
         if (!isLaunched) return;
 
         if (viewport.w < 768) {
-            // Mobile: always navigate directly to the section — no drill-down level
-            const section = SECTIONS.find(s => s.id === id);
-            if (section && section.link) {
-                if (closeMenu) closeMenu();
-                navigate(section.link);
+            if (focusedId === id) {
+                const section = SECTIONS.find(s => s.id === id);
+                if (section && section.link) {
+                    if (closeMenu) closeMenu();
+                    navigate(section.link);
+                }
+            } else {
+                setFocusedId(id);
             }
         } else {
             const section = SECTIONS.find(s => s.id === id);
@@ -1145,7 +1148,7 @@ export default function NavigationMap({ closeMenu }) {
                                     sizeDelay={viewport.w < 768 ? 0 : (sec.isFocused && focusedId ? 1.0 : (!focusedId ? secIdx * 0.15 : 0))}
                                 />
                                 <AnimatePresence mode="popLayout">
-                                    {(sec.isFocused || !focusedId) && viewport.w >= 768 && sec.subPetals.map((sp, idx) => {
+                                    {(sec.isFocused || !focusedId) && sec.subPetals.map((sp, idx) => {
                                         if (!sp.visible) return null;
 
                                         const isInitialLoadDelay = !isSettled; // Only show sub-petals when in Phase 2

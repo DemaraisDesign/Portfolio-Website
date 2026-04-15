@@ -628,31 +628,34 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
                         fanCenterAngle = Math.atan2(sy - hy, sx - hx);
                     }
 
-                    // Use fixed step to match Screens section spacing (6 petals, PI/5 per step)
-                    const screensStep = Math.PI / 5;
-                    const step = count > 1 ? screensStep : 0;
-                    const totalArc = step * (count - 1);
-
-                    // tl (Stages) + bl (Screens): rightmost petal at 12 o'clock → fan sweeps left
-                    // tr (Sounds) + br (Explorations): leftmost petal at 12 o'clock → fan sweeps right
+                    // tl (Stages) + bl (Screens): rightmost petal at 12 o'clock
+                    // tr (Sounds) + br (Explorations): leftmost petal at 12 o'clock
                     const isLeftQuadrant = sec.quadrant === 'tl' || sec.quadrant === 'bl';
-                    if (isLeftQuadrant) {
-                        fanCenterAngle = -Math.PI / 2 - totalArc / 2;
-                    } else {
-                        fanCenterAngle = -Math.PI / 2 + totalArc / 2;
-                    }
-
-                    // Anchor petal is the one at 12 o'clock (overrides the hoisted false)
                     const anchorIdx = isLeftQuadrant ? count - 1 : 0;
                     isAnchorPetal = i === anchorIdx;
 
-                    // Use a larger orbit radius for the anchor petal so it doesn't clip the section icon
+                    // Variable step: wider gap around the anchor (big circle), tighter between small petals
+                    const smallStep = Math.PI / 6;  // 30° between small petals
+                    const anchorGap = Math.PI / 3;  // 60° on either side of the anchor
+
+                    // Build cumulative angle array for all petals in this section
+                    const angles = [0];
+                    for (let j = 1; j < count; j++) {
+                        const isAnchorTransition =
+                            (isLeftQuadrant && j === count - 1) ||   // last petal IS the anchor
+                            (!isLeftQuadrant && j === 1);              // first petal IS the anchor (gap after it)
+                        angles.push(angles[j - 1] + (isAnchorTransition ? anchorGap : smallStep));
+                    }
+
+                    // Pin the anchor to exactly 12 o'clock (-PI/2), shift the whole fan accordingly
+                    const anchorAngleInFan = angles[anchorIdx];
+                    const fanStart = (-Math.PI / 2) - anchorAngleInFan;
+
+                    const petalAngle = fanStart + angles[i];
+
+                    // Wider orbit radius for the anchor so it clears the section icon edge
                     const anchorOrbitRadius = (currentSectionSize / 2) + (SIZES.subPetalActive / 2);
                     const effectiveRadius = isAnchorPetal ? anchorOrbitRadius : petalRestRadius;
-
-                    const startAngle = fanCenterAngle - totalArc / 2;
-
-                    const petalAngle = startAngle + (step * i);
 
                     cxChild = sx + Math.cos(petalAngle) * effectiveRadius;
                     cyChild = sy + Math.sin(petalAngle) * effectiveRadius;

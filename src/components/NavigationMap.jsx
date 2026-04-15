@@ -952,9 +952,16 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                             x: parkedData.startX - x,
                             y: parkedData.startY - y,
                             scale: parkedData.startSize / size,
+                            boxShadow: '0 0 0 5px rgba(247, 247, 247, 0)'
                         }}
-                        animate={{ x: 0, y: 0, scale: 1 }}
-                        transition={{ type: 'spring', stiffness: 260, damping: 16, mass: 0.9, delay: 0.15 }}
+                        animate={{ 
+                            x: 0, y: 0, scale: 1,
+                            boxShadow: isParkedReady ? `0 0 0 5px ${THEME.bg}` : '0 0 0 5px rgba(247, 247, 247, 0)'
+                        }}
+                        transition={{ 
+                            type: 'spring', stiffness: 260, damping: 16, mass: 0.9, delay: 0.15,
+                            boxShadow: { duration: 0.4, ease: "easeInOut", delay: isParkedReady ? 0.85 : 0 }
+                        }}
                         style={{
                             position: 'absolute',
                             top: '50%',
@@ -969,8 +976,7 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                             backgroundPosition: 'center',
                             backgroundColor: parkedData.color,
                             zIndex: 200,
-                            pointerEvents: 'none',
-                            boxShadow: 'none',
+                            pointerEvents: 'none'
                         }}
                     />
                 )}

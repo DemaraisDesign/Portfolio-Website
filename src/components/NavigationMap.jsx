@@ -715,14 +715,14 @@ const computeLayout = (w, h, focusedId, isLaunched = true, isParkedReady = false
                         
                         // Fake Spring Over-shoot (Bounce Down past final spot)
                         pathX.push(finalX);
-                        pathY.push(finalY + 5); 
-                        totalDist += 16; // Artificially slow time down for the spring extension
+                        pathY.push(finalY + 16); 
+                        totalDist += 120; // Massively inflate to allocate ~30% of the animation time to the stretch
                         dists.push(totalDist);
 
                         // Settle firmly back to final spot
                         pathX.push(finalX);
                         pathY.push(finalY);
-                        totalDist += 10; // Slow recoil
+                        totalDist += 80; // Allocate ~20% of the time to the sluggish recoil
                         dists.push(totalDist);
                         
                         const times = dists.map(d => totalDist > 0 ? d / totalDist : 0);

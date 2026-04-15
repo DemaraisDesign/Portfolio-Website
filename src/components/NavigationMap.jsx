@@ -276,7 +276,7 @@ const RoundedFilledHome = ({ color, size, ...props }) => (
     </div>
 );
 
-const StaticHome = (props) => <RoundedFilledHome {...props} />;
+// RoundedFilledHome used directly as StaticHome — passthrough wrapper removed
 
 const SECTIONS = [
     {
@@ -383,7 +383,7 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
     let activeY = visualCenterY;
 
     if (focusedId && isLaunched) {
-        const activeSec = SECTIONS.find(s => s.id === focusedId);
+        // focusedId is set, so the active section is guaranteed to exist
 
         // 1. Exact site-wide CSS padding values extracted from Navbar
         let paddingX = w >= 1024 ? 96 : (w >= 768 ? 48 : 36);
@@ -391,7 +391,7 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
         let paddingBottom = w < 768 ? -50 : -10; // Scooched even further down closer to the bottom edge; extra push on mobile
 
         // 2. Computed geometric limits
-        const activeRadius = activeSec.id === focusedId ? (SIZES.sectionActive / 2) : 55;
+        const activeRadius = SIZES.sectionActive / 2; // activeSec is always the focused section, so this is always sectionActive/2
         const orbitOffset = (w < 768 ? 15 : 35);
         const homeOrbitRadius = (SIZES.home / 2) + (SIZES.sectionBg / 2) + orbitOffset;
         const homeClusterRadius = homeOrbitRadius + (SIZES.sectionBg / 2);
@@ -422,11 +422,6 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
         const isFocused = sec.id === focusedId;
         const isBg = focusedId && !isFocused;
 
-        let angleBase = 0;
-        if (sec.quadrant === 'tl') angleBase = -Math.PI * 0.75;
-        if (sec.quadrant === 'tr') angleBase = -Math.PI * 0.25;
-        if (sec.quadrant === 'br') angleBase = Math.PI * 0.25;
-        if (sec.quadrant === 'bl') angleBase = Math.PI * 0.75;
 
         const dynamicLayoutAngle = Math.atan2(
             sec.quadrant.includes('b') ? newDy : -newDy,
@@ -568,25 +563,24 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
                         gridRow = -1; // Signal that this is orbit mode, not grid
                         gridCol = i;
                     } else {
-                        // ═══ DESKTOP GRID LAYOUT (≥1024px) ═══
-                        const isThreeColSector = true;
-                        const colSpacing = isThreeColSector ? 140 : 160;
+                        // ═══ DESKTOP GRID LAYOUT (≥1024px) — isThreeColSector is always true, constants inlined ═══
+                        const colSpacing = 140;
                         const rowSpacing = 144;
 
-                        const paddingFromIcon = isThreeColSector ? 60 : 120;
-                        const minPaddingFromEdge = w >= 1024 ? (isThreeColSector ? 68 : 116) : 40;
+                        const paddingFromIcon = 60;
+                        const minPaddingFromEdge = w >= 1024 ? 68 : 40;
 
                         const maxAvailableSpace = isLeft
                             ? sx - paddingFromIcon - minPaddingFromEdge
                             : w - sx - paddingFromIcon - minPaddingFromEdge;
 
                         let maxCols = 3;
-                        const spaceNeededFor3 = (2 * colSpacing) + (isThreeColSector ? 100 : 180);
+                        const spaceNeededFor3 = (2 * colSpacing) + 100; // always 3-col mode
 
                         if (maxAvailableSpace < spaceNeededFor3) maxCols = 2;
                         if (sec.children.length > 0 && sec.children.length < maxCols) maxCols = sec.children.length;
                         
-                        if (isThreeColSector) maxCols = 3;
+                        maxCols = 3; // always 3-col mode
 
                         gridRow = Math.floor(i / maxCols);
                         const col = i % maxCols;
@@ -660,7 +654,7 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
             };
         });
 
-        return { ...sec, x: sx, y: sy, isFocused, isBg, angle: angleBase, size: currentSectionSize, subPetals };
+        return { ...sec, x: sx, y: sy, isFocused, isBg, size: currentSectionSize, subPetals };
     });
 
     return { home: { x: hx_display, y: hy_display, size: SIZES.home }, sections };
@@ -746,7 +740,7 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
             <motion.div
                 key={flipKey || 'default'}
                 initial={flipKey ? { opacity: 0, rotateY: -90 } : false}
-                animate={flipKey ? { opacity: 1, rotateY: 0 } : { opacity: 1, rotateY: 0 }}
+                animate={{ opacity: 1, rotateY: 0 }}
                 whileHover={!disableAnimation ? { scale: 1.05 } : {}}
                 whileTap={!disableAnimation ? { scale: 0.95 } : {}}
                 transition={flipKey ? { delay: flipDelay, type: "spring", stiffness: 60, damping: 12, mass: 0.8 } : { type: "spring", stiffness: 400, damping: 25 }}
@@ -934,7 +928,7 @@ export default function NavigationMap({ closeMenu }) {
         window.addEventListener('resize', handleResize);
 
         const isMobileDevice = window.innerWidth < 768;
-        const t1 = setTimeout(() => setAnimPhase(1), isMobileDevice ? 950 : 950);
+        const t1 = setTimeout(() => setAnimPhase(1), 950); // same for mobile and desktop
         const t2 = setTimeout(() => setAnimPhase(2), isMobileDevice ? 1100 : 1950);
         const t3 = setTimeout(() => setAnimPhase(3), isMobileDevice ? 1200 : 2350);
         const t4 = setTimeout(() => setAnimPhase(4), isMobileDevice ? 1300 : 2650);
@@ -1119,7 +1113,7 @@ export default function NavigationMap({ closeMenu }) {
                             x={layout.home.x}
                             y={layout.home.y}
                             size={layout.home.size}
-                            color={THEME.dark} iconColor={THEME.white} icon={StaticHome}
+                            color={THEME.dark} iconColor={THEME.white} icon={RoundedFilledHome}
                             onClick={handleHomeClick} isFocused={!focusedId} showIcon={true}
                             isResizing={isResizing} initialOpacity={1} zIndex={!focusedId ? 20 : 5}
                             isShortViewport={isShortDesktop}

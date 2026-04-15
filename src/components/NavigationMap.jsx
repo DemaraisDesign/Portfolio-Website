@@ -1013,7 +1013,6 @@ export default function NavigationMap({ closeMenu }) {
         navigate("/");
     };
 
-    // Mobile-only: fly new petal forward AND reverse old one simultaneously
     const handleMobilePetalClick = (sp, sec) => {
         if (parkedPetalData?.id === sp.id) return; // already parked here
 
@@ -1025,7 +1024,8 @@ export default function NavigationMap({ closeMenu }) {
             id: sp.id,
             startX: sp.x, startY: sp.y, startSize: sp.size,
             targetX: sec.x, targetY: sec.y, targetSize: sec.size,
-            img: sp.img, color: sp.color || sec.deep
+            img: sp.img, color: sp.color || sec.deep,
+            contain: sp.contain
         });
     };
 
@@ -1178,7 +1178,7 @@ export default function NavigationMap({ closeMenu }) {
                             backgroundImage: outgoingPetalData.img ? `url(${outgoingPetalData.img})` : 'none',
                             backgroundSize: 'cover',
                             backgroundPosition: 'center',
-                            backgroundColor: outgoingPetalData.color,
+                            backgroundColor: (outgoingPetalData.img && outgoingPetalData.contain) ? THEME.white : outgoingPetalData.color,
                             zIndex: 199,
                             pointerEvents: 'none',
                             boxShadow: '0 8px 32px rgba(0,0,0,0.25)',
@@ -1211,7 +1211,7 @@ export default function NavigationMap({ closeMenu }) {
                             backgroundImage: parkedPetalData.img ? `url(${parkedPetalData.img})` : 'none',
                             backgroundSize: 'cover',
                             backgroundPosition: 'center',
-                            backgroundColor: parkedPetalData.color,
+                            backgroundColor: (parkedPetalData.img && parkedPetalData.contain) ? THEME.white : parkedPetalData.color,
                             zIndex: 200,
                             pointerEvents: 'none',
                             boxShadow: '0 8px 32px rgba(0,0,0,0.25)',

@@ -341,11 +341,11 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
     const isSmallMobile = w <= 430 || h <= 430;
 
     const SIZES = {
-        home: (focusedId || (isLaunched && w < 768)) ? 60 : (isLaunched && w >= 768 ? 55 : 110),
+        home: (focusedId || (isLaunched && w < 1024)) ? 60 : (isLaunched && w >= 1024 ? 55 : 110),
         sectionActive: isSmallMobile ? 80 : 110,
         sectionBg: focusedId ? 35 : 110, // Always 110 unless minimized as background nodes
         subPetalActive: 55,
-        subPetalDefault: w >= 768 ? 55 : 14,
+        subPetalDefault: w >= 1024 ? 55 : 14,
         subPetalBg: 10,
     };
 
@@ -1182,9 +1182,9 @@ export default function NavigationMap({ closeMenu }) {
 
             {/* Mobile petal overlays — both run simultaneously when switching */}
 
-            {/* Outgoing: parked petal springs back to its fan position */}
+            {/* Outgoing petal flies back from section to its original position before disappearing */}
             <AnimatePresence>
-                {outgoingPetalData && viewport.w < 768 && (
+                {outgoingPetalData && viewport.w < 1024 && (
                     <motion.div
                         key={`petal-out-${outgoingPetalData.id}`}
                         initial={{ x: 0, y: 0, scale: 1 }}
@@ -1244,7 +1244,7 @@ export default function NavigationMap({ closeMenu }) {
                                         desc: sec.desc,
                                         subDesc: "Case Studies",
                                         show: showLabels,
-                                        align: viewport.w < 768 ? (sec.isFocused ? 'right' : 'center') : (isShortDesktop && sec.quadrant.includes('b') ? 'top' : 'center')
+                                        align: viewport.w < 1024 ? (sec.isFocused ? 'right' : 'center') : (isShortDesktop && sec.quadrant.includes('b') ? 'top' : 'center')
                                     }}
                                     isShortViewport={isShortDesktop || (viewport.w >= 768 && viewport.w < 1024)}
                                     noFlyTransition={sec.isFocused && isNoFly}

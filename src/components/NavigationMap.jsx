@@ -1162,7 +1162,7 @@ export default function NavigationMap({ closeMenu }) {
                             scale: selectedPetalData.startSize / selectedPetalData.targetSize,
                         }}
                         animate={{ x: 0, y: 0, scale: 1 }}
-                        transition={{ type: 'spring', stiffness: 260, damping: 16, mass: 0.9 }}
+                        transition={{ type: 'spring', stiffness: 260, damping: 16, mass: 0.9, delay: 0.15 }}
                         style={{
                             position: 'absolute',
                             top: selectedPetalData.targetY,

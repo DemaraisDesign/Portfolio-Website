@@ -779,7 +779,7 @@ const computeLayout = (w, h, focusedId, isLaunched = true, isParkedReady = false
             const clusterLeft = minX - 70;
             const clusterRight = maxX + 70;
             const clusterTop = minY - 40;
-            const clusterBottom = maxY + (w < 768 ? 180 : 100);
+            const clusterBottom = maxY + (w < 768 ? 110 : 60);
             
             const q = activeSec.quadrant;
             let top, left, width, height;

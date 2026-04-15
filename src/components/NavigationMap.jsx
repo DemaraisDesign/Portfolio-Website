@@ -673,23 +673,31 @@ const computeLayout = (w, h, focusedId, isLaunched = true, isParkedReady = false
 
                         const numWp = 6;
                         const startAng = petalAngle;
-                        // To ensure counter-clockwise sweeping in a Y-down canvas, the angle must strictly decrease.
-                        // We find the first representation of 6 o'clock (Math.PI / 2) that is numerically LESS than the start angle.
                         let targetAng = Math.PI / 2;
                         while (targetAng > startAng) {
                             targetAng -= Math.PI * 2;
                         }
                         const angleDiff = targetAng - startAng;
 
-                        const pathX = [];
-                        const pathY = [];
+                        const pathX = [sx + Math.cos(startAng) * effectiveRadius];
+                        const pathY = [sy + Math.sin(startAng) * effectiveRadius];
+                        const dists = [0];
+                        let totalDist = 0;
 
-                        // Interpolate 6 points strictly along the counter-clockwise orbital curve
-                        for (let step = 0; step <= numWp; step++) {
+                        // Interpolate points strictly along the counter-clockwise orbital curve
+                        for (let step = 1; step <= numWp; step++) {
                              const progress = step / numWp;
                              const intAngle = startAng + (angleDiff * progress);
-                             pathX.push(sx + Math.cos(intAngle) * effectiveRadius);
-                             pathY.push(sy + Math.sin(intAngle) * effectiveRadius);
+                             const nx = sx + Math.cos(intAngle) * effectiveRadius;
+                             const ny = sy + Math.sin(intAngle) * effectiveRadius;
+                             
+                             const dx = nx - pathX[pathX.length - 1];
+                             const dy = ny - pathY[pathY.length - 1];
+                             totalDist += Math.sqrt(dx * dx + dy * dy);
+                             
+                             pathX.push(nx);
+                             pathY.push(ny);
+                             dists.push(totalDist);
                         }
 
                         // Add the vertical drop as the final resting point!
@@ -697,14 +705,21 @@ const computeLayout = (w, h, focusedId, isLaunched = true, isParkedReady = false
                         const finalX = sx;
                         const finalY = sy + effectiveRadius + 18 + (dropRank * verticalSpacing);
 
+                        const dx = finalX - pathX[pathX.length - 1];
+                        const dy = finalY - pathY[pathY.length - 1];
+                        totalDist += Math.sqrt(dx * dx + dy * dy);
+
                         pathX.push(finalX);
                         pathY.push(finalY);
+                        dists.push(totalDist);
+                        
+                        const times = dists.map(d => totalDist > 0 ? d / totalDist : 0);
                         
                         // Update final logical coords so hover/hitboxes match reality
                         cxChild = finalX;
                         cyChild = finalY;
 
-                        motionPath = { x: pathX, y: pathY, delay: dropRank * 0.08 };
+                        motionPath = { x: pathX, y: pathY, delay: dropRank * 0.08, times };
                     }
                 }
             }
@@ -800,7 +815,7 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
             onFocus={() => setHover(true)}
             onBlur={handleMouseLeave}
             animate={motionPath ? { top: motionPath.y, left: motionPath.x } : { top: y, left: x }}
-            transition={motionPath ? { top: { duration: 0.6, ease: "easeInOut", delay: motionPath.delay }, left: { duration: 0.6, ease: "easeInOut", delay: motionPath.delay } } : undefined}
+            transition={motionPath ? { top: { duration: 0.6, ease: "linear", delay: motionPath.delay, times: motionPath.times }, left: { duration: 0.6, ease: "linear", delay: motionPath.delay, times: motionPath.times } } : undefined}
             style={{
                 position: 'absolute',
                 top: motionPath ? undefined : y,

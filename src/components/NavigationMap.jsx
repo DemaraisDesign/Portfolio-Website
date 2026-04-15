@@ -710,7 +710,7 @@ const OrganicPath = React.memo(({ x1, y1, x2, y2, color, isDashed, isActive, wid
     );
 });
 
-const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, className = "", isChild, zIndex, showIcon, isFocused, isBg, isResizing, initialOpacity = 0, isDimmed, labelData, disableAnimation, isShortViewport, flipKey, flipDelay = 0, noFlyTransition = false, sizeDelay = 0, alwaysShowLabel = false }) => {
+const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, className = "", isChild, zIndex, showIcon, isFocused, isBg, isResizing, initialOpacity = 0, isDimmed, labelData, disableAnimation, isShortViewport, flipKey, flipDelay = 0, noFlyTransition = false, sizeDelay = 0, alwaysShowLabel = false, parkedData }) => {
     const { isProjectUnlocked } = usePasswordGate();
     const [hover, setHover] = useState(false);
     const [tapped, setTapped] = useState(false);
@@ -869,6 +869,39 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                     </div>
                 )}
             </motion.div>
+
+            {/* Incoming: new petal flies to section icon center and parks */}
+            <AnimatePresence>
+                {parkedData && (
+                    <motion.div
+                        key={`petal-in-${parkedData.id}`}
+                        initial={{
+                            x: parkedData.startX - x,
+                            y: parkedData.startY - y,
+                            scale: parkedData.startSize / size,
+                        }}
+                        animate={{ x: 0, y: 0, scale: 1 }}
+                        transition={{ type: 'spring', stiffness: 260, damping: 16, mass: 0.9, delay: 0.15 }}
+                        style={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            width: size,
+                            height: size,
+                            marginTop: -size / 2,
+                            marginLeft: -size / 2,
+                            borderRadius: '50%',
+                            backgroundImage: parkedData.img ? `url(${parkedData.img})` : 'none',
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            backgroundColor: parkedData.color,
+                            zIndex: 200,
+                            pointerEvents: 'none',
+                            boxShadow: '0 8px 32px rgba(0,0,0,0.25)',
+                        }}
+                    />
+                )}
+            </AnimatePresence>
 
             {labelData && (
                 <div style={{
@@ -1183,46 +1216,7 @@ export default function NavigationMap({ closeMenu }) {
                 )}
             </AnimatePresence>
 
-            {/* Incoming: new petal flies to section icon center and parks */}
-            <AnimatePresence>
-                {parkedPetalData && viewport.w < 768 && (() => {
-                    // Find the section that owns this petal to track its live layout coordinates during browser resize
-                    const parentSec = layout.sections.find(s => s.children && s.children.some(c => c.id === parkedPetalData.id));
-                    const liveX = parentSec ? parentSec.x : parkedPetalData.targetX;
-                    const liveY = parentSec ? parentSec.y : parkedPetalData.targetY;
-                    const liveSize = parentSec ? parentSec.size : parkedPetalData.targetSize;
-
-                    return (
-                        <motion.div
-                            key={`petal-in-${parkedPetalData.id}`}
-                            initial={{
-                                x: parkedPetalData.startX - liveX,
-                                y: parkedPetalData.startY - liveY,
-                                scale: parkedPetalData.startSize / liveSize,
-                            }}
-                            animate={{ x: 0, y: 0, scale: 1 }}
-                            transition={{ type: 'spring', stiffness: 260, damping: 16, mass: 0.9, delay: 0.15 }}
-                            style={{
-                                position: 'absolute',
-                                top: liveY,
-                                left: liveX,
-                                width: liveSize,
-                                height: liveSize,
-                                marginTop: -liveSize / 2,
-                                marginLeft: -liveSize / 2,
-                                borderRadius: '50%',
-                                backgroundImage: parkedPetalData.img ? `url(${parkedPetalData.img})` : 'none',
-                                backgroundSize: 'cover',
-                                backgroundPosition: 'center',
-                                backgroundColor: parkedPetalData.color,
-                                zIndex: 200,
-                                pointerEvents: 'none',
-                                boxShadow: '0 8px 32px rgba(0,0,0,0.25)',
-                            }}
-                        />
-                    );
-                })()}
-            </AnimatePresence>
+            {/* Incoming petal animation has been moved directly inside the Node component so it is structurally grouped with the animated icon */}
 
             {(() => {
                 const currentFlipKey = focusedId ? `flip-${focusedId}` : null;
@@ -1257,6 +1251,7 @@ export default function NavigationMap({ closeMenu }) {
                                     flipKey={sec.isFocused ? currentFlipKey : null}
                                     flipDelay={viewport.w < 768 ? 0 : (sec.isFocused && focusedId ? 1.0 : (!focusedId ? secIdx * 0.15 : 0))}
                                     sizeDelay={viewport.w < 768 ? 0 : (sec.isFocused && focusedId ? 1.0 : (!focusedId ? secIdx * 0.15 : 0))}
+                                    parkedData={(viewport.w < 768 && parkedPetalData?.id && sec.children && sec.children.some(c => c.id === parkedPetalData.id)) ? parkedPetalData : null}
                                 />
                                 <AnimatePresence mode="popLayout">
                                     {(sec.isFocused || !focusedId) && sec.subPetals.map((sp, idx) => {

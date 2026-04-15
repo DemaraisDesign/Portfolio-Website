@@ -933,6 +933,7 @@ export default function NavigationMap({ closeMenu }) {
     const { requestConstructionAccess } = useConstructionGate();
     const [focusedId, setFocusedId] = useState(null);
     const [animPhase, setAnimPhase] = useState(0);
+    const [selectedPetalData, setSelectedPetalData] = useState(null); // mobile fly-to-cover animation
     const isLaunched = animPhase >= 1;
     const isSettled = animPhase >= 2;
     const showLabels = animPhase >= 3;
@@ -1005,6 +1006,30 @@ export default function NavigationMap({ closeMenu }) {
         if (!isLaunched) return;
         if (closeMenu) closeMenu();
         navigate("/");
+    };
+
+    // Mobile-only: spring the tapped petal down to cover the section icon, then navigate
+    const handleMobilePetalClick = (sp, sec) => {
+        if (selectedPetalData?.id === sp.id) return; // prevent double-fire
+        const path = sp.link || sp.path || `/work/${sp.id}`;
+        setSelectedPetalData({
+            id: sp.id,
+            startX: sp.x, startY: sp.y, startSize: sp.size,
+            targetX: sec.x, targetY: sec.y, targetSize: sec.size,
+            img: sp.img, color: sp.color || sec.deep, path
+        });
+        // Navigate after the spring settles
+        setTimeout(() => {
+            setSelectedPetalData(null);
+            if (getProject(sp.id)?.isConstruction) {
+                requestConstructionAccess(path);
+            } else if (isProjectUnlocked(sp.id)) {
+                if (closeMenu) closeMenu();
+                navigate(path);
+            } else {
+                requestAccess(path);
+            }
+        }, 750);
     };
 
     const isShortDesktop = viewport.h < 680 && viewport.w >= 768;
@@ -1128,6 +1153,40 @@ export default function NavigationMap({ closeMenu }) {
                 })}
             </svg>
 
+
+            {/* Mobile petal fly-to-cover overlay */}
+            <AnimatePresence>
+                {selectedPetalData && viewport.w < 768 && (
+                    <motion.div
+                        key={`petal-fly-${selectedPetalData.id}`}
+                        initial={{
+                            x: selectedPetalData.startX - selectedPetalData.targetX,
+                            y: selectedPetalData.startY - selectedPetalData.targetY,
+                            scale: selectedPetalData.startSize / selectedPetalData.targetSize,
+                        }}
+                        animate={{ x: 0, y: 0, scale: 1 }}
+                        transition={{ type: 'spring', stiffness: 260, damping: 16, mass: 0.9 }}
+                        style={{
+                            position: 'absolute',
+                            top: selectedPetalData.targetY,
+                            left: selectedPetalData.targetX,
+                            width: selectedPetalData.targetSize,
+                            height: selectedPetalData.targetSize,
+                            marginTop: -selectedPetalData.targetSize / 2,
+                            marginLeft: -selectedPetalData.targetSize / 2,
+                            borderRadius: '50%',
+                            backgroundImage: selectedPetalData.img ? `url(${selectedPetalData.img})` : 'none',
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            backgroundColor: selectedPetalData.color,
+                            zIndex: 200,
+                            pointerEvents: 'none',
+                            boxShadow: '0 8px 32px rgba(0,0,0,0.25)',
+                        }}
+                    />
+                )}
+            </AnimatePresence>
+
             {(() => {
                 const currentFlipKey = focusedId ? `flip-${focusedId}` : null;
                 const isNoFly = !!focusedId;
@@ -1189,14 +1248,18 @@ export default function NavigationMap({ closeMenu }) {
                                                     x={sp.x} y={sp.y} size={sp.size}
                                                     color={sp.color} ringColor={sp.parentColor} iconColor={THEME.white}
                                                     onClick={() => {
-                                                        const path = sp.link || sp.path || `/work/${sp.id}`;
-                                                        if (getProject(sp.id)?.isConstruction) {
-                                                            requestConstructionAccess(path);
-                                                        } else if (isProjectUnlocked(sp.id)) {
-                                                            if (closeMenu) closeMenu();
-                                                            navigate(path);
+                                                        if (viewport.w < 768 && !focusedId) {
+                                                            handleMobilePetalClick(sp, sec);
                                                         } else {
-                                                            requestAccess(path);
+                                                            const path = sp.link || sp.path || `/work/${sp.id}`;
+                                                            if (getProject(sp.id)?.isConstruction) {
+                                                                requestConstructionAccess(path);
+                                                            } else if (isProjectUnlocked(sp.id)) {
+                                                                if (closeMenu) closeMenu();
+                                                                navigate(path);
+                                                            } else {
+                                                                requestAccess(path);
+                                                            }
                                                         }
                                                     }}
                                                     className={sec.isFocused || isLargeUnfocused ? "depth-active" : ""}

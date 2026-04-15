@@ -10,7 +10,7 @@ export const PROJECTS = [
     roles: "Leadership, Design & Performance",
     discipline: "stage",
     themeColor: BRAND_COLORS.stageDeep,
-    img: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1776264147/coeuragelogocircle_acjgsx.png", // Hamburger thumbnail
+    img: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1776264618/coeuragelogocircle_acjgsx.png", // Hamburger thumbnail
     heroImg: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1774387746/FAILURE-20150716-0473_CLEAR_ndi91w.jpg", // Case study hero
     desc: "My contributions to a nationally recognized theatre company.",
     type: "single",

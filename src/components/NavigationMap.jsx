@@ -705,12 +705,24 @@ const computeLayout = (w, h, focusedId, isLaunched = true, isParkedReady = false
                         const finalX = sx;
                         const finalY = sy + effectiveRadius + 18 + (dropRank * verticalSpacing);
 
-                        const dx = finalX - pathX[pathX.length - 1];
-                        const dy = finalY - pathY[pathY.length - 1];
-                        totalDist += Math.sqrt(dx * dx + dy * dy);
+                        const dxDrop = finalX - pathX[pathX.length - 1];
+                        const dyDrop = finalY - pathY[pathY.length - 1];
+                        totalDist += Math.sqrt(dxDrop * dxDrop + dyDrop * dyDrop);
 
                         pathX.push(finalX);
                         pathY.push(finalY);
+                        dists.push(totalDist);
+                        
+                        // Fake Spring Over-shoot (Bounce Down past final spot)
+                        pathX.push(finalX);
+                        pathY.push(finalY + 5); 
+                        totalDist += 16; // Artificially slow time down for the spring extension
+                        dists.push(totalDist);
+
+                        // Settle firmly back to final spot
+                        pathX.push(finalX);
+                        pathY.push(finalY);
+                        totalDist += 10; // Slow recoil
                         dists.push(totalDist);
                         
                         const times = dists.map(d => totalDist > 0 ? d / totalDist : 0);

@@ -1302,7 +1302,7 @@ export default function NavigationMap({ closeMenu }) {
                                         title: sec.label,
                                         desc: sec.desc,
                                         subDesc: "Case Studies",
-                                        show: showLabels,
+                                        show: showLabels && !isParkedReady,
                                         align: viewport.w < 1024 ? (sec.isFocused ? 'right' : 'center') : (isShortDesktop && sec.quadrant.includes('b') ? 'top' : 'center')
                                     }}
                                     isShortViewport={isShortDesktop}

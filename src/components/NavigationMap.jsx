@@ -766,7 +766,7 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 cursor: onClick ? 'pointer' : 'default',
                 perspective: '1000px',
-                transition: isResizing ? 'none' : `${noFlyTransition ? '' : `top 1.0s cubic-bezier(0.25, 1, 0.5, 1) ${flyDelay}s, left 1.0s cubic-bezier(0.25, 1, 0.5, 1) ${flyDelay}s, `}width 0.8s cubic-bezier(0.25, 1, 0.5, 1) ${sizeDelay}s, height 0.8s cubic-bezier(0.25, 1, 0.5, 1) ${sizeDelay}s, opacity 0.4s ease`
+                transition: isResizing ? 'none' : `${noFlyTransition ? '' : `top 1.0s cubic-bezier(0.25, 1, 0.5, 1) ${flyDelay}s, left 1.0s cubic-bezier(0.25, 1, 0.5, 1) ${flyDelay}s, `}width 0.8s cubic-bezier(0.25, 1, 0.5, 1) ${sizeDelay}s, height 0.8s cubic-bezier(0.25, 1, 0.5, 1) ${sizeDelay}s, opacity 0.2s ease`
             }}
         >
             <motion.div
@@ -1069,7 +1069,7 @@ export default function NavigationMap({ closeMenu }) {
         });
 
         if (window.parkTimer) clearTimeout(window.parkTimer);
-        window.parkTimer = setTimeout(() => setIsParkedReady(true), 400);
+        window.parkTimer = setTimeout(() => setIsParkedReady(true), 200);
     };
 
     const isShortDesktop = viewport.h < 680 && viewport.w >= 768;
@@ -1103,7 +1103,7 @@ export default function NavigationMap({ closeMenu }) {
                 position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 0,
                 overflow: 'visible',
                 opacity: isLaunched && !focusedId && viewport.w >= 768 && !isParkedReady && !parkedPetalData ? 1 : 0,
-                transition: isResizing ? 'none' : 'opacity 0.4s ease'
+                transition: isResizing ? 'none' : 'opacity 0.2s ease'
             }}>
                 {layout.sections.map(sec => {
                     const isLeft = sec.quadrant.includes('l');

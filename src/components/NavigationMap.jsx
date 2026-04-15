@@ -657,8 +657,8 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
 
                     const petalAngle = fanStart + angles[visualIndex];
 
-                    // Wider orbit radius for the anchor so it clears the section icon edge
-                    const anchorOrbitRadius = (currentSectionSize / 2) + (SIZES.subPetalActive / 2);
+                    // Wider orbit radius for the anchor so it clears the section icon edge + requested 5px padding
+                    const anchorOrbitRadius = (currentSectionSize / 2) + (SIZES.subPetalActive / 2) + (viewport.w < 768 ? 5 : 0);
                     const effectiveRadius = isAnchorPetal ? anchorOrbitRadius : petalRestRadius;
 
                     cxChild = sx + Math.cos(petalAngle) * effectiveRadius;

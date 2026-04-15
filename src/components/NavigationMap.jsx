@@ -784,13 +784,21 @@ const computeLayout = (w, h, focusedId, isLaunched = true, isParkedReady = false
             const q = activeSec.quadrant;
             let top, left, width, height;
             
-            if (q === 'tl' || q === 'tr') {
-                top = activeSec.y; left = clusterLeft;
-                width = clusterRight - clusterLeft;
+            if (q === 'tl') {
+                top = activeSec.y; left = activeSec.x;
+                width = clusterRight - activeSec.x;
                 height = clusterBottom - activeSec.y;
-            } else if (q === 'bl' || q === 'br') {
+            } else if (q === 'tr') {
+                top = activeSec.y; left = clusterLeft;
+                width = activeSec.x - clusterLeft;
+                height = clusterBottom - activeSec.y;
+            } else if (q === 'bl') {
+                top = clusterTop; left = activeSec.x;
+                width = clusterRight - activeSec.x;
+                height = activeSec.y - clusterTop;
+            } else if (q === 'br') {
                 top = clusterTop; left = clusterLeft;
-                width = clusterRight - clusterLeft;
+                width = activeSec.x - clusterLeft;
                 height = activeSec.y - clusterTop;
             }
 

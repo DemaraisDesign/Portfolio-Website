@@ -333,7 +333,7 @@ const SECTIONS = [
 // ═══════════════════════════════════════════════════
 //  SMART LAYOUT ENGINE
 // ═══════════════════════════════════════════════════
-const computeLayout = (w, h, focusedId, isLaunched) => {
+const computeLayout = (w, h, focusedId, isLaunched = true, isParkedReady = false, parkedPetalData = null) => {
     const cx = w / 2;
     const cy = h / 2;
     const minDim = Math.min(w, h);
@@ -663,6 +663,45 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
 
                     cxChild = sx + Math.cos(petalAngle) * effectiveRadius;
                     cyChild = sy + Math.sin(petalAngle) * effectiveRadius;
+
+                    let motionPath = null;
+                    if (isParkedReady && parkedPetalData?.parentId === sec.id && !isAnchorPetal) {
+                        // We need the dot's sorted index to stagger its height down the tail.
+                        let dropRank = 0;
+                        if (visualIndex < anchorIdx) dropRank = visualIndex;
+                        else if (visualIndex > anchorIdx) dropRank = visualIndex - 1;
+
+                        const numWp = 6;
+                        const startAng = petalAngle;
+                        // Target angle is 6 o'clock
+                        const targetAng = Math.PI / 2;
+                        const angleDiff = targetAng - startAng;
+
+                        const pathX = [];
+                        const pathY = [];
+
+                        // Interpolate 6 points strictly along the orbital curve
+                        for (let step = 0; step <= numWp; step++) {
+                             const progress = step / numWp;
+                             const intAngle = startAng + (angleDiff * progress);
+                             pathX.push(sx + Math.cos(intAngle) * effectiveRadius);
+                             pathY.push(sy + Math.sin(intAngle) * effectiveRadius);
+                        }
+
+                        // Add the vertical drop as the final resting point!
+                        const verticalSpacing = 28;
+                        const finalX = sx;
+                        const finalY = sy + effectiveRadius + 18 + (dropRank * verticalSpacing);
+
+                        pathX.push(finalX);
+                        pathY.push(finalY);
+                        
+                        // Update final logical coords so hover/hitboxes match reality
+                        cxChild = finalX;
+                        cyChild = finalY;
+
+                        motionPath = { x: pathX, y: pathY, delay: dropRank * 0.08 };
+                    }
                 }
             }
 
@@ -680,7 +719,8 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
                 img: child.img,
                 isAnchor: isAnchorPetal,
                 gridRow: gridRow,
-                gridCol: gridCol
+                gridCol: gridCol,
+                motionPath: motionPath
             };
         });
 
@@ -710,7 +750,7 @@ const OrganicPath = React.memo(({ x1, y1, x2, y2, color, isDashed, isActive, wid
     );
 });
 
-const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, className = "", isChild, zIndex, showIcon, isFocused, isBg, isResizing, initialOpacity = 0, isDimmed, labelData, disableAnimation, isShortViewport, flipKey, flipDelay = 0, noFlyTransition = false, sizeDelay = 0, alwaysShowLabel = false, parkedData }) => {
+const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, className = "", isChild, zIndex, showIcon, isFocused, isBg, isResizing, initialOpacity = 0, isDimmed, labelData, disableAnimation, isShortViewport, flipKey, flipDelay = 0, noFlyTransition = false, sizeDelay = 0, alwaysShowLabel = false, parkedData, motionPath }) => {
     const { isProjectUnlocked } = usePasswordGate();
     const [hover, setHover] = useState(false);
     const [tapped, setTapped] = useState(false);
@@ -746,7 +786,7 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
     const flyDelay = (isBg && isMobile) ? 0.3 : 0;
 
     return (
-        <button
+        <motion.button
             type="button"
             aria-label={labelData ? labelData.text : "Navigation Node"}
             className={`node-interactive ${className} group`}
@@ -755,10 +795,12 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
             onMouseLeave={handleMouseLeave}
             onFocus={() => setHover(true)}
             onBlur={handleMouseLeave}
+            animate={motionPath ? { top: motionPath.y, left: motionPath.x } : { top: y, left: x }}
+            transition={motionPath ? { top: { duration: 0.6, ease: "easeInOut", delay: motionPath.delay }, left: { duration: 0.6, ease: "easeInOut", delay: motionPath.delay } } : undefined}
             style={{
                 position: 'absolute',
-                top: y,
-                left: x,
+                top: motionPath ? undefined : y,
+                left: motionPath ? undefined : x,
                 width: size,
                 height: size,
                 opacity: initialOpacity * (isDimmed ? 0.25 : 1.0),
@@ -766,7 +808,7 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 cursor: onClick ? 'pointer' : 'default',
                 perspective: '1000px',
-                transition: isResizing ? 'none' : `${noFlyTransition ? '' : `top 1.0s cubic-bezier(0.25, 1, 0.5, 1) ${flyDelay}s, left 1.0s cubic-bezier(0.25, 1, 0.5, 1) ${flyDelay}s, `}width 0.8s cubic-bezier(0.25, 1, 0.5, 1) ${sizeDelay}s, height 0.8s cubic-bezier(0.25, 1, 0.5, 1) ${sizeDelay}s, opacity 0.2s ease`
+                transition: motionPath ? `width 0.8s cubic-bezier(0.25, 1, 0.5, 1) ${sizeDelay}s, height 0.8s cubic-bezier(0.25, 1, 0.5, 1) ${sizeDelay}s, opacity 0.2s ease` : (isResizing ? 'none' : `${noFlyTransition ? '' : `top 1.0s cubic-bezier(0.25, 1, 0.5, 1) ${flyDelay}s, left 1.0s cubic-bezier(0.25, 1, 0.5, 1) ${flyDelay}s, `}width 0.8s cubic-bezier(0.25, 1, 0.5, 1) ${sizeDelay}s, height 0.8s cubic-bezier(0.25, 1, 0.5, 1) ${sizeDelay}s, opacity 0.2s ease`)
             }}
         >
             <motion.div
@@ -951,7 +993,7 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                     </div>
                 </div>
             )}
-        </button>
+        </motion.button>
     );
 };
 
@@ -1014,8 +1056,8 @@ export default function NavigationMap({ closeMenu }) {
     }, [viewport.w, focusedId]);
 
     const layout = useMemo(() =>
-        computeLayout(viewport.w, viewport.h, focusedId, isLaunched),
-        [viewport, focusedId, isLaunched]
+        computeLayout(viewport.w, viewport.h, focusedId, isLaunched, isParkedReady, parkedPetalData),
+        [viewport, focusedId, isLaunched, isParkedReady, parkedPetalData]
     );
 
     const handleSectionClick = (id) => {
@@ -1307,6 +1349,7 @@ export default function NavigationMap({ closeMenu }) {
                                                     showIcon={isSettled && (sec.isFocused || isLargeUnfocused || (sp.isAnchor && viewport.w < 1024))} useElastic={isSettled}
                                                     isResizing={isResizing} isChild={true} initialOpacity={isSectionFaded ? 0 : opacityMul}
                                                     isDimmed={!sec.isFocused && !isLargeUnfocused && !(sp.isAnchor && viewport.w < 1024)}
+                                                    motionPath={sp.motionPath}
                                                     labelData={isLargeUnfocused ? { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: ((isShortDesktop || (viewport.w >= 768 && viewport.w < 1024)) && sec.quadrant.includes('b')) ? 'top' : 'center', img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: showLabels, forceSearchIcon: false } : { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: (isShortDesktop && sec.quadrant.includes('b')) ? 'top' : (viewport.w < 1024 ? 'center' : sp.alignLabel), img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: (viewport.w < 1024 && !focusedId) ? false : showLabels, forceSearchIcon: viewport.w < 1024 && !focusedId }}
                                                     isShortViewport={isShortDesktop || viewport.w < 1024}
                                                     noFlyTransition={isNoFly}

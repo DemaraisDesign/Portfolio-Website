@@ -935,7 +935,6 @@ export default function NavigationMap({ closeMenu }) {
     const [animPhase, setAnimPhase] = useState(0);
     const [parkedPetalData, setParkedPetalData] = useState(null);   // petal currently parked over section icon
     const [outgoingPetalData, setOutgoingPetalData] = useState(null); // petal springing back to fan
-    const [overlayData, setOverlayData] = useState(null);            // case study card shown after petal lands
     const isLaunched = animPhase >= 1;
     const isSettled = animPhase >= 2;
     const showLabels = animPhase >= 3;
@@ -1022,16 +1021,7 @@ export default function NavigationMap({ closeMenu }) {
             id: sp.id,
             startX: sp.x, startY: sp.y, startSize: sp.size,
             targetX: sec.x, targetY: sec.y, targetSize: sec.size,
-            img: sp.img, color: sp.color || sec.deep,
-            // Card overlay data
-            label: sp.label,
-            desc: sp.desc,
-            path: sp.link || sp.path || `/work/${sp.id}`,
-            quadrant: sec.quadrant,
-            sectionColor: sec.color,
-            sectionDeep: sec.deep,
-            SectionIcon: sec.icon,
-            isUnlocked: !getProject(sp.id)?.isConstruction && isProjectUnlocked(sp.id),
+            img: sp.img, color: sp.color || sec.deep
         });
     };
 
@@ -1204,10 +1194,6 @@ export default function NavigationMap({ closeMenu }) {
                             scale: parkedPetalData.startSize / parkedPetalData.targetSize,
                         }}
                         animate={{ x: 0, y: 0, scale: 1 }}
-                        onAnimationComplete={() => {
-                            // Petal has landed — show the case study card
-                            setOverlayData(parkedPetalData);
-                        }}
                         transition={{ type: 'spring', stiffness: 260, damping: 16, mass: 0.9, delay: 0.15 }}
                         style={{
                             position: 'absolute',
@@ -1228,149 +1214,6 @@ export default function NavigationMap({ closeMenu }) {
                         }}
                     />
                 )}
-            </AnimatePresence>
-
-            {/* Case study preview card — appears after petal lands */}
-            <AnimatePresence>
-                {overlayData && viewport.w < 768 && (() => {
-                    const d = overlayData;
-                    const isLeft = d.quadrant.includes('l');
-                    const isTop = d.quadrant.includes('t');
-                    const imgSize = 120;
-                    // transformOrigin anchored to the section icon corner
-                    const origin = `${isTop ? 'top' : 'bottom'} ${isLeft ? 'left' : 'right'}`;
-
-                    const closeOverlay = () => {
-                        setOverlayData(null);
-                        setParkedPetalData(null);
-                        setOutgoingPetalData(null);
-                    };
-
-                    return (
-                        <>
-                            {/* Scrim — dims other UI */}
-                            <motion.div
-                                key="petal-scrim"
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                exit={{ opacity: 0 }}
-                                transition={{ duration: 0.3 }}
-                                onClick={closeOverlay}
-                                style={{
-                                    position: 'absolute', inset: 0,
-                                    background: 'rgba(0,0,0,0.55)',
-                                    zIndex: 210, pointerEvents: 'auto',
-                                }}
-                            />
-
-                            {/* Card */}
-                            <motion.div
-                                key={`petal-card-${d.id}`}
-                                initial={{ opacity: 0, scale: 0.82 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                exit={{ opacity: 0, scale: 0.82 }}
-                                transition={{ type: 'spring', stiffness: 300, damping: 22, delay: 0.05 }}
-                                style={{
-                                    position: 'absolute',
-                                    top: '50%', left: '50%',
-                                    transform: 'translate(-50%, -50%)',
-                                    transformOrigin: origin,
-                                    width: 'calc(100% - 40px)',
-                                    background: d.sectionDeep,
-                                    borderRadius: '20px',
-                                    padding: '24px',
-                                    paddingTop: isTop ? `${imgSize * 0.6 + 24}px` : '24px',
-                                    paddingBottom: isTop ? '24px' : `${imgSize * 0.6 + 24}px`,
-                                    zIndex: 220,
-                                    pointerEvents: 'auto',
-                                    overflow: 'visible',
-                                    boxShadow: '0 24px 60px rgba(0,0,0,0.45)',
-                                }}
-                            >
-                                {/* Case study image — bleeds out of the quadrant corner */}
-                                <div style={{
-                                    position: 'absolute',
-                                    [isTop ? 'top' : 'bottom']: -(imgSize * 0.42),
-                                    [isLeft ? 'left' : 'right']: 20,
-                                    width: imgSize, height: imgSize,
-                                    borderRadius: '50%',
-                                    backgroundImage: d.img ? `url(${d.img})` : 'none',
-                                    backgroundSize: 'cover',
-                                    backgroundPosition: 'center',
-                                    backgroundColor: d.color,
-                                    boxShadow: '0 8px 28px rgba(0,0,0,0.35)',
-                                    zIndex: 1,
-                                    overflow: 'hidden',
-                                }}>
-                                    {/* Animated section icon overlaid in opposite corner of the image */}
-                                    <div style={{
-                                        position: 'absolute',
-                                        [isTop ? 'bottom' : 'top']: 4,
-                                        [isLeft ? 'right' : 'left']: 4,
-                                        width: 32, height: 32,
-                                        opacity: 0.9,
-                                    }}>
-                                        {d.SectionIcon && <d.SectionIcon color="#ffffff" isPlaying={true} />}
-                                    </div>
-                                </div>
-
-                                {/* X close button */}
-                                <button
-                                    onClick={closeOverlay}
-                                    style={{
-                                        position: 'absolute', top: 14, right: 14,
-                                        width: 32, height: 32,
-                                        borderRadius: '50%',
-                                        background: 'rgba(255,255,255,0.15)',
-                                        border: 'none', cursor: 'pointer',
-                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                        color: '#fff', fontSize: 16, fontWeight: 700,
-                                        zIndex: 2,
-                                    }}
-                                >✕</button>
-
-                                {/* Text content */}
-                                <p style={{
-                                    margin: 0, marginBottom: 4,
-                                    fontSize: 11, fontWeight: 700, letterSpacing: '0.1em',
-                                    textTransform: 'uppercase',
-                                    color: d.sectionColor, opacity: 0.9,
-                                }}>{d.desc}</p>
-
-                                <h2 style={{
-                                    margin: 0, marginBottom: 12,
-                                    fontSize: 22, fontWeight: 800, lineHeight: 1.2,
-                                    color: '#ffffff',
-                                }}>{d.label}</h2>
-
-                                {/* Link */}
-                                {d.isUnlocked ? (
-                                    <button
-                                        onClick={() => { closeOverlay(); setTimeout(() => { if (closeMenu) closeMenu(); navigate(d.path); }, 300); }}
-                                        style={{
-                                            display: 'inline-flex', alignItems: 'center', gap: 6,
-                                            marginTop: 4,
-                                            background: 'none', border: 'none', cursor: 'pointer',
-                                            color: d.sectionColor,
-                                            fontSize: 14, fontWeight: 700,
-                                            padding: 0,
-                                        }}
-                                    >
-                                        View Case Study
-                                        <span style={{ fontSize: 16 }}>→</span>
-                                    </button>
-                                ) : (
-                                    <p style={{
-                                        margin: 0, marginTop: 4,
-                                        fontSize: 13, fontWeight: 600,
-                                        color: 'rgba(255,255,255,0.4)',
-                                        fontStyle: 'italic',
-                                    }}>Coming soon</p>
-                                )}
-                            </motion.div>
-                        </>
-                    );
-                })()}
             </AnimatePresence>
 
             {(() => {

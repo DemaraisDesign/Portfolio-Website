@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import { ArrowRight, ExternalLink, Clock, Lock } from "lucide-react";
+import { ArrowRight, ExternalLink, Clock, Lock, Search } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from "framer-motion";
 import { getProject } from '../data/projects';
@@ -828,8 +828,8 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                                 pointerEvents: 'none'
                             }} />
                         )}
-                        {/* Lock/Clock overlay on case study thumbnails */}
-                        {labelData?.projectId && getProject(labelData.projectId)?.isConstruction ? (
+                        {/* Lock/Clock/Search overlay on case study thumbnails */}
+                        {(labelData?.projectId && (labelData?.forceSearchIcon || getProject(labelData.projectId)?.isConstruction || !isProjectUnlocked(labelData.projectId))) && (
                             <div style={{
                                 position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
                                 backgroundColor: 'rgba(0, 0, 0, 0.55)',
@@ -837,24 +837,20 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                                 pointerEvents: 'none',
                                 opacity: 0.9
                             }}>
-                                <svg style={{ width: '35%', height: '35%', opacity: 1 }} viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
-                                    <circle cx="12" cy="12" r="10" fill="white" stroke="none" />
-                                    <polyline points="12 6 12 12 15.5 15.5" stroke="rgba(0,0,0,0.6)" strokeWidth="3" fill="none" />
-                                </svg>
-                            </div>
-                        ) : labelData?.projectId && !isProjectUnlocked(labelData.projectId) && (
-                            <div style={{
-                                position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
-                                backgroundColor: 'rgba(0, 0, 0, 0.55)',
-                                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                pointerEvents: 'none',
-                                opacity: 0.9
-                            }}>
-                                <svg style={{ width: '35%', height: '35%', opacity: 1 }} viewBox="0 0 24 24" fill="white" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <path d="M7 10V7a5 5 0 0 1 10 0v3" fill="none" />
-                                    <rect x="3" y="10" width="18" height="12" rx="2" fill="white" stroke="none" />
-                                    <circle cx="12" cy="16" r="1.5" fill="rgba(0,0,0,0.6)" stroke="rgba(0,0,0,0.6)" strokeWidth="3" />
-                                </svg>
+                                {labelData?.forceSearchIcon ? (
+                                    <Search color="white" strokeWidth={2.5} style={{ width: '35%', height: '35%' }} />
+                                ) : getProject(labelData.projectId)?.isConstruction ? (
+                                    <svg style={{ width: '35%', height: '35%', opacity: 1 }} viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
+                                        <circle cx="12" cy="12" r="10" fill="white" stroke="none" />
+                                        <polyline points="12 6 12 12 15.5 15.5" stroke="rgba(0,0,0,0.6)" strokeWidth="3" fill="none" />
+                                    </svg>
+                                ) : (
+                                    <svg style={{ width: '35%', height: '35%', opacity: 1 }} viewBox="0 0 24 24" fill="white" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M7 10V7a5 5 0 0 1 10 0v3" fill="none" />
+                                        <rect x="3" y="10" width="18" height="12" rx="2" fill="white" stroke="none" />
+                                        <circle cx="12" cy="16" r="1.5" fill="rgba(0,0,0,0.6)" stroke="rgba(0,0,0,0.6)" strokeWidth="3" />
+                                    </svg>
+                                )}
                             </div>
                         )}
                     </>
@@ -1290,7 +1286,7 @@ export default function NavigationMap({ closeMenu }) {
                                                     showIcon={isSettled && (sec.isFocused || isLargeUnfocused || (sp.isAnchor && viewport.w < 768))} useElastic={isSettled}
                                                     isResizing={isResizing} isChild={true} initialOpacity={opacityMul}
                                                     isDimmed={!sec.isFocused && !isLargeUnfocused && !(sp.isAnchor && viewport.w < 768)}
-                                                    labelData={isLargeUnfocused ? { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: ((isShortDesktop || (viewport.w >= 768 && viewport.w < 1024)) && sec.quadrant.includes('b')) ? 'top' : 'center', img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: showLabels } : { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: (isShortDesktop && sec.quadrant.includes('b')) ? 'top' : (viewport.w < 768 ? 'center' : sp.alignLabel), img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: (viewport.w < 768 && !focusedId) ? false : showLabels }}
+                                                    labelData={isLargeUnfocused ? { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: ((isShortDesktop || (viewport.w >= 768 && viewport.w < 1024)) && sec.quadrant.includes('b')) ? 'top' : 'center', img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: showLabels, forceSearchIcon: false } : { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: (isShortDesktop && sec.quadrant.includes('b')) ? 'top' : (viewport.w < 768 ? 'center' : sp.alignLabel), img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: (viewport.w < 768 && !focusedId) ? false : showLabels, forceSearchIcon: viewport.w < 768 && !focusedId }}
                                                     isShortViewport={isShortDesktop || viewport.w < 1024}
                                                     noFlyTransition={isNoFly}
                                                     alwaysShowLabel={isLargeUnfocused && !(isShortDesktop || viewport.w < 1024)}

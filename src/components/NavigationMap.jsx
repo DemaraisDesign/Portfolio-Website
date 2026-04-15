@@ -1185,35 +1185,43 @@ export default function NavigationMap({ closeMenu }) {
 
             {/* Incoming: new petal flies to section icon center and parks */}
             <AnimatePresence>
-                {parkedPetalData && viewport.w < 768 && (
-                    <motion.div
-                        key={`petal-in-${parkedPetalData.id}`}
-                        initial={{
-                            x: parkedPetalData.startX - parkedPetalData.targetX,
-                            y: parkedPetalData.startY - parkedPetalData.targetY,
-                            scale: parkedPetalData.startSize / parkedPetalData.targetSize,
-                        }}
-                        animate={{ x: 0, y: 0, scale: 1 }}
-                        transition={{ type: 'spring', stiffness: 260, damping: 16, mass: 0.9, delay: 0.15 }}
-                        style={{
-                            position: 'absolute',
-                            top: parkedPetalData.targetY,
-                            left: parkedPetalData.targetX,
-                            width: parkedPetalData.targetSize,
-                            height: parkedPetalData.targetSize,
-                            marginTop: -parkedPetalData.targetSize / 2,
-                            marginLeft: -parkedPetalData.targetSize / 2,
-                            borderRadius: '50%',
-                            backgroundImage: parkedPetalData.img ? `url(${parkedPetalData.img})` : 'none',
-                            backgroundSize: 'cover',
-                            backgroundPosition: 'center',
-                            backgroundColor: parkedPetalData.color,
-                            zIndex: 200,
-                            pointerEvents: 'none',
-                            boxShadow: '0 8px 32px rgba(0,0,0,0.25)',
-                        }}
-                    />
-                )}
+                {parkedPetalData && viewport.w < 768 && (() => {
+                    // Find the section that owns this petal to track its live layout coordinates during browser resize
+                    const parentSec = layout.sections.find(s => s.children && s.children.some(c => c.id === parkedPetalData.id));
+                    const liveX = parentSec ? parentSec.x : parkedPetalData.targetX;
+                    const liveY = parentSec ? parentSec.y : parkedPetalData.targetY;
+                    const liveSize = parentSec ? parentSec.size : parkedPetalData.targetSize;
+
+                    return (
+                        <motion.div
+                            key={`petal-in-${parkedPetalData.id}`}
+                            initial={{
+                                x: parkedPetalData.startX - liveX,
+                                y: parkedPetalData.startY - liveY,
+                                scale: parkedPetalData.startSize / liveSize,
+                            }}
+                            animate={{ x: 0, y: 0, scale: 1 }}
+                            transition={{ type: 'spring', stiffness: 260, damping: 16, mass: 0.9, delay: 0.15 }}
+                            style={{
+                                position: 'absolute',
+                                top: liveY,
+                                left: liveX,
+                                width: liveSize,
+                                height: liveSize,
+                                marginTop: -liveSize / 2,
+                                marginLeft: -liveSize / 2,
+                                borderRadius: '50%',
+                                backgroundImage: parkedPetalData.img ? `url(${parkedPetalData.img})` : 'none',
+                                backgroundSize: 'cover',
+                                backgroundPosition: 'center',
+                                backgroundColor: parkedPetalData.color,
+                                zIndex: 200,
+                                pointerEvents: 'none',
+                                boxShadow: '0 8px 32px rgba(0,0,0,0.25)',
+                            }}
+                        />
+                    );
+                })()}
             </AnimatePresence>
 
             {(() => {

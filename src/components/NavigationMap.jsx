@@ -1018,17 +1018,14 @@ export default function NavigationMap({ closeMenu }) {
             targetX: sec.x, targetY: sec.y, targetSize: sec.size,
             img: sp.img, color: sp.color || sec.deep, path
         });
-        // Navigate after the spring settles
+        // After the spring settles: navigate if unlocked, reset silently otherwise
         setTimeout(() => {
             setSelectedPetalData(null);
-            if (getProject(sp.id)?.isConstruction) {
-                requestConstructionAccess(path);
-            } else if (isProjectUnlocked(sp.id)) {
+            if (!getProject(sp.id)?.isConstruction && isProjectUnlocked(sp.id)) {
                 if (closeMenu) closeMenu();
                 navigate(path);
-            } else {
-                requestAccess(path);
             }
+            // Locked / construction: fly animation plays but no modal — handled elsewhere
         }, 750);
     };
 

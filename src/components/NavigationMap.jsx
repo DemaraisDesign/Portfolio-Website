@@ -762,11 +762,23 @@ const computeLayout = (w, h, focusedId, isLaunched = true, isParkedReady = false
     if (isParkedReady && parkedPetalData) {
         const activeSec = sections.find(s => s.id === parkedPetalData.parentId);
         if (activeSec) {
-            // Calculate cluster physical bounds
-            const clusterLeft = cx - dx - 40;
-            const clusterRight = cx + dx + 40;
-            const clusterTop = visualCenterY - topDy - 40;
-            const clusterBottom = visualCenterY + dy + (w < 768 ? 50 : 0) + 60;
+            // Calculate cluster physical bounds securely from processed sections
+            let minX = w, maxX = 0, minY = h, maxY = 0;
+            sections.forEach(s => {
+                if (s.x < minX) minX = s.x;
+                if (s.x > maxX) maxX = s.x;
+                if (s.y < minY) minY = s.y;
+                if (s.y > maxY) maxY = s.y;
+            });
+
+            // If layout isn't cross-shaped, these default fallbacks prevent inversions
+            if (minX > maxX) { minX = 0; maxX = w; }
+            if (minY > maxY) { minY = 0; maxY = h; }
+
+            const clusterLeft = minX - 40;
+            const clusterRight = maxX + 40;
+            const clusterTop = minY - 40;
+            const clusterBottom = maxY + (w < 768 ? 110 : 60);
             
             const q = activeSec.quadrant;
             let top, left, width, height;

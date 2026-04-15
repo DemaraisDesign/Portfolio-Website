@@ -485,7 +485,7 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
             }
         }
 
-        const petalOffset = (w >= 768 && !focusedId) ? 20 : 0;
+        const petalOffset = (w >= 1024 && !focusedId) ? 20 : 0;
         const petalRestRadius = (currentSectionSize / 2) + (currentPetalSize / 2) + petalOffset;
 
         const subPetals = sec.children.map((child, i) => {

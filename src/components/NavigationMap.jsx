@@ -452,8 +452,8 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
             const dy = Math.min(rawDy, maxBotDy);
             const topDy = Math.min(rawTopDy, maxTopDy);
 
-            if (sec.quadrant === 'bl') { targetX = cx - dx; targetY = visualCenterY + dy; }
-            if (sec.quadrant === 'br') { targetX = cx + dx; targetY = visualCenterY + dy; }
+            if (sec.quadrant === 'bl') { targetX = cx - dx; targetY = visualCenterY + dy + (w < 768 ? 50 : 0); }
+            if (sec.quadrant === 'br') { targetX = cx + dx; targetY = visualCenterY + dy + (w < 768 ? 50 : 0); }
             if (sec.quadrant === 'tl') { targetX = cx - dx; targetY = visualCenterY - topDy; }
             if (sec.quadrant === 'tr') { targetX = cx + dx; targetY = visualCenterY - topDy; }
 

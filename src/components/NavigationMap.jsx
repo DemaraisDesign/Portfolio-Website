@@ -354,9 +354,9 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
         default: w >= 768 ? minDim * 0.35 : minDim * 0.24,
     };
 
-    // On mobile, push the entire grid up 60px to make room for bottom navbar
-    // On desktop, the visual center is the true center of the screen
-    const visualCenterY = w < 768 ? cy - 60 : cy;
+    // On mobile, the useable space is between the top Navbar (~60px) and the bottom of the screen.
+    // Center is: 60 + (h - 60) / 2 = h/2 + 30 = cy + 30
+    const visualCenterY = w < 768 ? cy + 30 : cy;
 
     const origDx = w < 768 ? Math.max(90, w * 0.22) : Math.max(250, w * 0.35); // Pulled back out slightly
     const newDy = w < 768 ? Math.max(125, h * 0.16) : Math.max(180, h * 0.22); // Pulled back out slightly

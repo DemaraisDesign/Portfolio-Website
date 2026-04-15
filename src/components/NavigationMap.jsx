@@ -631,6 +631,16 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
                     const screensStep = Math.PI / 5;
                     const step = count > 1 ? screensStep : 0;
                     const totalArc = step * (count - 1);
+
+                    // tl (Stages) + bl (Screens): rightmost petal at 12 o'clock → fan sweeps left
+                    // tr (Sounds) + br (Explorations): leftmost petal at 12 o'clock → fan sweeps right
+                    const isLeftQuadrant = sec.quadrant === 'tl' || sec.quadrant === 'bl';
+                    if (isLeftQuadrant) {
+                        fanCenterAngle = -Math.PI / 2 - totalArc / 2;
+                    } else {
+                        fanCenterAngle = -Math.PI / 2 + totalArc / 2;
+                    }
+
                     const startAngle = fanCenterAngle - totalArc / 2;
 
                     const petalAngle = startAngle + (step * i);

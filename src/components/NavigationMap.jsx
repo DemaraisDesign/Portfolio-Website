@@ -283,7 +283,7 @@ const SECTIONS = [
         id: "stage", label: "Stages", desc: "Artist Statement", color: THEME.purple, deep: THEME.deep.stage,
         icon: TheatreIcon, quadrant: "tl", link: "/stage",
         children: [
-            { id: "coeurage", label: "Coeurage Theatre", desc: "Leadership", img: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1776264618/coeuragelogocircle_acjgsx.png", contain: true },
+            { id: "coeurage", label: "Coeurage Theatre", desc: "Leadership", img: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1776264618/coeuragelogocircle_acjgsx.png", contain: true, color: THEME.white },
             { id: "secret", label: "Secret in the Wings", desc: "Show Direction", img: getProject('secret')?.img },
             { id: "the-sparrow", label: "The Sparrow", desc: "Show Direction", img: getProject('the-sparrow')?.img, imgPosition: "center 30%" },
             { id: "rcc", label: "Teaching Statement", desc: "Education", img: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1775591224/Gemini_Generated_Image_l207s0l207s0l207_cveupt.jpg" },

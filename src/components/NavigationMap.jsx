@@ -968,6 +968,7 @@ export default function NavigationMap({ closeMenu }) {
     const [animPhase, setAnimPhase] = useState(0);
     const [parkedPetalData, setParkedPetalData] = useState(null);   // petal currently parked over section icon
     const [outgoingPetalData, setOutgoingPetalData] = useState(null); // petal springing back to fan
+    const [isParkedReady, setIsParkedReady] = useState(false); // flags when thumbnail has finished flying in
     const isLaunched = animPhase >= 1;
     const isSettled = animPhase >= 2;
     const showLabels = animPhase >= 3;
@@ -1020,6 +1021,13 @@ export default function NavigationMap({ closeMenu }) {
     const handleSectionClick = (id) => {
         if (!isLaunched) return;
 
+        // If a thumbnail is parked and ready, tapping the section navigates directly to that project
+        if (isParkedReady && parkedPetalData?.parentId === id) {
+            if (closeMenu) closeMenu();
+            navigate(parkedPetalData.path);
+            return;
+        }
+
         if (viewport.w < 768) {
             // Mobile: always navigate directly to the section — no drill-down level
             const section = SECTIONS.find(s => s.id === id);
@@ -1046,6 +1054,7 @@ export default function NavigationMap({ closeMenu }) {
     const handleMobilePetalClick = (sp, sec) => {
         if (parkedPetalData?.id === sp.id) return; // already parked here
 
+        setIsParkedReady(false);
         // Kick the currently parked petal back to its fan position (runs in parallel)
         if (parkedPetalData) setOutgoingPetalData(parkedPetalData);
 
@@ -1054,8 +1063,13 @@ export default function NavigationMap({ closeMenu }) {
             id: sp.id,
             startX: sp.x, startY: sp.y, startSize: sp.size,
             targetX: sec.x, targetY: sec.y, targetSize: sec.size,
-            img: sp.img, color: sp.color || sec.deep
+            img: sp.img, color: sp.color || sec.deep,
+            parentId: sec.id,
+            path: sp.link || sp.path || `/work/${sp.id}`
         });
+
+        if (window.parkTimer) clearTimeout(window.parkTimer);
+        window.parkTimer = setTimeout(() => setIsParkedReady(true), 800);
     };
 
     const isShortDesktop = viewport.h < 680 && viewport.w >= 768;
@@ -1088,7 +1102,7 @@ export default function NavigationMap({ closeMenu }) {
             <svg style={{
                 position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 0,
                 overflow: 'visible',
-                opacity: isLaunched && !focusedId && viewport.w >= 768 ? 1 : 0,
+                opacity: isLaunched && !focusedId && viewport.w >= 768 && !isParkedReady && !parkedPetalData ? 1 : 0,
                 transition: isResizing ? 'none' : 'opacity 0.8s ease 0.4s'
             }}>
                 {layout.sections.map(sec => {
@@ -1226,19 +1240,22 @@ export default function NavigationMap({ closeMenu }) {
                     <>
 
 
-                        {layout.sections.map((sec, secIdx) => (
-                            <React.Fragment key={sec.id}>
-                                <Node
-                                    x={sec.x}
-                                    y={sec.y}
-                                    size={sec.size}
-                                    color={sec.color} iconColor={THEME.white} icon={sec.icon}
-                                    onClick={() => handleSectionClick(sec.id)}
-                                    className={`${sec.isBg ? "depth-bg" : "depth-active"} ${isLaunched && !focusedId ? 'launched-node' : ''}`}
-                                    isFocused={sec.isFocused} isBg={sec.isBg} zIndex={sec.isFocused ? 15 : 12}
-                                    showIcon={isLaunched} useElastic={isLaunched}
-                                    isResizing={isResizing} initialOpacity={1}
-                                    disableAnimation={sec.isBg}
+                        {layout.sections.map((sec, secIdx) => {
+                            const isSectionFaded = isParkedReady && parkedPetalData?.parentId !== sec.id;
+
+                            return (
+                                <React.Fragment key={sec.id}>
+                                    <Node
+                                        x={sec.x}
+                                        y={sec.y}
+                                        size={sec.size}
+                                        color={sec.color} iconColor={THEME.white} icon={sec.icon}
+                                        onClick={() => handleSectionClick(sec.id)}
+                                        className={`${sec.isBg ? "depth-bg" : "depth-active"} ${isLaunched && !focusedId ? 'launched-node' : ''}`}
+                                        isFocused={sec.isFocused} isBg={sec.isBg} zIndex={sec.isFocused ? 15 : 12}
+                                        showIcon={isLaunched} useElastic={isLaunched}
+                                        isResizing={isResizing} initialOpacity={isSectionFaded ? 0 : 1}
+                                        disableAnimation={sec.isBg}
                                     labelData={{
                                         title: sec.label,
                                         desc: sec.desc,
@@ -1288,7 +1305,7 @@ export default function NavigationMap({ closeMenu }) {
                                                     className={sec.isFocused || isLargeUnfocused ? "depth-active" : ""}
                                                     zIndex={sec.isFocused || isLargeUnfocused ? 12 : 2}
                                                     showIcon={isSettled && (sec.isFocused || isLargeUnfocused || (sp.isAnchor && viewport.w < 1024))} useElastic={isSettled}
-                                                    isResizing={isResizing} isChild={true} initialOpacity={opacityMul}
+                                                    isResizing={isResizing} isChild={true} initialOpacity={isSectionFaded ? 0 : opacityMul}
                                                     isDimmed={!sec.isFocused && !isLargeUnfocused && !(sp.isAnchor && viewport.w < 1024)}
                                                     labelData={isLargeUnfocused ? { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: ((isShortDesktop || (viewport.w >= 768 && viewport.w < 1024)) && sec.quadrant.includes('b')) ? 'top' : 'center', img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: showLabels, forceSearchIcon: false } : { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: (isShortDesktop && sec.quadrant.includes('b')) ? 'top' : (viewport.w < 1024 ? 'center' : sp.alignLabel), img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: (viewport.w < 1024 && !focusedId) ? false : showLabels, forceSearchIcon: viewport.w < 1024 && !focusedId }}
                                                     isShortViewport={isShortDesktop || viewport.w < 1024}
@@ -1322,9 +1339,10 @@ export default function NavigationMap({ closeMenu }) {
                                             </motion.div>
                                         );
                                     })}
-                                </AnimatePresence>
-                            </React.Fragment>
-                        ))}
+                                    </AnimatePresence>
+                                </React.Fragment>
+                            );
+                        })}
                     </>
                 );
             })()}

@@ -494,6 +494,7 @@ const computeLayout = (w, h, focusedId, isLaunched = true, isParkedReady = false
             let gridRow = null;
             let gridCol = null;
             let isAnchorPetal = false; // Set inside fan branch for mobile-only anchor petal
+            let motionPath = null;
 
             if (isLaunched && focusedId) {
                 // Ensure mobile colSpacing and rowSpacing compactly reflect the new popup label system
@@ -664,7 +665,6 @@ const computeLayout = (w, h, focusedId, isLaunched = true, isParkedReady = false
                     cxChild = sx + Math.cos(petalAngle) * effectiveRadius;
                     cyChild = sy + Math.sin(petalAngle) * effectiveRadius;
 
-                    let motionPath = null;
                     if (isParkedReady && parkedPetalData?.parentId === sec.id && !isAnchorPetal) {
                         // We need the dot's sorted index to stagger its height down the tail.
                         let dropRank = 0;

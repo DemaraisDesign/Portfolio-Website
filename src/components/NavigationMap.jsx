@@ -673,14 +673,18 @@ const computeLayout = (w, h, focusedId, isLaunched = true, isParkedReady = false
 
                         const numWp = 6;
                         const startAng = petalAngle;
-                        // Target angle is 6 o'clock
-                        const targetAng = Math.PI / 2;
+                        // To ensure counter-clockwise sweeping in a Y-down canvas, the angle must strictly decrease.
+                        // We find the first representation of 6 o'clock (Math.PI / 2) that is numerically LESS than the start angle.
+                        let targetAng = Math.PI / 2;
+                        while (targetAng > startAng) {
+                            targetAng -= Math.PI * 2;
+                        }
                         const angleDiff = targetAng - startAng;
 
                         const pathX = [];
                         const pathY = [];
 
-                        // Interpolate 6 points strictly along the orbital curve
+                        // Interpolate 6 points strictly along the counter-clockwise orbital curve
                         for (let step = 0; step <= numWp; step++) {
                              const progress = step / numWp;
                              const intAngle = startAng + (angleDiff * progress);

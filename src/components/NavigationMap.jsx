@@ -758,7 +758,42 @@ const computeLayout = (w, h, focusedId, isLaunched = true, isParkedReady = false
         return { ...sec, x: sx, y: sy, isFocused, isBg, size: currentSectionSize, subPetals };
     });
 
-    return { home: { x: hx_display, y: hy_display, size: SIZES.home }, sections };
+    let parkedBox = null;
+    if (isParkedReady && parkedPetalData) {
+        const activeSec = sections.find(s => s.id === parkedPetalData.parentId);
+        if (activeSec) {
+            // Calculate cluster physical bounds
+            const clusterLeft = cx - dx - 40;
+            const clusterRight = cx + dx + 40;
+            const clusterTop = visualCenterY - topDy - 40;
+            const clusterBottom = visualCenterY + dy + (w < 768 ? 50 : 0) + 60;
+            
+            const q = activeSec.quadrant;
+            let top, left, width, height;
+            
+            if (q === 'tl') {
+                top = activeSec.y; left = activeSec.x;
+                width = clusterRight - activeSec.x;
+                height = clusterBottom - activeSec.y;
+            } else if (q === 'tr') {
+                top = activeSec.y; left = clusterLeft;
+                width = activeSec.x - clusterLeft;
+                height = clusterBottom - activeSec.y;
+            } else if (q === 'bl') {
+                top = clusterTop; left = activeSec.x;
+                width = clusterRight - activeSec.x;
+                height = activeSec.y - clusterTop;
+            } else if (q === 'br') {
+                top = clusterTop; left = clusterLeft;
+                width = activeSec.x - clusterLeft;
+                height = activeSec.y - clusterTop;
+            }
+
+            parkedBox = { top, left, width, height, color: activeSec.deep };
+        }
+    }
+
+    return { home: { x: hx_display, y: hy_display, size: SIZES.home }, sections, parkedBox };
 };
 
 // ═══════════════════════════════════════════════════

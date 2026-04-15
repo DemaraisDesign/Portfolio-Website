@@ -1246,7 +1246,7 @@ export default function NavigationMap({ closeMenu }) {
                                         show: showLabels,
                                         align: viewport.w < 1024 ? (sec.isFocused ? 'right' : 'center') : (isShortDesktop && sec.quadrant.includes('b') ? 'top' : 'center')
                                     }}
-                                    isShortViewport={isShortDesktop || (viewport.w >= 768 && viewport.w < 1024)}
+                                    isShortViewport={isShortDesktop}
                                     noFlyTransition={sec.isFocused && isNoFly}
                                     flipKey={sec.isFocused ? currentFlipKey : null}
                                     flipDelay={viewport.w < 1024 ? 0 : (sec.isFocused && focusedId ? 1.0 : (!focusedId ? secIdx * 0.15 : 0))}

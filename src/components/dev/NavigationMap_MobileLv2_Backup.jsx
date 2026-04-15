@@ -452,8 +452,8 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
             const dy = Math.min(rawDy, maxBotDy);
             const topDy = Math.min(rawTopDy, maxTopDy);
 
-            if (sec.quadrant === 'bl') { targetX = cx - dx; targetY = visualCenterY + dy; }
-            if (sec.quadrant === 'br') { targetX = cx + dx; targetY = visualCenterY + dy; }
+            if (sec.quadrant === 'bl') { targetX = cx - dx; targetY = visualCenterY + dy + (w < 768 ? 50 : 0); }
+            if (sec.quadrant === 'br') { targetX = cx + dx; targetY = visualCenterY + dy + (w < 768 ? 50 : 0); }
             if (sec.quadrant === 'tl') { targetX = cx - dx; targetY = visualCenterY - topDy; }
             if (sec.quadrant === 'tr') { targetX = cx + dx; targetY = visualCenterY - topDy; }
 
@@ -493,6 +493,7 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
             let cyChild = sy;
             let gridRow = null;
             let gridCol = null;
+            let isAnchorPetal = false; // Set inside fan branch for mobile-only anchor petal
 
             if (isLaunched && focusedId) {
                 // Ensure mobile colSpacing and rowSpacing compactly reflect the new popup label system
@@ -627,13 +628,37 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
                         fanCenterAngle = Math.atan2(sy - hy, sx - hx);
                     }
 
-                    const startAngle = fanCenterAngle - fanSpread / 2;
-                    const step = count > 1 ? fanSpread / (count - 1) : 0;
+                    // tl (Stages) + bl (Screens): rightmost petal at 12 o'clock
+                    // tr (Sounds) + br (Explorations): leftmost petal at 12 o'clock
+                    const isLeftQuadrant = sec.quadrant === 'tl' || sec.quadrant === 'bl';
+                    const anchorIdx = isLeftQuadrant ? count - 1 : 0;
+                    isAnchorPetal = i === anchorIdx;
 
-                    const petalAngle = startAngle + (step * i);
+                    // Variable step: wider gap around the anchor (big circle), tighter between small petals
+                    const smallStep = Math.PI / 6;  // 30° between small petals
+                    const anchorGap = Math.PI / 3;  // 60° on either side of the anchor
 
-                    cxChild = sx + Math.cos(petalAngle) * petalRestRadius;
-                    cyChild = sy + Math.sin(petalAngle) * petalRestRadius;
+                    // Build cumulative angle array for all petals in this section
+                    const angles = [0];
+                    for (let j = 1; j < count; j++) {
+                        const isAnchorTransition =
+                            (isLeftQuadrant && j === count - 1) ||   // last petal IS the anchor
+                            (!isLeftQuadrant && j === 1);              // first petal IS the anchor (gap after it)
+                        angles.push(angles[j - 1] + (isAnchorTransition ? anchorGap : smallStep));
+                    }
+
+                    // Pin the anchor to exactly 12 o'clock (-PI/2), shift the whole fan accordingly
+                    const anchorAngleInFan = angles[anchorIdx];
+                    const fanStart = (-Math.PI / 2) - anchorAngleInFan;
+
+                    const petalAngle = fanStart + angles[i];
+
+                    // Wider orbit radius for the anchor so it clears the section icon edge
+                    const anchorOrbitRadius = (currentSectionSize / 2) + (SIZES.subPetalActive / 2);
+                    const effectiveRadius = isAnchorPetal ? anchorOrbitRadius : petalRestRadius;
+
+                    cxChild = sx + Math.cos(petalAngle) * effectiveRadius;
+                    cyChild = sy + Math.sin(petalAngle) * effectiveRadius;
                 }
             }
 
@@ -641,7 +666,7 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
                 ...child,
                 x: cxChild,
                 y: cyChild,
-                size: currentPetalSize,
+                size: isAnchorPetal ? SIZES.subPetalActive : currentPetalSize,
                 color: sec.deep,
                 parentColor: sec.color,
                 // Always keep them rendered if launched, for smoother CSS transitions
@@ -649,6 +674,7 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
                 isParentFocused: isFocused,
                 alignLabel: (sec.quadrant === 'tl' || sec.quadrant === 'bl') ? 'right' : 'left',
                 img: child.img,
+                isAnchor: isAnchorPetal,
                 gridRow: gridRow,
                 gridCol: gridCol
             };
@@ -709,7 +735,9 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
     };
 
     const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-    const isActiveLayout = isFocused || (isBg === false);
+    // On mobile with no section focused, isBg is null (not false), so we need the extra isMobile && !isBg check.
+    // !isChild ensures sub-petal case study circles don't inherit this and show their label popups.
+    const isActiveLayout = isFocused || (isBg === false) || (isMobile && !isBg && !isChild);
     const isLabelVisible = showIcon && labelData && labelData.show && (isMobile ? isActiveLayout : (hover || tapped || isActiveLayout));
     const flyDelay = (isBg && isMobile) ? 0.3 : 0;
 
@@ -958,14 +986,11 @@ export default function NavigationMap({ closeMenu }) {
         if (!isLaunched) return;
 
         if (viewport.w < 768) {
-            if (focusedId === id) {
-                const section = SECTIONS.find(s => s.id === id);
-                if (section && section.link) {
-                    if (closeMenu) closeMenu();
-                    navigate(section.link);
-                }
-            } else {
-                setFocusedId(id);
+            // Mobile: always navigate directly to the section — no drill-down level
+            const section = SECTIONS.find(s => s.id === id);
+            if (section && section.link) {
+                if (closeMenu) closeMenu();
+                navigate(section.link);
             }
         } else {
             const section = SECTIONS.find(s => s.id === id);
@@ -1176,9 +1201,9 @@ export default function NavigationMap({ closeMenu }) {
                                                     }}
                                                     className={sec.isFocused || isLargeUnfocused ? "depth-active" : ""}
                                                     zIndex={sec.isFocused || isLargeUnfocused ? 12 : 2}
-                                                    showIcon={isSettled && (sec.isFocused || isLargeUnfocused)} useElastic={isSettled}
+                                                    showIcon={isSettled && (sec.isFocused || isLargeUnfocused || (sp.isAnchor && viewport.w < 768))} useElastic={isSettled}
                                                     isResizing={isResizing} isChild={true} initialOpacity={opacityMul}
-                                                    isDimmed={!sec.isFocused && !isLargeUnfocused}
+                                                    isDimmed={!sec.isFocused && !isLargeUnfocused && !(sp.isAnchor && viewport.w < 768)}
                                                     labelData={isLargeUnfocused ? { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: ((isShortDesktop || (viewport.w >= 768 && viewport.w < 1024)) && sec.quadrant.includes('b')) ? 'top' : 'center', img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: showLabels } : { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: (isShortDesktop && sec.quadrant.includes('b')) ? 'top' : (viewport.w < 768 ? 'center' : sp.alignLabel), img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: showLabels }}
                                                     isShortViewport={isShortDesktop || viewport.w < 1024}
                                                     noFlyTransition={isNoFly}

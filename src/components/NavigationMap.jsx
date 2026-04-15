@@ -493,6 +493,7 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
             let cyChild = sy;
             let gridRow = null;
             let gridCol = null;
+            let isAnchorPetal = false; // Set inside fan branch for mobile-only anchor petal
 
             if (isLaunched && focusedId) {
                 // Ensure mobile colSpacing and rowSpacing compactly reflect the new popup label system
@@ -641,12 +642,20 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
                         fanCenterAngle = -Math.PI / 2 + totalArc / 2;
                     }
 
+                    // Anchor petal is the one at 12 o'clock (overrides the hoisted false)
+                    const anchorIdx = isLeftQuadrant ? count - 1 : 0;
+                    isAnchorPetal = i === anchorIdx;
+
+                    // Use a larger orbit radius for the anchor petal so it doesn't clip the section icon
+                    const anchorOrbitRadius = (currentSectionSize / 2) + (SIZES.subPetalActive / 2);
+                    const effectiveRadius = isAnchorPetal ? anchorOrbitRadius : petalRestRadius;
+
                     const startAngle = fanCenterAngle - totalArc / 2;
 
                     const petalAngle = startAngle + (step * i);
 
-                    cxChild = sx + Math.cos(petalAngle) * petalRestRadius;
-                    cyChild = sy + Math.sin(petalAngle) * petalRestRadius;
+                    cxChild = sx + Math.cos(petalAngle) * effectiveRadius;
+                    cyChild = sy + Math.sin(petalAngle) * effectiveRadius;
                 }
             }
 
@@ -654,7 +663,7 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
                 ...child,
                 x: cxChild,
                 y: cyChild,
-                size: currentPetalSize,
+                size: isAnchorPetal ? SIZES.subPetalActive : currentPetalSize,
                 color: sec.deep,
                 parentColor: sec.color,
                 // Always keep them rendered if launched, for smoother CSS transitions
@@ -662,6 +671,7 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
                 isParentFocused: isFocused,
                 alignLabel: (sec.quadrant === 'tl' || sec.quadrant === 'bl') ? 'right' : 'left',
                 img: child.img,
+                isAnchor: isAnchorPetal,
                 gridRow: gridRow,
                 gridCol: gridCol
             };
@@ -1186,9 +1196,9 @@ export default function NavigationMap({ closeMenu }) {
                                                     }}
                                                     className={sec.isFocused || isLargeUnfocused ? "depth-active" : ""}
                                                     zIndex={sec.isFocused || isLargeUnfocused ? 12 : 2}
-                                                    showIcon={isSettled && (sec.isFocused || isLargeUnfocused)} useElastic={isSettled}
+                                                    showIcon={isSettled && (sec.isFocused || isLargeUnfocused || (sp.isAnchor && viewport.w < 768))} useElastic={isSettled}
                                                     isResizing={isResizing} isChild={true} initialOpacity={opacityMul}
-                                                    isDimmed={!sec.isFocused && !isLargeUnfocused}
+                                                    isDimmed={!sec.isFocused && !isLargeUnfocused && !(sp.isAnchor && viewport.w < 768)}
                                                     labelData={isLargeUnfocused ? { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: ((isShortDesktop || (viewport.w >= 768 && viewport.w < 1024)) && sec.quadrant.includes('b')) ? 'top' : 'center', img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: showLabels } : { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: (isShortDesktop && sec.quadrant.includes('b')) ? 'top' : (viewport.w < 768 ? 'center' : sp.alignLabel), img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: showLabels }}
                                                     isShortViewport={isShortDesktop || viewport.w < 1024}
                                                     noFlyTransition={isNoFly}

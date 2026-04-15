@@ -19,8 +19,9 @@ const easeInOut = (t) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t);
 const THEME = {
     purple: "#A88EFF", teal: "#00C2A3", blue: "#56C6FF",
     orange: "#CE4D35", yellow: "#FFDE21",
-    dark: "#0D1216", black: "#050508",
+    dark: "#1D1629", black: "#050508",
     light: "#F5F7F8", white: "#FFFFFF",
+    bg: "#F7F7F7",
     textSub: "rgba(13, 18, 22, 0.5)",
     deep: {
         stage: "#8369B8",
@@ -775,10 +776,10 @@ const computeLayout = (w, h, focusedId, isLaunched = true, isParkedReady = false
             if (minX > maxX) { minX = 0; maxX = w; }
             if (minY > maxY) { minY = 0; maxY = h; }
 
-            const clusterLeft = minX - 40;
-            const clusterRight = maxX + 40;
+            const clusterLeft = minX - 70;
+            const clusterRight = maxX + 70;
             const clusterTop = minY - 40;
-            const clusterBottom = maxY + (w < 768 ? 110 : 60);
+            const clusterBottom = maxY + (w < 768 ? 180 : 100);
             
             const q = activeSec.quadrant;
             let top, left, width, height;
@@ -793,7 +794,7 @@ const computeLayout = (w, h, focusedId, isLaunched = true, isParkedReady = false
                 height = activeSec.y - clusterTop;
             }
 
-            parkedBox = { top, left, width, height, color: activeSec.deep };
+            parkedBox = { top, left, width, height, color: THEME.dark };
         }
     }
 

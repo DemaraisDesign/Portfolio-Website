@@ -735,7 +735,9 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
     };
 
     const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-    const isActiveLayout = isFocused || (isBg === false);
+    // On mobile with no section focused, isBg is null (not false), so we need the extra isMobile && !isBg check.
+    // !isChild ensures sub-petal case study circles don't inherit this and show their label popups.
+    const isActiveLayout = isFocused || (isBg === false) || (isMobile && !isBg && !isChild);
     const isLabelVisible = showIcon && labelData && labelData.show && (isMobile ? isActiveLayout : (hover || tapped || isActiveLayout));
     const flyDelay = (isBg && isMobile) ? 0.3 : 0;
 

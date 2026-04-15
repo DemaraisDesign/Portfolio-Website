@@ -933,9 +933,8 @@ export default function NavigationMap({ closeMenu }) {
     const { requestConstructionAccess } = useConstructionGate();
     const [focusedId, setFocusedId] = useState(null);
     const [animPhase, setAnimPhase] = useState(0);
-    const [selectedPetalData, setSelectedPetalData] = useState(null); // mobile fly-to-cover animation
-    const [isReversing, setIsReversing] = useState(false);            // true while petal is flying back
-    const pendingPetalFn = React.useRef(null);                        // next petal to fly after reverse
+    const [parkedPetalData, setParkedPetalData] = useState(null);   // petal currently parked over section icon
+    const [outgoingPetalData, setOutgoingPetalData] = useState(null); // petal springing back to fan
     const isLaunched = animPhase >= 1;
     const isSettled = animPhase >= 2;
     const showLabels = animPhase >= 3;
@@ -1010,28 +1009,20 @@ export default function NavigationMap({ closeMenu }) {
         navigate("/");
     };
 
-    // Mobile-only: fly petal to section icon center and park it there.
-    // Tapping another petal reverses the current one first, then flies the new one.
+    // Mobile-only: fly new petal forward AND reverse old one simultaneously
     const handleMobilePetalClick = (sp, sec) => {
-        if (selectedPetalData?.id === sp.id && !isReversing) return; // already parked here
+        if (parkedPetalData?.id === sp.id) return; // already parked here
 
-        const doFly = () => {
-            setIsReversing(false);
-            setSelectedPetalData({
-                id: sp.id,
-                startX: sp.x, startY: sp.y, startSize: sp.size,
-                targetX: sec.x, targetY: sec.y, targetSize: sec.size,
-                img: sp.img, color: sp.color || sec.deep
-            });
-        };
+        // Kick the currently parked petal back to its fan position (runs in parallel)
+        if (parkedPetalData) setOutgoingPetalData(parkedPetalData);
 
-        if (selectedPetalData && !isReversing) {
-            // Reverse the parked petal, then fly the new one
-            pendingPetalFn.current = doFly;
-            setIsReversing(true);
-        } else {
-            doFly();
-        }
+        // Fly the new petal forward immediately (same tick — simultaneous)
+        setParkedPetalData({
+            id: sp.id,
+            startX: sp.x, startY: sp.y, startSize: sp.size,
+            targetX: sec.x, targetY: sec.y, targetSize: sec.size,
+            img: sp.img, color: sp.color || sec.deep
+        });
     };
 
     const isShortDesktop = viewport.h < 680 && viewport.w >= 768;
@@ -1156,45 +1147,67 @@ export default function NavigationMap({ closeMenu }) {
             </svg>
 
 
-            {/* Mobile petal fly-to-cover overlay */}
+            {/* Mobile petal overlays — both run simultaneously when switching */}
+
+            {/* Outgoing: parked petal springs back to its fan position */}
             <AnimatePresence>
-                {selectedPetalData && viewport.w < 768 && (
+                {outgoingPetalData && viewport.w < 768 && (
                     <motion.div
-                        key={`petal-fly-${selectedPetalData.id}`}
-                        initial={{
-                            x: selectedPetalData.startX - selectedPetalData.targetX,
-                            y: selectedPetalData.startY - selectedPetalData.targetY,
-                            scale: selectedPetalData.startSize / selectedPetalData.targetSize,
+                        key={`petal-out-${outgoingPetalData.id}`}
+                        initial={{ x: 0, y: 0, scale: 1 }}
+                        animate={{
+                            x: outgoingPetalData.startX - outgoingPetalData.targetX,
+                            y: outgoingPetalData.startY - outgoingPetalData.targetY,
+                            scale: outgoingPetalData.startSize / outgoingPetalData.targetSize,
                         }}
-                        animate={isReversing ? {
-                            x: selectedPetalData.startX - selectedPetalData.targetX,
-                            y: selectedPetalData.startY - selectedPetalData.targetY,
-                            scale: selectedPetalData.startSize / selectedPetalData.targetSize,
-                        } : { x: 0, y: 0, scale: 1 }}
-                        onAnimationComplete={() => {
-                            if (isReversing) {
-                                setSelectedPetalData(null);
-                                setIsReversing(false);
-                                if (pendingPetalFn.current) {
-                                    pendingPetalFn.current();
-                                    pendingPetalFn.current = null;
-                                }
-                            }
-                        }}
-                        transition={{ type: 'spring', stiffness: 260, damping: 16, mass: 0.9, delay: isReversing ? 0 : 0.15 }}
+                        onAnimationComplete={() => setOutgoingPetalData(null)}
+                        transition={{ type: 'spring', stiffness: 260, damping: 16, mass: 0.9 }}
                         style={{
                             position: 'absolute',
-                            top: selectedPetalData.targetY,
-                            left: selectedPetalData.targetX,
-                            width: selectedPetalData.targetSize,
-                            height: selectedPetalData.targetSize,
-                            marginTop: -selectedPetalData.targetSize / 2,
-                            marginLeft: -selectedPetalData.targetSize / 2,
+                            top: outgoingPetalData.targetY,
+                            left: outgoingPetalData.targetX,
+                            width: outgoingPetalData.targetSize,
+                            height: outgoingPetalData.targetSize,
+                            marginTop: -outgoingPetalData.targetSize / 2,
+                            marginLeft: -outgoingPetalData.targetSize / 2,
                             borderRadius: '50%',
-                            backgroundImage: selectedPetalData.img ? `url(${selectedPetalData.img})` : 'none',
+                            backgroundImage: outgoingPetalData.img ? `url(${outgoingPetalData.img})` : 'none',
                             backgroundSize: 'cover',
                             backgroundPosition: 'center',
-                            backgroundColor: selectedPetalData.color,
+                            backgroundColor: outgoingPetalData.color,
+                            zIndex: 199,
+                            pointerEvents: 'none',
+                            boxShadow: '0 8px 32px rgba(0,0,0,0.25)',
+                        }}
+                    />
+                )}
+            </AnimatePresence>
+
+            {/* Incoming: new petal flies to section icon center and parks */}
+            <AnimatePresence>
+                {parkedPetalData && viewport.w < 768 && (
+                    <motion.div
+                        key={`petal-in-${parkedPetalData.id}`}
+                        initial={{
+                            x: parkedPetalData.startX - parkedPetalData.targetX,
+                            y: parkedPetalData.startY - parkedPetalData.targetY,
+                            scale: parkedPetalData.startSize / parkedPetalData.targetSize,
+                        }}
+                        animate={{ x: 0, y: 0, scale: 1 }}
+                        transition={{ type: 'spring', stiffness: 260, damping: 16, mass: 0.9, delay: 0.15 }}
+                        style={{
+                            position: 'absolute',
+                            top: parkedPetalData.targetY,
+                            left: parkedPetalData.targetX,
+                            width: parkedPetalData.targetSize,
+                            height: parkedPetalData.targetSize,
+                            marginTop: -parkedPetalData.targetSize / 2,
+                            marginLeft: -parkedPetalData.targetSize / 2,
+                            borderRadius: '50%',
+                            backgroundImage: parkedPetalData.img ? `url(${parkedPetalData.img})` : 'none',
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            backgroundColor: parkedPetalData.color,
                             zIndex: 200,
                             pointerEvents: 'none',
                             boxShadow: '0 8px 32px rgba(0,0,0,0.25)',
@@ -1296,9 +1309,7 @@ export default function NavigationMap({ closeMenu }) {
                                                 style={{
                                                     position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
                                                     pointerEvents: 'none',
-                                                    // Hide when flying away; fade back in during reversal
-                                                    opacity: (selectedPetalData?.id === sp.id && !isReversing) ? 0 : 1,
-                                                    transition: (selectedPetalData?.id === sp.id && isReversing) ? 'opacity 0.35s ease 0.25s' : 'none',
+                                                    opacity: (parkedPetalData?.id === sp.id || outgoingPetalData?.id === sp.id) ? 0 : 1,
                                                 }}
                                             >
                                                 {nodeContent}

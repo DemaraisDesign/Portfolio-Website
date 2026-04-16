@@ -651,9 +651,9 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
                         angles.push(angles[j - 1] + (isAnchorTransition ? anchorGap : smallStep));
                     }
 
-                    // Pin the anchor to exactly 12 o'clock (-PI/2), shift the whole fan accordingly
+                    // Pin the anchor to exactly 6 o'clock (Math.PI / 2), shift the whole fan accordingly
                     const anchorAngleInFan = angles[anchorIdx];
-                    const fanStart = (-Math.PI / 2) - anchorAngleInFan;
+                    const fanStart = (Math.PI / 2) - anchorAngleInFan;
 
                     const petalAngle = fanStart + angles[visualIndex];
 
@@ -670,14 +670,15 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
                 ...child,
                 x: cxChild,
                 y: cyChild,
-                size: isAnchorPetal ? SIZES.subPetalActive : currentPetalSize,
+                size: isAnchorPetal ? (SIZES.subPetalActive * 0.5) : currentPetalSize,
                 color: sec.deep,
                 parentColor: sec.color,
                 // Always keep them rendered if launched, for smoother CSS transitions
                 visible: isLaunched,
                 isParentFocused: isFocused,
                 alignLabel: (sec.quadrant === 'tl' || sec.quadrant === 'bl') ? 'right' : 'left',
-                img: child.img,
+                img: isAnchorPetal ? null : child.img,
+                isAnchor: isAnchorPetal,
                 isAnchor: isAnchorPetal,
                 gridRow: gridRow,
                 gridCol: gridCol
@@ -832,13 +833,13 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                         {(labelData?.projectId && (labelData?.forceSearchIcon || getProject(labelData.projectId)?.isConstruction || !isProjectUnlocked(labelData.projectId))) && (
                             <div style={{
                                 position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
-                                backgroundColor: 'rgba(0, 0, 0, 0.55)',
+                                backgroundColor: labelData?.forceSearchIcon ? 'transparent' : 'rgba(0, 0, 0, 0.55)',
                                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                                 pointerEvents: 'none',
                                 opacity: 0.9
                             }}>
                                 {labelData?.forceSearchIcon ? (
-                                    <Search color="white" strokeWidth={2.5} style={{ width: '35%', height: '35%' }} />
+                                    <Search color={iconColor || "white"} strokeWidth={2.5} style={{ width: '35%', height: '35%' }} />
                                 ) : getProject(labelData.projectId)?.isConstruction ? (
                                     <svg style={{ width: '35%', height: '35%', opacity: 1 }} viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
                                         <circle cx="12" cy="12" r="10" fill="white" stroke="none" />
@@ -1240,11 +1241,11 @@ export default function NavigationMap({ closeMenu }) {
                                     isResizing={isResizing} initialOpacity={1}
                                     disableAnimation={sec.isBg}
                                     labelData={{
-                                        title: sec.label,
+                                        title: sec.label + " Overview",
                                         desc: sec.desc,
-                                        subDesc: "Case Studies",
+                                        subDesc: "Selected work links",
                                         show: showLabels,
-                                        align: viewport.w < 1024 ? (sec.isFocused ? 'right' : 'center') : (isShortDesktop && sec.quadrant.includes('b') ? 'top' : 'center')
+                                        align: viewport.w < 1024 ? (sec.isFocused ? 'right' : 'top') : (isShortDesktop && sec.quadrant.includes('b') ? 'top' : 'center')
                                     }}
                                     isShortViewport={isShortDesktop}
                                     noFlyTransition={sec.isFocused && isNoFly}
@@ -1269,7 +1270,8 @@ export default function NavigationMap({ closeMenu }) {
                                             <div style={{ pointerEvents: 'auto' }}>
                                                 <Node
                                                     x={sp.x} y={sp.y} size={sp.size}
-                                                    color={sp.color} ringColor={sp.parentColor} iconColor={THEME.white}
+                                                    color={sp.isAnchor && viewport.w < 1024 ? THEME.purple : sp.color} ringColor={sp.parentColor} 
+                                                    iconColor={sp.isAnchor && viewport.w < 1024 ? THEME.black : THEME.white}
                                                     onClick={() => {
                                                         if (viewport.w < 1024 && !focusedId) {
                                                             handleMobilePetalClick(sp, sec);
@@ -1290,7 +1292,7 @@ export default function NavigationMap({ closeMenu }) {
                                                     showIcon={isSettled && (sec.isFocused || isLargeUnfocused || (sp.isAnchor && viewport.w < 1024))} useElastic={isSettled}
                                                     isResizing={isResizing} isChild={true} initialOpacity={opacityMul}
                                                     isDimmed={!sec.isFocused && !isLargeUnfocused && !(sp.isAnchor && viewport.w < 1024)}
-                                                    labelData={isLargeUnfocused ? { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: ((isShortDesktop || (viewport.w >= 768 && viewport.w < 1024)) && sec.quadrant.includes('b')) ? 'top' : 'center', img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: showLabels, forceSearchIcon: false } : { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: (isShortDesktop && sec.quadrant.includes('b')) ? 'top' : (viewport.w < 1024 ? 'center' : sp.alignLabel), img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: (viewport.w < 1024 && !focusedId) ? false : showLabels, forceSearchIcon: viewport.w < 1024 && !focusedId }}
+                                                    labelData={isLargeUnfocused ? { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: ((isShortDesktop || (viewport.w >= 768 && viewport.w < 1024)) && sec.quadrant.includes('b')) ? 'top' : 'center', img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: showLabels, forceSearchIcon: false } : { title: sp.isAnchor && viewport.w < 1024 ? "" : sp.label, desc: sp.isAnchor && viewport.w < 1024 ? "Explore selected work" : sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: (isShortDesktop && sec.quadrant.includes('b')) ? 'top' : (viewport.w < 1024 ? 'center' : sp.alignLabel), img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: (viewport.w < 1024 && !focusedId) ? (sp.isAnchor ? true : false) : showLabels, forceSearchIcon: viewport.w < 1024 && !focusedId }}
                                                     isShortViewport={isShortDesktop || viewport.w < 1024}
                                                     noFlyTransition={isNoFly}
                                                     alwaysShowLabel={isLargeUnfocused && !(isShortDesktop || viewport.w < 1024)}

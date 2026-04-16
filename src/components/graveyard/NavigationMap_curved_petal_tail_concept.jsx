@@ -19,8 +19,9 @@ const easeInOut = (t) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t);
 const THEME = {
     purple: "#A88EFF", teal: "#00C2A3", blue: "#56C6FF",
     orange: "#CE4D35", yellow: "#FFDE21",
-    dark: "#0D1216", black: "#050508",
+    dark: "#1D1629", black: "#050508",
     light: "#F5F7F8", white: "#FFFFFF",
+    bg: "#F7F7F7",
     textSub: "rgba(13, 18, 22, 0.5)",
     deep: {
         stage: "#8369B8",
@@ -333,7 +334,7 @@ const SECTIONS = [
 // ═══════════════════════════════════════════════════
 //  SMART LAYOUT ENGINE
 // ═══════════════════════════════════════════════════
-const computeLayout = (w, h, focusedId, isLaunched) => {
+const computeLayout = (w, h, focusedId, isLaunched = true, isParkedReady = false, parkedPetalData = null) => {
     const cx = w / 2;
     const cy = h / 2;
     const minDim = Math.min(w, h);
@@ -494,6 +495,7 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
             let gridRow = null;
             let gridCol = null;
             let isAnchorPetal = false; // Set inside fan branch for mobile-only anchor petal
+            let motionPath = null;
 
             if (isLaunched && focusedId) {
                 // Ensure mobile colSpacing and rowSpacing compactly reflect the new popup label system
@@ -663,6 +665,76 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
 
                     cxChild = sx + Math.cos(petalAngle) * effectiveRadius;
                     cyChild = sy + Math.sin(petalAngle) * effectiveRadius;
+
+                    if (isParkedReady && parkedPetalData?.parentId === sec.id && !isAnchorPetal) {
+                        // We need the dot's sorted index to stagger its height down the tail.
+                        let dropRank = 0;
+                        if (visualIndex < anchorIdx) dropRank = visualIndex;
+                        else if (visualIndex > anchorIdx) dropRank = visualIndex - 1;
+
+                        const numWp = 6;
+                        const startAng = petalAngle;
+                        let targetAng = Math.PI / 2;
+                        while (targetAng > startAng) {
+                            targetAng -= Math.PI * 2;
+                        }
+                        const angleDiff = targetAng - startAng;
+
+                        const pathX = [sx + Math.cos(startAng) * effectiveRadius];
+                        const pathY = [sy + Math.sin(startAng) * effectiveRadius];
+                        const dists = [0];
+                        let totalDist = 0;
+
+                        // Interpolate points strictly along the counter-clockwise orbital curve
+                        for (let step = 1; step <= numWp; step++) {
+                             const progress = step / numWp;
+                             const intAngle = startAng + (angleDiff * progress);
+                             const nx = sx + Math.cos(intAngle) * effectiveRadius;
+                             const ny = sy + Math.sin(intAngle) * effectiveRadius;
+                             
+                             const dx = nx - pathX[pathX.length - 1];
+                             const dy = ny - pathY[pathY.length - 1];
+                             totalDist += Math.sqrt(dx * dx + dy * dy);
+                             
+                             pathX.push(nx);
+                             pathY.push(ny);
+                             dists.push(totalDist);
+                        }
+
+                        // Add the vertical drop as the final resting point!
+                        const dropShift = sec.quadrant.includes('l') ? -30 : 30;
+                        const verticalSpacing = 28;
+                        const finalX = sx + dropShift;
+                        const finalY = sy + effectiveRadius + 18 + (dropRank * verticalSpacing);
+
+                        const dxDrop = finalX - pathX[pathX.length - 1];
+                        const dyDrop = finalY - pathY[pathY.length - 1];
+                        totalDist += Math.sqrt(dxDrop * dxDrop + dyDrop * dyDrop);
+
+                        pathX.push(finalX);
+                        pathY.push(finalY);
+                        dists.push(totalDist);
+                        
+                        // Fake Spring Over-shoot (Bounce Down past final spot)
+                        pathX.push(finalX);
+                        pathY.push(finalY + 16); 
+                        totalDist += 120; // Massively inflate to allocate ~30% of the animation time to the stretch
+                        dists.push(totalDist);
+
+                        // Settle firmly back to final spot
+                        pathX.push(finalX);
+                        pathY.push(finalY);
+                        totalDist += 80; // Allocate ~20% of the time to the sluggish recoil
+                        dists.push(totalDist);
+                        
+                        const times = dists.map(d => totalDist > 0 ? d / totalDist : 0);
+                        
+                        // Update final logical coords so hover/hitboxes match reality
+                        cxChild = finalX;
+                        cyChild = finalY;
+
+                        motionPath = { x: pathX, y: pathY, delay: dropRank * 0.08, times };
+                    }
                 }
             }
 
@@ -680,14 +752,62 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
                 img: child.img,
                 isAnchor: isAnchorPetal,
                 gridRow: gridRow,
-                gridCol: gridCol
+                gridCol: gridCol,
+                motionPath: motionPath
             };
         });
 
         return { ...sec, x: sx, y: sy, isFocused, isBg, size: currentSectionSize, subPetals };
     });
 
-    return { home: { x: hx_display, y: hy_display, size: SIZES.home }, sections };
+    let parkedBox = null;
+    if (isParkedReady && parkedPetalData) {
+        const activeSec = sections.find(s => s.id === parkedPetalData.parentId);
+        if (activeSec) {
+            // Calculate cluster physical bounds securely from processed sections
+            let minX = w, maxX = 0, minY = h, maxY = 0;
+            sections.forEach(s => {
+                if (s.x < minX) minX = s.x;
+                if (s.x > maxX) maxX = s.x;
+                if (s.y < minY) minY = s.y;
+                if (s.y > maxY) maxY = s.y;
+            });
+
+            // If layout isn't cross-shaped, these default fallbacks prevent inversions
+            if (minX > maxX) { minX = 0; maxX = w; }
+            if (minY > maxY) { minY = 0; maxY = h; }
+
+            const clusterLeft = minX - 70;
+            const clusterRight = maxX + 70;
+            const clusterTop = minY - 40;
+            const clusterBottom = maxY + (w < 768 ? 110 : 60);
+            
+            const q = activeSec.quadrant;
+            let top, left, width, height;
+            
+            if (q === 'tl') {
+                top = activeSec.y; left = activeSec.x;
+                width = clusterRight - activeSec.x;
+                height = clusterBottom - activeSec.y;
+            } else if (q === 'tr') {
+                top = activeSec.y; left = clusterLeft;
+                width = activeSec.x - clusterLeft;
+                height = clusterBottom - activeSec.y;
+            } else if (q === 'bl') {
+                top = clusterTop; left = activeSec.x;
+                width = clusterRight - activeSec.x;
+                height = activeSec.y - clusterTop;
+            } else if (q === 'br') {
+                top = clusterTop; left = clusterLeft;
+                width = activeSec.x - clusterLeft;
+                height = activeSec.y - clusterTop;
+            }
+
+            parkedBox = { top, left, width, height, color: THEME.dark };
+        }
+    }
+
+    return { home: { x: hx_display, y: hy_display, size: SIZES.home }, sections, parkedBox };
 };
 
 // ═══════════════════════════════════════════════════
@@ -710,7 +830,7 @@ const OrganicPath = React.memo(({ x1, y1, x2, y2, color, isDashed, isActive, wid
     );
 });
 
-const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, className = "", isChild, zIndex, showIcon, isFocused, isBg, isResizing, initialOpacity = 0, isDimmed, labelData, disableAnimation, isShortViewport, flipKey, flipDelay = 0, noFlyTransition = false, sizeDelay = 0, alwaysShowLabel = false, parkedData }) => {
+const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, className = "", isChild, zIndex, showIcon, isFocused, isBg, isResizing, initialOpacity = 0, isDimmed, labelData, disableAnimation, isShortViewport, flipKey, flipDelay = 0, noFlyTransition = false, sizeDelay = 0, alwaysShowLabel = false, parkedData, motionPath, isParkedReady }) => {
     const { isProjectUnlocked } = usePasswordGate();
     const [hover, setHover] = useState(false);
     const [tapped, setTapped] = useState(false);
@@ -746,7 +866,7 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
     const flyDelay = (isBg && isMobile) ? 0.3 : 0;
 
     return (
-        <button
+        <motion.button
             type="button"
             aria-label={labelData ? labelData.text : "Navigation Node"}
             className={`node-interactive ${className} group`}
@@ -755,10 +875,12 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
             onMouseLeave={handleMouseLeave}
             onFocus={() => setHover(true)}
             onBlur={handleMouseLeave}
+            animate={motionPath ? { top: motionPath.y, left: motionPath.x } : { top: y, left: x }}
+            transition={motionPath ? { top: { duration: 0.6, ease: "linear", delay: motionPath.delay, times: motionPath.times }, left: { duration: 0.6, ease: "linear", delay: motionPath.delay, times: motionPath.times } } : undefined}
             style={{
                 position: 'absolute',
-                top: y,
-                left: x,
+                top: motionPath ? undefined : y,
+                left: motionPath ? undefined : x,
                 width: size,
                 height: size,
                 opacity: initialOpacity * (isDimmed ? 0.25 : 1.0),
@@ -766,7 +888,7 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 cursor: onClick ? 'pointer' : 'default',
                 perspective: '1000px',
-                transition: isResizing ? 'none' : `${noFlyTransition ? '' : `top 1.0s cubic-bezier(0.25, 1, 0.5, 1) ${flyDelay}s, left 1.0s cubic-bezier(0.25, 1, 0.5, 1) ${flyDelay}s, `}width 0.8s cubic-bezier(0.25, 1, 0.5, 1) ${sizeDelay}s, height 0.8s cubic-bezier(0.25, 1, 0.5, 1) ${sizeDelay}s, opacity 0.8s ease`
+                transition: motionPath ? `width 0.8s cubic-bezier(0.25, 1, 0.5, 1) ${sizeDelay}s, height 0.8s cubic-bezier(0.25, 1, 0.5, 1) ${sizeDelay}s, opacity 0.2s ease` : (isResizing ? 'none' : `${noFlyTransition ? '' : `top 1.0s cubic-bezier(0.25, 1, 0.5, 1) ${flyDelay}s, left 1.0s cubic-bezier(0.25, 1, 0.5, 1) ${flyDelay}s, `}width 0.8s cubic-bezier(0.25, 1, 0.5, 1) ${sizeDelay}s, height 0.8s cubic-bezier(0.25, 1, 0.5, 1) ${sizeDelay}s, opacity 0.2s ease`)
             }}
         >
             <motion.div
@@ -879,9 +1001,16 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                             x: parkedData.startX - x,
                             y: parkedData.startY - y,
                             scale: parkedData.startSize / size,
+                            boxShadow: '0 0 0 5px rgba(247, 247, 247, 0)'
                         }}
-                        animate={{ x: 0, y: 0, scale: 1 }}
-                        transition={{ type: 'spring', stiffness: 260, damping: 16, mass: 0.9, delay: 0.15 }}
+                        animate={{ 
+                            x: 0, y: 0, scale: 1,
+                            boxShadow: isParkedReady ? `0 0 0 5px ${THEME.bg}` : '0 0 0 5px rgba(247, 247, 247, 0)'
+                        }}
+                        transition={{ 
+                            type: 'spring', stiffness: 260, damping: 16, mass: 0.9, delay: 0.15,
+                            boxShadow: { duration: 0.6, ease: "easeOut", delay: isParkedReady ? 0.85 : 0 }
+                        }}
                         style={{
                             position: 'absolute',
                             top: '50%',
@@ -896,8 +1025,7 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                             backgroundPosition: 'center',
                             backgroundColor: parkedData.color,
                             zIndex: 200,
-                            pointerEvents: 'none',
-                            boxShadow: '0 8px 32px rgba(0,0,0,0.25)',
+                            pointerEvents: 'none'
                         }}
                     />
                 )}
@@ -951,7 +1079,7 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                     </div>
                 </div>
             )}
-        </button>
+        </motion.button>
     );
 };
 
@@ -968,6 +1096,7 @@ export default function NavigationMap({ closeMenu }) {
     const [animPhase, setAnimPhase] = useState(0);
     const [parkedPetalData, setParkedPetalData] = useState(null);   // petal currently parked over section icon
     const [outgoingPetalData, setOutgoingPetalData] = useState(null); // petal springing back to fan
+    const [isParkedReady, setIsParkedReady] = useState(false); // flags when thumbnail has finished flying in
     const isLaunched = animPhase >= 1;
     const isSettled = animPhase >= 2;
     const showLabels = animPhase >= 3;
@@ -1013,12 +1142,19 @@ export default function NavigationMap({ closeMenu }) {
     }, [viewport.w, focusedId]);
 
     const layout = useMemo(() =>
-        computeLayout(viewport.w, viewport.h, focusedId, isLaunched),
-        [viewport, focusedId, isLaunched]
+        computeLayout(viewport.w, viewport.h, focusedId, isLaunched, isParkedReady, parkedPetalData),
+        [viewport, focusedId, isLaunched, isParkedReady, parkedPetalData]
     );
 
     const handleSectionClick = (id) => {
         if (!isLaunched) return;
+
+        // If a thumbnail is parked and ready, tapping the section navigates directly to that project
+        if (isParkedReady && parkedPetalData?.parentId === id) {
+            if (closeMenu) closeMenu();
+            navigate(parkedPetalData.path);
+            return;
+        }
 
         if (viewport.w < 768) {
             // Mobile: always navigate directly to the section — no drill-down level
@@ -1046,6 +1182,7 @@ export default function NavigationMap({ closeMenu }) {
     const handleMobilePetalClick = (sp, sec) => {
         if (parkedPetalData?.id === sp.id) return; // already parked here
 
+        setIsParkedReady(false);
         // Kick the currently parked petal back to its fan position (runs in parallel)
         if (parkedPetalData) setOutgoingPetalData(parkedPetalData);
 
@@ -1054,8 +1191,13 @@ export default function NavigationMap({ closeMenu }) {
             id: sp.id,
             startX: sp.x, startY: sp.y, startSize: sp.size,
             targetX: sec.x, targetY: sec.y, targetSize: sec.size,
-            img: sp.img, color: sp.color || sec.deep
+            img: sp.img, color: sp.color || sec.deep,
+            parentId: sec.id,
+            path: sp.link || sp.path || `/work/${sp.id}`
         });
+
+        if (window.parkTimer) clearTimeout(window.parkTimer);
+        window.parkTimer = setTimeout(() => setIsParkedReady(true), 200);
     };
 
     const isShortDesktop = viewport.h < 680 && viewport.w >= 768;
@@ -1088,8 +1230,8 @@ export default function NavigationMap({ closeMenu }) {
             <svg style={{
                 position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 0,
                 overflow: 'visible',
-                opacity: isLaunched && !focusedId && viewport.w >= 768 ? 1 : 0,
-                transition: isResizing ? 'none' : 'opacity 0.8s ease 0.4s'
+                opacity: isLaunched && !focusedId && viewport.w >= 768 && !isParkedReady && !parkedPetalData ? 1 : 0,
+                transition: isResizing ? 'none' : 'opacity 0.2s ease'
             }}>
                 {layout.sections.map(sec => {
                     const isLeft = sec.quadrant.includes('l');
@@ -1179,6 +1321,28 @@ export default function NavigationMap({ closeMenu }) {
                 })}
             </svg>
 
+            {/* Dark Masking Box for Parked State */}
+            <AnimatePresence>
+                {layout.parkedBox && (
+                    <motion.div
+                        key="parked-mask-box"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.6, ease: "easeOut", delay: 0.3 }}
+                        style={{
+                            position: 'absolute',
+                            top: layout.parkedBox.top,
+                            left: layout.parkedBox.left,
+                            width: layout.parkedBox.width,
+                            height: layout.parkedBox.height,
+                            backgroundColor: layout.parkedBox.color || THEME.dark,
+                            borderRadius: '24px',
+                            zIndex: 5
+                        }}
+                    />
+                )}
+            </AnimatePresence>
 
             {/* Mobile petal overlays — both run simultaneously when switching */}
 
@@ -1226,24 +1390,28 @@ export default function NavigationMap({ closeMenu }) {
                     <>
 
 
-                        {layout.sections.map((sec, secIdx) => (
-                            <React.Fragment key={sec.id}>
-                                <Node
-                                    x={sec.x}
-                                    y={sec.y}
-                                    size={sec.size}
-                                    color={sec.color} iconColor={THEME.white} icon={sec.icon}
-                                    onClick={() => handleSectionClick(sec.id)}
-                                    className={`${sec.isBg ? "depth-bg" : "depth-active"} ${isLaunched && !focusedId ? 'launched-node' : ''}`}
-                                    isFocused={sec.isFocused} isBg={sec.isBg} zIndex={sec.isFocused ? 15 : 12}
-                                    showIcon={isLaunched} useElastic={isLaunched}
-                                    isResizing={isResizing} initialOpacity={1}
-                                    disableAnimation={sec.isBg}
+                        {layout.sections.map((sec, secIdx) => {
+                            const isSectionFaded = isParkedReady && parkedPetalData?.parentId !== sec.id;
+
+                            return (
+                                <React.Fragment key={sec.id}>
+                                    <Node
+                                        x={sec.x}
+                                        y={sec.y}
+                                        size={sec.size}
+                                        color={sec.color} iconColor={THEME.white} icon={sec.icon}
+                                        onClick={() => handleSectionClick(sec.id)}
+                                        className={`${sec.isBg ? "depth-bg" : "depth-active"} ${isLaunched && !focusedId ? 'launched-node' : ''}`}
+                                        isFocused={sec.isFocused} isBg={sec.isBg} zIndex={sec.isFocused ? 15 : 12}
+                                        showIcon={isLaunched} useElastic={isLaunched}
+                                        isResizing={isResizing} initialOpacity={isSectionFaded ? 0 : 1}
+                                        disableAnimation={sec.isBg}
+                                        isParkedReady={isParkedReady}
                                     labelData={{
                                         title: sec.label,
                                         desc: sec.desc,
                                         subDesc: "Case Studies",
-                                        show: showLabels,
+                                        show: showLabels && !isParkedReady,
                                         align: viewport.w < 1024 ? (sec.isFocused ? 'right' : 'center') : (isShortDesktop && sec.quadrant.includes('b') ? 'top' : 'center')
                                     }}
                                     isShortViewport={isShortDesktop}
@@ -1288,8 +1456,10 @@ export default function NavigationMap({ closeMenu }) {
                                                     className={sec.isFocused || isLargeUnfocused ? "depth-active" : ""}
                                                     zIndex={sec.isFocused || isLargeUnfocused ? 12 : 2}
                                                     showIcon={isSettled && (sec.isFocused || isLargeUnfocused || (sp.isAnchor && viewport.w < 1024))} useElastic={isSettled}
-                                                    isResizing={isResizing} isChild={true} initialOpacity={opacityMul}
+                                                    isResizing={isResizing} isChild={true} initialOpacity={isSectionFaded ? 0 : opacityMul}
                                                     isDimmed={!sec.isFocused && !isLargeUnfocused && !(sp.isAnchor && viewport.w < 1024)}
+                                                    isParkedReady={isParkedReady}
+                                                    motionPath={sp.motionPath}
                                                     labelData={isLargeUnfocused ? { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: ((isShortDesktop || (viewport.w >= 768 && viewport.w < 1024)) && sec.quadrant.includes('b')) ? 'top' : 'center', img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: showLabels, forceSearchIcon: false } : { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: (isShortDesktop && sec.quadrant.includes('b')) ? 'top' : (viewport.w < 1024 ? 'center' : sp.alignLabel), img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: (viewport.w < 1024 && !focusedId) ? false : showLabels, forceSearchIcon: viewport.w < 1024 && !focusedId }}
                                                     isShortViewport={isShortDesktop || viewport.w < 1024}
                                                     noFlyTransition={isNoFly}
@@ -1322,9 +1492,10 @@ export default function NavigationMap({ closeMenu }) {
                                             </motion.div>
                                         );
                                     })}
-                                </AnimatePresence>
-                            </React.Fragment>
-                        ))}
+                                    </AnimatePresence>
+                                </React.Fragment>
+                            );
+                        })}
                     </>
                 );
             })()}

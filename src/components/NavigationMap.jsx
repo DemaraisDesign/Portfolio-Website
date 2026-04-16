@@ -670,15 +670,14 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
                 ...child,
                 x: cxChild,
                 y: cyChild,
-                size: isAnchorPetal ? (SIZES.subPetalActive * 0.5) : currentPetalSize,
+                size: isAnchorPetal ? (SIZES.subPetalActive * 0.7) : currentPetalSize,
                 color: sec.deep,
                 parentColor: sec.color,
                 // Always keep them rendered if launched, for smoother CSS transitions
                 visible: isLaunched,
                 isParentFocused: isFocused,
-                alignLabel: (sec.quadrant === 'tl' || sec.quadrant === 'bl') ? 'right' : 'left',
+                alignLabel: (sec.quadrant === 'tl' || sec.quadrant === 'bl') ? 'left' : 'right',
                 img: isAnchorPetal ? null : child.img,
-                isAnchor: isAnchorPetal,
                 isAnchor: isAnchorPetal,
                 gridRow: gridRow,
                 gridCol: gridCol
@@ -922,13 +921,13 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                     opacity: isLabelVisible ? 1 : 0,
                     transition: `opacity ${isLabelVisible ? '0.4s' : '0.2s'} ease ${isLabelVisible ? sizeDelay : 0}s, transform ${isLabelVisible ? '0.4s' : '0.2s'} ease ${isLabelVisible ? sizeDelay : 0}s`,
                     display: 'flex',
-                    flexDirection: isShortViewport ? 'row' : 'column',
+                    flexDirection: (isShortViewport && !labelData?.isPlain) ? 'row' : 'column',
                     alignItems: isShortViewport ? 'center' : (labelData.align === 'right' ? 'flex-start' : (labelData.align === 'left' ? 'flex-end' : 'center')),
                     gap: isShortViewport ? '10px' : '0',
                     pointerEvents: 'none',
                     zIndex: 1,
                     // Additional card styles for short viewports
-                    ...(isShortViewport ? {
+                    ...(isShortViewport && !labelData?.isPlain ? {
                         background: THEME.white,
                         padding: '8px 14px 8px 10px',
                         borderRadius: '12px',
@@ -936,7 +935,7 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                         border: `1px solid ${THEME.light}`
                     } : {})
                 }}>
-                    {isShortViewport && (
+                    {(isShortViewport && !labelData?.isPlain) && (
                         <div style={{
                             width: '10px',
                             height: '10px',
@@ -1270,8 +1269,8 @@ export default function NavigationMap({ closeMenu }) {
                                             <div style={{ pointerEvents: 'auto' }}>
                                                 <Node
                                                     x={sp.x} y={sp.y} size={sp.size}
-                                                    color={sp.isAnchor && viewport.w < 1024 ? THEME.purple : sp.color} ringColor={sp.parentColor} 
-                                                    iconColor={sp.isAnchor && viewport.w < 1024 ? THEME.black : THEME.white}
+                                                    color={sp.color} ringColor={sp.parentColor} 
+                                                    iconColor={THEME.white}
                                                     onClick={() => {
                                                         if (viewport.w < 1024 && !focusedId) {
                                                             handleMobilePetalClick(sp, sec);
@@ -1292,7 +1291,7 @@ export default function NavigationMap({ closeMenu }) {
                                                     showIcon={isSettled && (sec.isFocused || isLargeUnfocused || (sp.isAnchor && viewport.w < 1024))} useElastic={isSettled}
                                                     isResizing={isResizing} isChild={true} initialOpacity={opacityMul}
                                                     isDimmed={!sec.isFocused && !isLargeUnfocused && !(sp.isAnchor && viewport.w < 1024)}
-                                                    labelData={isLargeUnfocused ? { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: ((isShortDesktop || (viewport.w >= 768 && viewport.w < 1024)) && sec.quadrant.includes('b')) ? 'top' : 'center', img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: showLabels, forceSearchIcon: false } : { title: sp.isAnchor && viewport.w < 1024 ? "" : sp.label, desc: sp.isAnchor && viewport.w < 1024 ? "Explore selected work" : sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: (isShortDesktop && sec.quadrant.includes('b')) ? 'top' : (viewport.w < 1024 ? 'center' : sp.alignLabel), img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: (viewport.w < 1024 && !focusedId) ? (sp.isAnchor ? true : false) : showLabels, forceSearchIcon: viewport.w < 1024 && !focusedId }}
+                                                    labelData={isLargeUnfocused ? { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: ((isShortDesktop || (viewport.w >= 768 && viewport.w < 1024)) && sec.quadrant.includes('b')) ? 'top' : 'center', img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: showLabels, forceSearchIcon: false } : { title: sp.isAnchor && viewport.w < 1024 ? "" : sp.label, desc: sp.isAnchor && viewport.w < 1024 ? "Explore selected work" : sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: (isShortDesktop && sec.quadrant.includes('b')) ? 'top' : (viewport.w < 1024 ? (sp.isAnchor && !focusedId ? 'center' : sp.alignLabel) : sp.alignLabel), img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: (viewport.w < 1024 && !focusedId) ? (sp.isAnchor ? true : false) : showLabels, forceSearchIcon: viewport.w < 1024 && !focusedId, isPlain: true }}
                                                     isShortViewport={isShortDesktop || viewport.w < 1024}
                                                     noFlyTransition={isNoFly}
                                                     alwaysShowLabel={isLargeUnfocused && !(isShortDesktop || viewport.w < 1024)}

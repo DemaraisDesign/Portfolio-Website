@@ -914,8 +914,8 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                     transform: isLabelVisible 
                         ? (labelData.align === 'right' ? 'translate(20px, -50%)' : (labelData.align === 'left' ? 'translate(calc(-100% - 20px), -50%)' : 'translate(-50%, 0)')) 
                         : (labelData.align === 'right' ? 'translate(10px, -50%)' : (labelData.align === 'left' ? 'translate(calc(-100% - 10px), -50%)' : `translate(-50%, ${labelData.align === 'top' ? '10px' : '-10px'})`)),
-                    marginTop: labelData.align === 'top' || labelData.align === 'right' || labelData.align === 'left' ? '0' : '20px',
-                    marginBottom: labelData.align === 'top' ? '20px' : '0',
+                    marginTop: labelData.align === 'top' || labelData.align === 'right' || labelData.align === 'left' ? '0' : `${(size / 2) + 12}px`,
+                    marginBottom: labelData.align === 'top' ? `${(size / 2) + 12}px` : '0',
                     textAlign: isShortViewport ? (labelData.align === 'center' ? 'center' : 'left') : (labelData.align === 'right' ? 'left' : (labelData.align === 'left' ? 'right' : 'center')),
                     whiteSpace: isShortViewport ? 'nowrap' : 'normal',
                     width: isShortViewport ? 'auto' : '180px',
@@ -948,7 +948,7 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                     )}
                     <div style={{ display: 'flex', flexDirection: 'column' }}>
                         <span style={{ fontSize: isChild && !isShortViewport ? '13px' : '16px', fontWeight: 800, color: THEME.dark, letterSpacing: '0.02em', WebkitFontSmoothing: 'antialiased', lineHeight: 1.25 }}>{labelData.title}</span>
-                        {labelData.desc && <span style={{ fontSize: '10px', fontWeight: 600, color: THEME.textSub, textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: '2px' }}>{labelData.desc}</span>}
+                        {labelData.desc && <span style={{ fontSize: '11px', fontWeight: 700, color: THEME.dark, letterSpacing: '0.05em', marginTop: '4px' }}>{labelData.desc}</span>}
                         {labelData.subDesc && <span style={{ fontSize: '10px', fontWeight: 600, color: THEME.textSub, textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: '1px' }}>{labelData.subDesc}</span>}
                     </div>
                 </div>

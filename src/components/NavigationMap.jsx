@@ -1382,8 +1382,8 @@ export default function NavigationMap({ closeMenu }) {
                                         <div style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: 'rgba(13,18,22,0.25)', flexShrink: 0, margin: '0 6px' }} />
                                         {/* Text */}
                                         <span style={{
-                                            fontSize: '9px', fontWeight: 700, color: THEME.dark,
-                                            letterSpacing: '0.08em', textTransform: 'uppercase',
+                                            fontSize: '10px', fontWeight: 600, color: THEME.textSub,
+                                            letterSpacing: '0.05em', textTransform: 'uppercase',
                                             whiteSpace: 'nowrap', flexShrink: 0,
                                             padding: '0 2px'
                                         }}>Explore Selected Work</span>

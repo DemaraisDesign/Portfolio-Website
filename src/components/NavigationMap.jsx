@@ -1336,21 +1336,13 @@ export default function NavigationMap({ closeMenu }) {
                                         >
                                             <Search size={16} color={THEME.white} strokeWidth={2.5} />
                                         </button>
-                                        {viewport.w >= 500 && (
-                                            <span style={{
-                                                display: 'block', marginTop: '6px',
-                                                fontSize: '10px', fontWeight: 600, color: THEME.textSub,
-                                                textTransform: 'uppercase', letterSpacing: '0.05em',
-                                                whiteSpace: 'nowrap', textAlign: 'center'
-                                            }}>Explore Selected Work</span>
-                                        )}
                                     </div>
                                 )}
                             </React.Fragment>
                         ))}
 
-                        {/* "Explore Selected Work" connector between row pairs — phone only */}
-                        {viewport.w < 500 && !focusedId && isSettled && (() => {
+                        {/* "Explore Selected Work" connector between row pairs — mobile only */}
+                        {viewport.w < 1024 && !focusedId && isSettled && (() => {
                             const topLeft = layout.sections.find(s => s.quadrant === 'tl');
                             const topRight = layout.sections.find(s => s.quadrant === 'tr');
                             const botLeft = layout.sections.find(s => s.quadrant === 'bl');

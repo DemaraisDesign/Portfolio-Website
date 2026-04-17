@@ -1326,7 +1326,8 @@ export default function NavigationMap({ closeMenu }) {
                                         <button
                                             onClick={() => handleSectionClick(sec.id)}
                                             style={{
-                                                width: 32, height: 32,
+                                                width: viewport.w >= 768 ? 38 : 32,
+                                                height: viewport.w >= 768 ? 38 : 32,
                                                 borderRadius: '50%',
                                                 backgroundColor: sec.color,
                                                 border: 'none',
@@ -1335,7 +1336,7 @@ export default function NavigationMap({ closeMenu }) {
                                                 padding: 0
                                             }}
                                         >
-                                            <Search size={16} color={THEME.white} strokeWidth={2.5} />
+                                            <Search size={viewport.w >= 768 ? 19 : 16} color={THEME.white} strokeWidth={2.5} />
                                         </button>
                                         {viewport.w >= 768 && (
                                             <span style={{

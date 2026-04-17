@@ -630,12 +630,12 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
 
                     let petalAngle;
                     if (count === 4) {
-                        // Symmetric arrangement: 10:30, 12:30, 4:30, 6:30
+                        // Symmetric arrangement: 10:30, 1:30, 4:30, 7:30
                         const fixedAngles = [
                             -3 * Math.PI / 4,    // 10:30
-                            -5 * Math.PI / 12,   // 12:30
+                            -Math.PI / 4,         // 1:30
                             Math.PI / 4,          // 4:30
-                            7 * Math.PI / 12,     // 6:30
+                            3 * Math.PI / 4,      // 7:30
                         ];
                         petalAngle = fixedAngles[i];
                     } else {

@@ -1241,7 +1241,7 @@ export default function NavigationMap({ closeMenu }) {
                                         desc: isLandscapePhone ? null : sec.desc,
                                         subDesc: isLandscapePhone ? null : 'Selected work links',
                                         show: showLabels,
-                                        align: viewport.w < 1280 ? (sec.isFocused ? 'right' : 'top') : (isShortDesktop && sec.quadrant.includes('b') ? 'top' : 'center')
+                                        align: isLandscapePhone ? 'center' : (viewport.w < 1280 ? (sec.isFocused ? 'right' : 'top') : (isShortDesktop && sec.quadrant.includes('b') ? 'top' : 'center'))
                                     }}
                                     isShortViewport={isShortDesktop}
                                     noFlyTransition={sec.isFocused && isNoFly}

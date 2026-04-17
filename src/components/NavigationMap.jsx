@@ -339,6 +339,7 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
     const minDim = Math.min(w, h);
 
     const isSmallMobile = w <= 430 || h <= 430;
+    const isLandscapePhone = w > h && h < 500 && w < 1280;
 
     const SIZES = {
         home: (focusedId || (isLaunched && w < 1280)) ? 60 : (isLaunched && w >= 1280 ? 55 : 110),
@@ -351,7 +352,7 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
 
     const DISTANCES = {
         unlaunched: (110 / 2) + (55 / 2),
-        default: w >= 768 ? minDim * 0.35 : minDim * 0.24,
+        default: isLandscapePhone ? Math.min(h * 0.30, 100) : (w >= 768 ? minDim * 0.35 : minDim * 0.24),
     };
 
     // The bounding box is bottom-heavy due to text, but visual weight is in the circles.
@@ -452,10 +453,20 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
             const dy = Math.min(rawDy, maxBotDy);
             const topDy = Math.min(rawTopDy, maxTopDy);
 
-            if (sec.quadrant === 'bl') { targetX = cx - dx; targetY = visualCenterY + dy + (w < 768 ? 50 : 0); }
-            if (sec.quadrant === 'br') { targetX = cx + dx; targetY = visualCenterY + dy + (w < 768 ? 50 : 0); }
-            if (sec.quadrant === 'tl') { targetX = cx - dx; targetY = visualCenterY - topDy; }
-            if (sec.quadrant === 'tr') { targetX = cx + dx; targetY = visualCenterY - topDy; }
+            // Landscape phone: single horizontal row
+            if (isLandscapePhone) {
+                const quadrantOrder = ['tl', 'tr', 'bl', 'br'];
+                const idx = quadrantOrder.indexOf(sec.quadrant);
+                const padX = 100;
+                const spacing = (w - 2 * padX) / 3;
+                targetX = padX + spacing * idx;
+                targetY = cy;
+            } else {
+                if (sec.quadrant === 'bl') { targetX = cx - dx; targetY = visualCenterY + dy + (w < 768 ? 50 : 0); }
+                if (sec.quadrant === 'br') { targetX = cx + dx; targetY = visualCenterY + dy + (w < 768 ? 50 : 0); }
+                if (sec.quadrant === 'tl') { targetX = cx - dx; targetY = visualCenterY - topDy; }
+                if (sec.quadrant === 'tr') { targetX = cx + dx; targetY = visualCenterY - topDy; }
+            }
 
             if (!focusedId) {
                 sx = targetX;
@@ -1044,6 +1055,7 @@ export default function NavigationMap({ closeMenu }) {
     };
 
     const isShortDesktop = viewport.h < 680 && viewport.w >= 1280;
+    const isLandscapePhone = viewport.w > viewport.h && viewport.h < 500 && viewport.w < 1280;
 
     return (
         <div ref={containerRef} style={{
@@ -1225,9 +1237,9 @@ export default function NavigationMap({ closeMenu }) {
                                     isResizing={isResizing} initialOpacity={1}
                                     disableAnimation={sec.isBg}
                                     labelData={{
-                                        title: sec.label + " Overview",
-                                        desc: sec.desc,
-                                        subDesc: "Selected work links",
+                                        title: sec.label + (isLandscapePhone ? '' : ' Overview'),
+                                        desc: isLandscapePhone ? null : sec.desc,
+                                        subDesc: isLandscapePhone ? null : 'Selected work links',
                                         show: showLabels,
                                         align: viewport.w < 1280 ? (sec.isFocused ? 'right' : 'top') : (isShortDesktop && sec.quadrant.includes('b') ? 'top' : 'center')
                                     }}
@@ -1311,7 +1323,7 @@ export default function NavigationMap({ closeMenu }) {
                                 </AnimatePresence>
 
                                 {/* Magnifying glass explore trigger — mobile only, unfocused state */}
-                                {viewport.w < 1280 && !focusedId && isSettled && (
+                                {viewport.w < 1280 && !isLandscapePhone && !focusedId && isSettled && (
                                     <div style={(() => {
                                         const isLandscapeTablet = viewport.w >= 768 && viewport.w < 1280 && viewport.w > viewport.h;
                                         const isInnerRight = sec.quadrant === 'tl' || sec.quadrant === 'bl';
@@ -1367,7 +1379,7 @@ export default function NavigationMap({ closeMenu }) {
                         ))}
 
                         {/* "Selected Work" connector between row pairs — phone only */}
-                        {viewport.w < 768 && !focusedId && isSettled && (() => {
+                        {viewport.w < 768 && !isLandscapePhone && !focusedId && isSettled && (() => {
                             const topLeft = layout.sections.find(s => s.quadrant === 'tl');
                             const topRight = layout.sections.find(s => s.quadrant === 'tr');
                             const botLeft = layout.sections.find(s => s.quadrant === 'bl');

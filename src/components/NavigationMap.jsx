@@ -628,10 +628,12 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
                         fanCenterAngle = Math.atan2(sy - hy, sx - hx);
                     }
 
-                    // Uniform petal distribution around the full perimeter
-                    const angleStep = (Math.PI * 2) / count;
-                    // Start from 12 o'clock (-PI/2) and go clockwise
-                    const petalAngle = (-Math.PI / 2) + (i * angleStep);
+                    // Distribute petals over upper 300° arc, leaving 60° gap at bottom for magnifying glass
+                    const gapAngle = Math.PI / 3; // 60° gap centered on 6 o'clock
+                    const arcAngle = (Math.PI * 2) - gapAngle;
+                    const startAngle = (Math.PI / 2) + (gapAngle / 2); // Start just past the gap
+                    const angleStep = count > 1 ? arcAngle / (count - 1) : 0;
+                    const petalAngle = startAngle + (i * angleStep);
 
                     cxChild = sx + Math.cos(petalAngle) * petalRestRadius;
                     cyChild = sy + Math.sin(petalAngle) * petalRestRadius;

@@ -1312,17 +1312,32 @@ export default function NavigationMap({ closeMenu }) {
 
                                 {/* Magnifying glass explore trigger — mobile only, unfocused state */}
                                 {viewport.w < 1280 && !focusedId && isSettled && (
-                                    <div style={{
-                                        position: 'absolute',
-                                        left: sec.x,
-                                        top: sec.y + (sec.size / 2) + 20,
-                                        transform: 'translateX(-50%)',
-                                        display: 'flex', flexDirection: 'column', alignItems: 'center',
-                                        zIndex: 14,
-                                        pointerEvents: 'auto',
-                                        opacity: showLabels ? 1 : 0,
-                                        transition: 'opacity 0.4s ease'
-                                    }}>
+                                    <div style={(() => {
+                                        const isLandscapeTablet = viewport.w >= 768 && viewport.w < 1280 && viewport.w > viewport.h;
+                                        const isInnerRight = sec.quadrant === 'tl' || sec.quadrant === 'bl';
+                                        if (isLandscapeTablet) {
+                                            return {
+                                                position: 'absolute',
+                                                left: isInnerRight ? sec.x + (sec.size / 2) + 20 : sec.x - (sec.size / 2) - 20,
+                                                top: sec.y,
+                                                transform: isInnerRight ? 'translateY(-50%)' : 'translate(-100%, -50%)',
+                                                display: 'flex', flexDirection: 'column', alignItems: 'center',
+                                                zIndex: 14, pointerEvents: 'auto',
+                                                opacity: showLabels ? 1 : 0,
+                                                transition: 'opacity 0.4s ease'
+                                            };
+                                        }
+                                        return {
+                                            position: 'absolute',
+                                            left: sec.x,
+                                            top: sec.y + (sec.size / 2) + 20,
+                                            transform: 'translateX(-50%)',
+                                            display: 'flex', flexDirection: 'column', alignItems: 'center',
+                                            zIndex: 14, pointerEvents: 'auto',
+                                            opacity: showLabels ? 1 : 0,
+                                            transition: 'opacity 0.4s ease'
+                                        };
+                                    })()}>
                                         <button
                                             onClick={() => handleSectionClick(sec.id)}
                                             style={{

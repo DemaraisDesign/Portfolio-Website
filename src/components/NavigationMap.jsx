@@ -1318,7 +1318,7 @@ export default function NavigationMap({ closeMenu }) {
                                         if (isLandscapeTablet) {
                                             return {
                                                 position: 'absolute',
-                                                left: isInnerRight ? sec.x + (sec.size / 2) + 20 : sec.x - (sec.size / 2) - 20,
+                                                left: isInnerRight ? sec.x + (sec.size / 2) + 32 : sec.x - (sec.size / 2) - 32,
                                                 top: sec.y,
                                                 transform: isInnerRight ? 'translateY(-50%)' : 'translate(-100%, -50%)',
                                                 display: 'flex', flexDirection: 'column', alignItems: 'center',

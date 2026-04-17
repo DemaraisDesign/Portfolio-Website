@@ -921,7 +921,7 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                     alignItems: isShortViewport ? 'center' : (labelData.align === 'right' ? 'flex-start' : (labelData.align === 'left' ? 'flex-end' : 'center')),
                     gap: isShortViewport ? '10px' : '0',
                     pointerEvents: 'none',
-                    zIndex: 1,
+                    zIndex: 20,
                     // Additional card styles for short viewports
                     ...(isShortViewport && !labelData?.isPlain ? {
                         background: THEME.white,

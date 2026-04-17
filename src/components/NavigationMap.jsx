@@ -446,8 +446,8 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
             const maxTopDy = Math.max(0, visualCenterY - 140);
             const maxBotDy = Math.max(0, h - visualCenterY - 100);
 
-            let rawDy = w < 768 ? newDy : (isTablet ? Math.max(210, h * 0.28) : Math.max(220, h * 0.26));
-            let rawTopDy = w < 768 ? newDy * 0.8 : (isTablet ? Math.max(180, h * 0.24) : Math.max(150, h * 0.22));
+            let rawDy = w < 768 ? newDy : (isTablet ? Math.max(160, h * 0.22) : Math.max(220, h * 0.26));
+            let rawTopDy = w < 768 ? newDy * 0.8 : (isTablet ? Math.max(140, h * 0.20) : Math.max(150, h * 0.22));
 
             const dy = Math.min(rawDy, maxBotDy);
             const topDy = Math.min(rawTopDy, maxTopDy);

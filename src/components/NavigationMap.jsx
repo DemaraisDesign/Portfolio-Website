@@ -1043,7 +1043,7 @@ export default function NavigationMap({ closeMenu }) {
         });
     };
 
-    const isShortDesktop = viewport.h < 680 && viewport.w >= 768;
+    const isShortDesktop = viewport.h < 680 && viewport.w >= 1280;
 
     return (
         <div ref={containerRef} style={{
@@ -1336,13 +1336,21 @@ export default function NavigationMap({ closeMenu }) {
                                         >
                                             <Search size={16} color={THEME.white} strokeWidth={2.5} />
                                         </button>
+                                        {viewport.w >= 768 && (
+                                            <span style={{
+                                                display: 'block', marginTop: '6px',
+                                                fontSize: '10px', fontWeight: 600, color: THEME.textSub,
+                                                textTransform: 'uppercase', letterSpacing: '0.05em',
+                                                whiteSpace: 'nowrap', textAlign: 'center'
+                                            }}>Explore Selected Work</span>
+                                        )}
                                     </div>
                                 )}
                             </React.Fragment>
                         ))}
 
-                        {/* "Explore Selected Work" connector between row pairs — mobile only */}
-                        {viewport.w < 1280 && !focusedId && isSettled && (() => {
+                        {/* "Explore Selected Work" connector between row pairs — phone only */}
+                        {viewport.w < 768 && !focusedId && isSettled && (() => {
                             const topLeft = layout.sections.find(s => s.quadrant === 'tl');
                             const topRight = layout.sections.find(s => s.quadrant === 'tr');
                             const botLeft = layout.sections.find(s => s.quadrant === 'bl');

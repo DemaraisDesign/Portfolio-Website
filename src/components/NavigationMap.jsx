@@ -628,43 +628,13 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
                         fanCenterAngle = Math.atan2(sy - hy, sx - hx);
                     }
 
-                    // tl (Stages) + bl (Screens): rightmost petal at 12 o'clock
-                    // tr (Sounds) + br (Explorations): leftmost petal at 12 o'clock
-                    const isLeftQuadrant = sec.quadrant === 'tl' || sec.quadrant === 'bl';
-                    
-                    // Only reverse mapping on mobile for Stages & Screens so data order matches 
-                    const visualIndex = (sec.id === 'stage' || sec.id === 'ux') ? (count - 1 - i) : i;
-                    
-                    // For outward-facing fan with anchor at bottom:
-                    // Left quadrants fan out toward the left. Right quadrants fan out toward the right.
-                    const anchorIdx = isLeftQuadrant ? 0 : count - 1;
-                    isAnchorPetal = visualIndex === anchorIdx;
+                    // Uniform petal distribution around the full perimeter
+                    const angleStep = (Math.PI * 2) / count;
+                    // Start from 12 o'clock (-PI/2) and go clockwise
+                    const petalAngle = (-Math.PI / 2) + (i * angleStep);
 
-                    // Variable step: wider gap around the anchor (big circle), tighter between small petals
-                    const smallStep = Math.PI / 6;  // 30° between small petals
-                    const anchorGap = Math.PI / 3;  // 60° on either side of the anchor
-
-                    // Build cumulative angle array for all petals in this section
-                    const angles = [0];
-                    for (let j = 1; j < count; j++) {
-                        const isAnchorTransition =
-                            (isLeftQuadrant && j === count - 1) ||   // last petal IS the anchor
-                            (!isLeftQuadrant && j === 1);              // first petal IS the anchor (gap after it)
-                        angles.push(angles[j - 1] + (isAnchorTransition ? anchorGap : smallStep));
-                    }
-
-                    // Pin the anchor to exactly 6 o'clock (Math.PI / 2), shift the whole fan accordingly
-                    const anchorAngleInFan = angles[anchorIdx];
-                    const fanStart = (Math.PI / 2) - anchorAngleInFan;
-
-                    const petalAngle = fanStart + angles[visualIndex];
-
-                    // Wider orbit radius for the anchor so it clears the section icon edge
-                    const anchorOrbitRadius = (currentSectionSize / 2) + (SIZES.subPetalActive / 2);
-                    const effectiveRadius = isAnchorPetal ? anchorOrbitRadius : petalRestRadius;
-
-                    cxChild = sx + Math.cos(petalAngle) * effectiveRadius;
-                    cyChild = sy + Math.sin(petalAngle) * effectiveRadius;
+                    cxChild = sx + Math.cos(petalAngle) * petalRestRadius;
+                    cyChild = sy + Math.sin(petalAngle) * petalRestRadius;
                 }
             }
 
@@ -672,15 +642,14 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
                 ...child,
                 x: cxChild,
                 y: cyChild,
-                size: isAnchorPetal ? (SIZES.subPetalActive * 0.7) : currentPetalSize,
+                size: currentPetalSize,
                 color: sec.deep,
                 parentColor: sec.color,
-                // Always keep them rendered if launched, for smoother CSS transitions
                 visible: isLaunched,
                 isParentFocused: isFocused,
-                alignLabel: (sec.quadrant === 'tl' || sec.quadrant === 'bl') ? 'left' : 'right',
-                img: isAnchorPetal ? null : child.img,
-                isAnchor: isAnchorPetal,
+                alignLabel: (sec.quadrant === 'tl' || sec.quadrant === 'bl') ? 'right' : 'left',
+                img: child.img,
+                isAnchor: false,
                 gridRow: gridRow,
                 gridCol: gridCol
             };
@@ -1273,7 +1242,6 @@ export default function NavigationMap({ closeMenu }) {
                                                     x={sp.x} y={sp.y} size={sp.size}
                                                     color={sp.color} ringColor={sp.parentColor} 
                                                     iconColor={THEME.white}
-                                                    icon={sp.isAnchor && viewport.w < 1024 ? Search : sp.Icon}
                                                     onClick={() => {
                                                         if (viewport.w < 1024 && !focusedId) {
                                                             handleMobilePetalClick(sp, sec);
@@ -1291,10 +1259,10 @@ export default function NavigationMap({ closeMenu }) {
                                                     }}
                                                     className={sec.isFocused || isLargeUnfocused ? "depth-active" : ""}
                                                     zIndex={sec.isFocused || isLargeUnfocused ? 12 : 2}
-                                                    showIcon={isSettled && (sec.isFocused || isLargeUnfocused || (sp.isAnchor && viewport.w < 1024))} useElastic={isSettled}
+                                                    showIcon={isSettled && (sec.isFocused || isLargeUnfocused)} useElastic={isSettled}
                                                     isResizing={isResizing} isChild={true} initialOpacity={opacityMul}
-                                                    isDimmed={!sec.isFocused && !isLargeUnfocused && !(sp.isAnchor && viewport.w < 1024)}
-                                                    labelData={isLargeUnfocused ? { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: ((isShortDesktop || (viewport.w >= 768 && viewport.w < 1024)) && sec.quadrant.includes('b')) ? 'top' : 'center', img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: showLabels, forceSearchIcon: false } : { title: sp.isAnchor && viewport.w < 1024 ? "" : sp.label, desc: sp.isAnchor && viewport.w < 1024 ? "Explore selected work" : sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: (isShortDesktop && sec.quadrant.includes('b')) ? 'top' : (viewport.w < 1024 ? (sp.isAnchor && !focusedId ? 'bottom' : sp.alignLabel) : sp.alignLabel), img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: (viewport.w < 1024 && !focusedId) ? (sp.isAnchor ? true : false) : showLabels, forceSearchIcon: false, isPlain: true }}
+                                                    isDimmed={!sec.isFocused && !isLargeUnfocused}
+                                                    labelData={isLargeUnfocused ? { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: ((isShortDesktop || (viewport.w >= 768 && viewport.w < 1024)) && sec.quadrant.includes('b')) ? 'top' : 'center', img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: showLabels, forceSearchIcon: false } : { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: (isShortDesktop && sec.quadrant.includes('b')) ? 'top' : (viewport.w < 1024 ? sp.alignLabel : sp.alignLabel), img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: (viewport.w < 1024 && !focusedId) ? false : showLabels, forceSearchIcon: viewport.w < 1024 && !focusedId }}
                                                     isShortViewport={isShortDesktop || viewport.w < 1024}
                                                     noFlyTransition={isNoFly}
                                                     alwaysShowLabel={isLargeUnfocused && !(isShortDesktop || viewport.w < 1024)}
@@ -1327,8 +1295,92 @@ export default function NavigationMap({ closeMenu }) {
                                         );
                                     })}
                                 </AnimatePresence>
+
+                                {/* Magnifying glass explore trigger — mobile only, unfocused state */}
+                                {viewport.w < 1024 && !focusedId && isSettled && (
+                                    <div style={{
+                                        position: 'absolute',
+                                        left: sec.x,
+                                        top: sec.y + (sec.size / 2) + 12,
+                                        transform: 'translateX(-50%)',
+                                        zIndex: 14,
+                                        pointerEvents: 'auto',
+                                        opacity: showLabels ? 1 : 0,
+                                        transition: 'opacity 0.4s ease'
+                                    }}>
+                                        <button
+                                            onClick={() => handleSectionClick(sec.id)}
+                                            style={{
+                                                width: 32, height: 32,
+                                                borderRadius: '50%',
+                                                backgroundColor: sec.color,
+                                                border: 'none',
+                                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                                cursor: 'pointer',
+                                                boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+                                                padding: 0
+                                            }}
+                                        >
+                                            <Search size={16} color={THEME.white} strokeWidth={2.5} />
+                                        </button>
+                                    </div>
+                                )}
                             </React.Fragment>
                         ))}
+
+                        {/* "Explore Selected Work" connector between row pairs — mobile only */}
+                        {viewport.w < 1024 && !focusedId && isSettled && (() => {
+                            const topLeft = layout.sections.find(s => s.quadrant === 'tl');
+                            const topRight = layout.sections.find(s => s.quadrant === 'tr');
+                            const botLeft = layout.sections.find(s => s.quadrant === 'bl');
+                            const botRight = layout.sections.find(s => s.quadrant === 'br');
+                            const searchCircleSize = 32;
+                            const rows = [[topLeft, topRight], [botLeft, botRight]];
+                            return rows.map(([left, right], rowIdx) => {
+                                if (!left || !right) return null;
+                                const leftX = left.x;
+                                const rightX = right.x;
+                                const y = Math.max(left.y, right.y) + (left.size / 2) + 12 + (searchCircleSize / 2);
+                                const lineLeft = leftX + (searchCircleSize / 2) + 4;
+                                const lineRight = rightX - (searchCircleSize / 2) - 4;
+                                const lineWidth = lineRight - lineLeft;
+                                return (
+                                    <div
+                                        key={`explore-row-${rowIdx}`}
+                                        style={{
+                                            position: 'absolute',
+                                            left: lineLeft,
+                                            top: y,
+                                            width: lineWidth,
+                                            height: 1,
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            zIndex: 14,
+                                            pointerEvents: 'none',
+                                            opacity: showLabels ? 1 : 0,
+                                            transition: 'opacity 0.4s ease'
+                                        }}
+                                    >
+                                        {/* Left line segment */}
+                                        <div style={{ flex: 1, height: 1, backgroundColor: 'rgba(13,18,22,0.15)' }} />
+                                        {/* Dot */}
+                                        <div style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: 'rgba(13,18,22,0.25)', flexShrink: 0, margin: '0 6px' }} />
+                                        {/* Text */}
+                                        <span style={{
+                                            fontSize: '9px', fontWeight: 700, color: THEME.dark,
+                                            letterSpacing: '0.08em', textTransform: 'uppercase',
+                                            whiteSpace: 'nowrap', flexShrink: 0,
+                                            padding: '0 2px'
+                                        }}>Explore Selected Work</span>
+                                        {/* Dot */}
+                                        <div style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: 'rgba(13,18,22,0.25)', flexShrink: 0, margin: '0 6px' }} />
+                                        {/* Right line segment */}
+                                        <div style={{ flex: 1, height: 1, backgroundColor: 'rgba(13,18,22,0.15)' }} />
+                                    </div>
+                                );
+                            });
+                        })()}
                     </>
                 );
             })()}

@@ -341,11 +341,11 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
     const isSmallMobile = w <= 430 || h <= 430;
 
     const SIZES = {
-        home: (focusedId || (isLaunched && w < 1024)) ? 60 : (isLaunched && w >= 1024 ? 55 : 110),
+        home: (focusedId || (isLaunched && w < 1280)) ? 60 : (isLaunched && w >= 1280 ? 55 : 110),
         sectionActive: isSmallMobile ? 80 : 110,
         sectionBg: focusedId ? 35 : 110, // Always 110 unless minimized as background nodes
         subPetalActive: 55,
-        subPetalDefault: w >= 1024 ? 55 : 14,
+        subPetalDefault: w >= 1280 ? 55 : 14,
         subPetalBg: 10,
     };
 
@@ -386,7 +386,7 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
         // focusedId is set, so the active section is guaranteed to exist
 
         // 1. Exact site-wide CSS padding values extracted from Navbar
-        let paddingX = w >= 1024 ? 96 : (w >= 768 ? 48 : 36);
+        let paddingX = w >= 1280 ? 96 : (w >= 768 ? 48 : 36);
         let paddingTop = w >= 768 ? 96 : 60;
         let paddingBottom = w < 768 ? -50 : -10; // Scooched even further down closer to the bottom edge; extra push on mobile
 
@@ -439,7 +439,7 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
             let targetY = visualCenterY;
 
             // Symmetrical placements in the general corners of the screen
-            const isTablet = w >= 768 && w < 1024;
+            const isTablet = w >= 768 && w < 1280;
             const dx = w < 768 ? origDx : (isTablet ? Math.max(180, w * 0.22) : Math.max(60, w * 0.08)); // Tablet: push far into corners
 
             // Constrain vertical pushes so nodes cannot clip top/bottom edges of screen
@@ -485,7 +485,7 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
             }
         }
 
-        const petalOffset = (w >= 1024 && !focusedId) ? 20 : 0;
+        const petalOffset = (w >= 1280 && !focusedId) ? 20 : 0;
         const petalRestRadius = (currentSectionSize / 2) + (currentPetalSize / 2) + petalOffset;
 
         const subPetals = sec.children.map((child, i) => {
@@ -513,7 +513,7 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
                 const gridCenterY = (topCeiling + bottomFloor) / 2;
 
                 // 2. Dynamically solve arrangement based on true physical width strictly preventing X-overlaps
-                let paddingX = w >= 1024 ? 96 : (w >= 768 ? 48 : 20); // Reduce mobile side padding
+                let paddingX = w >= 1280 ? 96 : (w >= 768 ? 48 : 20); // Reduce mobile side padding
                 const safeW = w - (paddingX * 2) - 20;
                 let maxCols = w < 768 ? 3 : Math.max(1, Math.floor(safeW / colSpacing));
                 if (maxCols > 3) maxCols = 3;
@@ -537,14 +537,14 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
                 let fanCenterAngle = dynamicLayoutAngle;
 
                 // Adjust spread and radius based on state and screen size
-                const isLargeUnfocused = (isLaunched && !focusedId && w >= 1024);
+                const isLargeUnfocused = (isLaunched && !focusedId && w >= 1280);
 
                 if (isLargeUnfocused) {
                     const isLeft = sec.quadrant.includes('l');
-                    const isTablet = w >= 768 && w < 1024;
+                    const isTablet = w >= 768 && w < 1280;
 
                     if (isTablet) {
-                        // ═══ SOLAR SYSTEM LAYOUT (tablet 768-1024px) ═══
+                        // ═══ SOLAR SYSTEM LAYOUT (tablet 768-1280px) ═══
                         // Nodes orbit their parent in a circle
                         const count = sec.children.length;
                         const orbitRadius = Math.min(minDim * 0.16, 145); // Larger orbit ring
@@ -564,12 +564,12 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
                         gridRow = -1; // Signal that this is orbit mode, not grid
                         gridCol = i;
                     } else {
-                        // ═══ DESKTOP GRID LAYOUT (≥1024px) — isThreeColSector is always true, constants inlined ═══
+                        // ═══ DESKTOP GRID LAYOUT (≥1280px) — isThreeColSector is always true, constants inlined ═══
                         const colSpacing = 140;
                         const rowSpacing = 144;
 
                         const paddingFromIcon = 60;
-                        const minPaddingFromEdge = w >= 1024 ? 68 : 40;
+                        const minPaddingFromEdge = w >= 1280 ? 68 : 40;
 
                         const maxAvailableSpace = isLeft
                             ? sx - paddingFromIcon - minPaddingFromEdge
@@ -1169,7 +1169,7 @@ export default function NavigationMap({ closeMenu }) {
 
             {/* Outgoing petal flies back from section to its original position before disappearing */}
             <AnimatePresence>
-                {outgoingPetalData && viewport.w < 1024 && (
+                {outgoingPetalData && viewport.w < 1280 && (
                     <motion.div
                         key={`petal-out-${outgoingPetalData.id}`}
                         initial={{ x: 0, y: 0, scale: 1 }}
@@ -1229,15 +1229,15 @@ export default function NavigationMap({ closeMenu }) {
                                         desc: sec.desc,
                                         subDesc: "Selected work links",
                                         show: showLabels,
-                                        align: viewport.w < 1024 ? (sec.isFocused ? 'right' : 'top') : (isShortDesktop && sec.quadrant.includes('b') ? 'top' : 'center')
+                                        align: viewport.w < 1280 ? (sec.isFocused ? 'right' : 'top') : (isShortDesktop && sec.quadrant.includes('b') ? 'top' : 'center')
                                     }}
                                     isShortViewport={isShortDesktop}
                                     noFlyTransition={sec.isFocused && isNoFly}
                                     flipKey={sec.isFocused ? currentFlipKey : null}
-                                    flipDelay={viewport.w < 1024 ? 0 : (sec.isFocused && focusedId ? 1.0 : (!focusedId ? secIdx * 0.15 : 0))}
-                                    sizeDelay={viewport.w < 1024 ? 0 : (sec.isFocused && focusedId ? 1.0 : (!focusedId ? secIdx * 0.15 : 0))}
-                                    parkedData={(viewport.w < 1024 && parkedPetalData?.id && sec.children && sec.children.some(c => c.id === parkedPetalData.id)) ? parkedPetalData : null}
-                                    alwaysShowLabel={!focusedId && viewport.w < 1024}
+                                    flipDelay={viewport.w < 1280 ? 0 : (sec.isFocused && focusedId ? 1.0 : (!focusedId ? secIdx * 0.15 : 0))}
+                                    sizeDelay={viewport.w < 1280 ? 0 : (sec.isFocused && focusedId ? 1.0 : (!focusedId ? secIdx * 0.15 : 0))}
+                                    parkedData={(viewport.w < 1280 && parkedPetalData?.id && sec.children && sec.children.some(c => c.id === parkedPetalData.id)) ? parkedPetalData : null}
+                                    alwaysShowLabel={!focusedId && viewport.w < 1280}
                                 />
                                 <AnimatePresence mode="popLayout">
                                     {(sec.isFocused || !focusedId) && sec.subPetals.map((sp, idx) => {
@@ -1246,10 +1246,10 @@ export default function NavigationMap({ closeMenu }) {
                                         const isInitialLoadDelay = !isSettled; // Only show sub-petals when in Phase 2
                                         const opacityMul = (isInitialLoadDelay || sec.isBg) ? 0 : 1;
 
-                                        const isLargeUnfocused = (viewport.w >= 1024 && !focusedId);
+                                        const isLargeUnfocused = (viewport.w >= 1280 && !focusedId);
                                         const nodeDelay = (sec.isFocused && focusedId ? 1.0 : 0.3 + (secIdx * 0.15)) + (idx * 0.08);
 
-                                        const isMobileViewport = viewport.w < 1024;
+                                        const isMobileViewport = viewport.w < 1280;
                                         const nodeContent = (
                                             <div style={{ pointerEvents: 'auto' }}>
                                                 <Node
@@ -1257,7 +1257,7 @@ export default function NavigationMap({ closeMenu }) {
                                                     color={sp.color} ringColor={sp.parentColor} 
                                                     iconColor={THEME.white}
                                                     onClick={() => {
-                                                        if (viewport.w < 1024 && !focusedId) {
+                                                        if (viewport.w < 1280 && !focusedId) {
                                                             handleMobilePetalClick(sp, sec);
                                                         } else {
                                                             const path = sp.link || sp.path || `/work/${sp.id}`;
@@ -1276,10 +1276,10 @@ export default function NavigationMap({ closeMenu }) {
                                                     showIcon={isSettled && (sec.isFocused || isLargeUnfocused)} useElastic={isSettled}
                                                     isResizing={isResizing} isChild={true} initialOpacity={opacityMul}
                                                     isDimmed={!sec.isFocused && !isLargeUnfocused}
-                                                    labelData={isLargeUnfocused ? { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: ((isShortDesktop || (viewport.w >= 768 && viewport.w < 1024)) && sec.quadrant.includes('b')) ? 'top' : 'center', img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: showLabels, forceSearchIcon: false } : { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: (isShortDesktop && sec.quadrant.includes('b')) ? 'top' : (viewport.w < 1024 ? sp.alignLabel : sp.alignLabel), img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: (viewport.w < 1024 && !focusedId) ? false : showLabels, forceSearchIcon: viewport.w < 1024 && !focusedId }}
-                                                    isShortViewport={isShortDesktop || viewport.w < 1024}
+                                                    labelData={isLargeUnfocused ? { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: ((isShortDesktop || (viewport.w >= 768 && viewport.w < 1280)) && sec.quadrant.includes('b')) ? 'top' : 'center', img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: showLabels, forceSearchIcon: false } : { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: (isShortDesktop && sec.quadrant.includes('b')) ? 'top' : (viewport.w < 1280 ? sp.alignLabel : sp.alignLabel), img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: (viewport.w < 1280 && !focusedId) ? false : showLabels, forceSearchIcon: viewport.w < 1280 && !focusedId }}
+                                                    isShortViewport={isShortDesktop || viewport.w < 1280}
                                                     noFlyTransition={isNoFly}
-                                                    alwaysShowLabel={isLargeUnfocused && !(isShortDesktop || viewport.w < 1024)}
+                                                    alwaysShowLabel={isLargeUnfocused && !(isShortDesktop || viewport.w < 1280)}
                                                 />
                                             </div>
                                         );
@@ -1311,7 +1311,7 @@ export default function NavigationMap({ closeMenu }) {
                                 </AnimatePresence>
 
                                 {/* Magnifying glass explore trigger — mobile only, unfocused state */}
-                                {viewport.w < 1024 && !focusedId && isSettled && (
+                                {viewport.w < 1280 && !focusedId && isSettled && (
                                     <div style={{
                                         position: 'absolute',
                                         left: sec.x,
@@ -1342,7 +1342,7 @@ export default function NavigationMap({ closeMenu }) {
                         ))}
 
                         {/* "Explore Selected Work" connector between row pairs — mobile only */}
-                        {viewport.w < 1024 && !focusedId && isSettled && (() => {
+                        {viewport.w < 1280 && !focusedId && isSettled && (() => {
                             const topLeft = layout.sections.find(s => s.quadrant === 'tl');
                             const topRight = layout.sections.find(s => s.quadrant === 'tr');
                             const botLeft = layout.sections.find(s => s.quadrant === 'bl');

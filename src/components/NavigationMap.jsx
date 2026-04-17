@@ -742,7 +742,8 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
     const flyDelay = (isBg && isMobile) ? 0.3 : 0;
 
     return (
-        <button
+        <>
+            <button
             type="button"
             aria-label={labelData ? labelData.text : "Navigation Node"}
             className={`node-interactive ${className} group`}
@@ -899,17 +900,17 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                 )}
             </AnimatePresence>
 
+        </button>
+
             {labelData && (
                 <div style={{
                     position: 'absolute',
-                    top: labelData.align === 'top' ? 'auto' : (labelData.align === 'right' || labelData.align === 'left' ? '50%' : '100%'),
-                    bottom: labelData.align === 'top' ? '100%' : 'auto',
-                    left: labelData.align === 'right' ? '100%' : (labelData.align === 'left' ? '0' : '50%'),
+                    top: labelData.align === 'top' ? y - (size / 2) : (labelData.align === 'right' || labelData.align === 'left' ? y : y + (size / 2)),
+                    left: labelData.align === 'right' ? x + (size / 2) : (labelData.align === 'left' ? x - (size / 2) : x),
                     transform: isLabelVisible 
                         ? (labelData.align === 'right' ? 'translate(20px, -50%)' : (labelData.align === 'left' ? 'translate(calc(-100% - 20px), -50%)' : 'translate(-50%, 0)')) 
                         : (labelData.align === 'right' ? 'translate(10px, -50%)' : (labelData.align === 'left' ? 'translate(calc(-100% - 10px), -50%)' : `translate(-50%, ${labelData.align === 'top' ? '10px' : '-10px'})`)),
-                    marginTop: labelData.align === 'top' || labelData.align === 'right' || labelData.align === 'left' ? '0' : (labelData.isCompact ? '19px' : '28px'),
-                    marginBottom: labelData.align === 'top' ? '28px' : '0',
+                    marginTop: labelData.align === 'top' ? '-28px' : (labelData.align === 'right' || labelData.align === 'left' ? '0' : (labelData.isCompact ? '19px' : '28px')),
                     textAlign: isShortViewport ? (labelData.align === 'center' ? 'center' : 'left') : (labelData.align === 'right' ? 'left' : (labelData.align === 'left' ? 'right' : 'center')),
                     whiteSpace: (isShortViewport || labelData.align === 'top') ? 'nowrap' : 'normal',
                     width: (isShortViewport || labelData.align === 'top') ? 'auto' : '180px',
@@ -921,7 +922,7 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                     alignItems: isShortViewport ? 'center' : (labelData.align === 'right' ? 'flex-start' : (labelData.align === 'left' ? 'flex-end' : 'center')),
                     gap: isShortViewport ? '10px' : '0',
                     pointerEvents: 'none',
-                    zIndex: 20,
+                    zIndex: 50,
                     // Additional card styles for short viewports
                     ...(isShortViewport && !labelData?.isPlain ? {
                         background: THEME.white,
@@ -947,7 +948,7 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                     </div>
                 </div>
             )}
-        </button>
+        </>
     );
 };
 
@@ -1070,8 +1071,8 @@ export default function NavigationMap({ closeMenu }) {
         .fade-enter { animation: fadeIn 0.5s ease forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .depth-bg { opacity: 0.8; transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1); }
-        .depth-active { opacity: 1; z-index: 10; transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1); }
+        .depth-bg { opacity: 0.8; transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1); }
+        .depth-active { opacity: 1; transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1); }
 
         @keyframes dd-teensy-settle {
           0% { transform: translate(-50%, -50%) scale(1); }

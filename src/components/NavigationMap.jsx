@@ -930,9 +930,9 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                         }} />
                     )}
                     <div style={{ display: 'flex', flexDirection: 'column' }}>
-                        <span style={{ fontSize: isChild && !isShortViewport ? '13px' : '16px', fontWeight: 800, color: THEME.dark, letterSpacing: '0.02em', WebkitFontSmoothing: 'antialiased', lineHeight: 1.25 }}>{labelData.title}</span>
+                        <span style={{ fontSize: isChild && !isShortViewport ? '13px' : '19px', fontWeight: 800, color: THEME.dark, letterSpacing: '0.02em', WebkitFontSmoothing: 'antialiased', lineHeight: 1.25 }}>{labelData.title}</span>
                         {labelData.desc && <span style={{ fontSize: '12px', fontWeight: 700, color: THEME.dark, letterSpacing: '0.05em', marginTop: '4px' }}>{labelData.desc}</span>}
-                        {labelData.subDesc && <span style={{ fontSize: '12px', fontWeight: 600, color: THEME.textSub, letterSpacing: '0.05em', marginTop: '1px' }}>{labelData.subDesc}</span>}
+                        {labelData.subDesc && <span style={{ fontSize: '12px', fontWeight: 600, color: THEME.textSub, textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: '1px' }}>{labelData.subDesc}</span>}
                     </div>
                 </div>
             )}

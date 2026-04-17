@@ -628,12 +628,24 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
                         fanCenterAngle = Math.atan2(sy - hy, sx - hx);
                     }
 
-                    // Distribute petals over upper 300° arc, leaving 60° gap at bottom for magnifying glass
-                    const gapAngle = Math.PI / 3; // 60° gap centered on 6 o'clock
-                    const arcAngle = (Math.PI * 2) - gapAngle;
-                    const startAngle = (Math.PI / 2) + (gapAngle / 2); // Start just past the gap
-                    const angleStep = count > 1 ? arcAngle / (count - 1) : 0;
-                    const petalAngle = startAngle + (i * angleStep);
+                    let petalAngle;
+                    if (count === 4) {
+                        // Symmetric arrangement: 10am, 2pm, 4pm, 8pm
+                        const fixedAngles = [
+                            -5 * Math.PI / 6,  // 10 o'clock
+                            -Math.PI / 6,       // 2 o'clock
+                            Math.PI / 6,        // 4 o'clock
+                            5 * Math.PI / 6,    // 8 o'clock
+                        ];
+                        petalAngle = fixedAngles[i];
+                    } else {
+                        // Distribute petals over upper 300° arc, leaving 60° gap at bottom for magnifying glass
+                        const gapAngle = Math.PI / 3; // 60° gap centered on 6 o'clock
+                        const arcAngle = (Math.PI * 2) - gapAngle;
+                        const startAngle = (Math.PI / 2) + (gapAngle / 2); // Start just past the gap
+                        const angleStep = count > 1 ? arcAngle / (count - 1) : 0;
+                        petalAngle = startAngle + (i * angleStep);
+                    }
 
                     cxChild = sx + Math.cos(petalAngle) * petalRestRadius;
                     cyChild = sy + Math.sin(petalAngle) * petalRestRadius;

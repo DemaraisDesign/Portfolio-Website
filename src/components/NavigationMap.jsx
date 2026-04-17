@@ -897,8 +897,8 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                     transform: isLabelVisible 
                         ? (labelData.align === 'right' ? 'translate(20px, -50%)' : (labelData.align === 'left' ? 'translate(calc(-100% - 20px), -50%)' : 'translate(-50%, 0)')) 
                         : (labelData.align === 'right' ? 'translate(10px, -50%)' : (labelData.align === 'left' ? 'translate(calc(-100% - 10px), -50%)' : `translate(-50%, ${labelData.align === 'top' ? '10px' : '-10px'})`)),
-                    marginTop: labelData.align === 'top' || labelData.align === 'right' || labelData.align === 'left' ? '0' : `${(size / 2) + 12}px`,
-                    marginBottom: labelData.align === 'top' ? `${(size / 2) + 12}px` : '0',
+                    marginTop: labelData.align === 'top' || labelData.align === 'right' || labelData.align === 'left' ? '0' : '20px',
+                    marginBottom: labelData.align === 'top' ? '20px' : '0',
                     textAlign: isShortViewport ? (labelData.align === 'center' ? 'center' : 'left') : (labelData.align === 'right' ? 'left' : (labelData.align === 'left' ? 'right' : 'center')),
                     whiteSpace: isShortViewport ? 'nowrap' : 'normal',
                     width: isShortViewport ? 'auto' : '180px',
@@ -1382,7 +1382,7 @@ export default function NavigationMap({ closeMenu }) {
                                         <div style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: 'rgba(13,18,22,0.25)', flexShrink: 0, margin: '0 6px' }} />
                                         {/* Text */}
                                         <span style={{
-                                            fontSize: '10px', fontWeight: 600, color: THEME.textSub,
+                                            fontSize: '11px', fontWeight: 700, color: THEME.dark,
                                             letterSpacing: '0.05em', textTransform: 'uppercase',
                                             whiteSpace: 'nowrap', flexShrink: 0,
                                             padding: '0 2px'

@@ -1383,7 +1383,7 @@ export default function NavigationMap({ closeMenu }) {
                                         {/* Text */}
                                         <span style={{
                                             fontSize: '11px', fontWeight: 700, color: THEME.dark,
-                                            letterSpacing: '0.05em', textTransform: 'uppercase',
+                                            letterSpacing: '0.05em',
                                             whiteSpace: 'nowrap', flexShrink: 0,
                                             padding: '0 2px'
                                         }}>Explore Selected Work</span>

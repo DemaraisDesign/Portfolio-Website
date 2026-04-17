@@ -758,7 +758,7 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                 width: size,
                 height: size,
                 opacity: initialOpacity * (isDimmed ? 0.25 : 1.0),
-                transform: 'translate(-50%, -50%)', zIndex: zIndex,
+                transform: 'translate(-50%, -50%)', zIndex: (hover || tapped) ? 30 : zIndex,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 cursor: onClick ? 'pointer' : 'default',
                 perspective: '1000px',

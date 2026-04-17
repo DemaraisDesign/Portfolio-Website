@@ -1317,6 +1317,7 @@ export default function NavigationMap({ closeMenu }) {
                                         left: sec.x,
                                         top: sec.y + (sec.size / 2) + 20,
                                         transform: 'translateX(-50%)',
+                                        display: 'flex', flexDirection: 'column', alignItems: 'center',
                                         zIndex: 14,
                                         pointerEvents: 'auto',
                                         opacity: showLabels ? 1 : 0,
@@ -1339,8 +1340,8 @@ export default function NavigationMap({ closeMenu }) {
                                         {viewport.w >= 768 && (
                                             <span style={{
                                                 display: 'block', marginTop: '6px',
-                                                fontSize: '10px', fontWeight: 600, color: THEME.textSub,
-                                                textTransform: 'uppercase', letterSpacing: '0.05em',
+                                                fontSize: '10px', fontWeight: 700, color: THEME.dark,
+                                                letterSpacing: '0.05em',
                                                 whiteSpace: 'nowrap', textAlign: 'center'
                                             }}>Explore Selected Work</span>
                                         )}

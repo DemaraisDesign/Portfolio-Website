@@ -1359,14 +1359,14 @@ export default function NavigationMap({ closeMenu }) {
                                                 fontSize: '10px', fontWeight: 700, color: THEME.dark,
                                                 letterSpacing: '0.05em',
                                                 whiteSpace: 'nowrap', textAlign: 'center'
-                                            }}>Explore Selected Work</span>
+                                            }}>Selected Work</span>
                                         )}
                                     </div>
                                 )}
                             </React.Fragment>
                         ))}
 
-                        {/* "Explore Selected Work" connector between row pairs — phone only */}
+                        {/* "Selected Work" connector between row pairs — phone only */}
                         {viewport.w < 768 && !focusedId && isSettled && (() => {
                             const topLeft = layout.sections.find(s => s.quadrant === 'tl');
                             const topRight = layout.sections.find(s => s.quadrant === 'tr');
@@ -1410,7 +1410,7 @@ export default function NavigationMap({ closeMenu }) {
                                             letterSpacing: '0.05em',
                                             whiteSpace: 'nowrap', flexShrink: 0,
                                             padding: '0 2px'
-                                        }}>Explore Selected Work</span>
+                                        }}>Selected Work</span>
                                         {/* Right dot */}
                                         <div style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: right.color, flexShrink: 0, margin: '0 6px' }} />
                                         {/* Right line segment — right section color */}

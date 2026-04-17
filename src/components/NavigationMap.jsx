@@ -1232,7 +1232,7 @@ export default function NavigationMap({ closeMenu }) {
                                     color={sec.color} iconColor={THEME.white} icon={sec.icon}
                                     onClick={() => handleSectionClick(sec.id)}
                                     className={`${sec.isBg ? "depth-bg" : "depth-active"} ${isLaunched && !focusedId ? 'launched-node' : ''}`}
-                                    isFocused={sec.isFocused} isBg={sec.isBg} zIndex={sec.isFocused ? 15 : 12}
+                                    isFocused={sec.isFocused} isBg={sec.isBg} zIndex={sec.isFocused ? 15 : 14}
                                     showIcon={isLaunched} useElastic={isLaunched}
                                     isResizing={isResizing} initialOpacity={1}
                                     disableAnimation={sec.isBg}

@@ -908,7 +908,7 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                     transform: isLabelVisible 
                         ? (labelData.align === 'right' ? 'translate(20px, -50%)' : (labelData.align === 'left' ? 'translate(calc(-100% - 20px), -50%)' : 'translate(-50%, 0)')) 
                         : (labelData.align === 'right' ? 'translate(10px, -50%)' : (labelData.align === 'left' ? 'translate(calc(-100% - 10px), -50%)' : `translate(-50%, ${labelData.align === 'top' ? '10px' : '-10px'})`)),
-                    marginTop: labelData.align === 'top' || labelData.align === 'right' || labelData.align === 'left' ? '0' : '28px',
+                    marginTop: labelData.align === 'top' || labelData.align === 'right' || labelData.align === 'left' ? '0' : (labelData.isCompact ? '10px' : '28px'),
                     marginBottom: labelData.align === 'top' ? '28px' : '0',
                     textAlign: isShortViewport ? (labelData.align === 'center' ? 'center' : 'left') : (labelData.align === 'right' ? 'left' : (labelData.align === 'left' ? 'right' : 'center')),
                     whiteSpace: (isShortViewport || labelData.align === 'top') ? 'nowrap' : 'normal',
@@ -1240,6 +1240,7 @@ export default function NavigationMap({ closeMenu }) {
                                         title: sec.label + (isLandscapePhone ? '' : ' Overview'),
                                         desc: isLandscapePhone ? null : sec.desc,
                                         subDesc: isLandscapePhone ? null : 'Selected work links',
+                                        isCompact: isLandscapePhone,
                                         show: showLabels,
                                         align: isLandscapePhone ? 'center' : (viewport.w < 1280 ? (sec.isFocused ? 'right' : 'top') : (isShortDesktop && sec.quadrant.includes('b') ? 'top' : 'center'))
                                     }}

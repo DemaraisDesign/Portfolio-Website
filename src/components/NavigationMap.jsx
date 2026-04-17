@@ -359,7 +359,7 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
     const visualCenterY = w < 768 ? cy - 30 : cy;
 
     const origDx = w < 768 ? Math.max(90, w * 0.22) : Math.max(250, w * 0.35); // Pulled back out slightly
-    const newDy = w < 768 ? Math.max(125, h * 0.16) : Math.max(180, h * 0.22); // Pulled back out slightly
+    const newDy = w < 768 ? Math.max(165, h * 0.21) : Math.max(180, h * 0.22);
 
     let hx = cx;
     let hy = visualCenterY;

@@ -897,8 +897,8 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                     transform: isLabelVisible 
                         ? (labelData.align === 'right' ? 'translate(20px, -50%)' : (labelData.align === 'left' ? 'translate(calc(-100% - 20px), -50%)' : 'translate(-50%, 0)')) 
                         : (labelData.align === 'right' ? 'translate(10px, -50%)' : (labelData.align === 'left' ? 'translate(calc(-100% - 10px), -50%)' : `translate(-50%, ${labelData.align === 'top' ? '10px' : '-10px'})`)),
-                    marginTop: labelData.align === 'top' || labelData.align === 'right' || labelData.align === 'left' ? '0' : '20px',
-                    marginBottom: labelData.align === 'top' ? '20px' : '0',
+                    marginTop: labelData.align === 'top' || labelData.align === 'right' || labelData.align === 'left' ? '0' : '28px',
+                    marginBottom: labelData.align === 'top' ? '28px' : '0',
                     textAlign: isShortViewport ? (labelData.align === 'center' ? 'center' : 'left') : (labelData.align === 'right' ? 'left' : (labelData.align === 'left' ? 'right' : 'center')),
                     whiteSpace: (isShortViewport || labelData.align === 'top') ? 'nowrap' : 'normal',
                     width: (isShortViewport || labelData.align === 'top') ? 'auto' : '180px',
@@ -931,7 +931,7 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                     )}
                     <div style={{ display: 'flex', flexDirection: 'column' }}>
                         <span style={{ fontSize: isChild && !isShortViewport ? '13px' : '16px', fontWeight: 800, color: THEME.dark, letterSpacing: '0.02em', WebkitFontSmoothing: 'antialiased', lineHeight: 1.25 }}>{labelData.title}</span>
-                        {labelData.desc && <span style={{ fontSize: '10px', fontWeight: 700, color: THEME.dark, letterSpacing: '0.05em', marginTop: '4px' }}>{labelData.desc}</span>}
+                        {labelData.desc && <span style={{ fontSize: '10px', fontWeight: 600, color: THEME.textSub, textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: '4px' }}>{labelData.desc}</span>}
                         {labelData.subDesc && <span style={{ fontSize: '10px', fontWeight: 600, color: THEME.textSub, textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: '1px' }}>{labelData.subDesc}</span>}
                     </div>
                 </div>
@@ -1315,7 +1315,7 @@ export default function NavigationMap({ closeMenu }) {
                                     <div style={{
                                         position: 'absolute',
                                         left: sec.x,
-                                        top: sec.y + (sec.size / 2) + 12,
+                                        top: sec.y + (sec.size / 2) + 20,
                                         transform: 'translateX(-50%)',
                                         zIndex: 14,
                                         pointerEvents: 'auto',
@@ -1331,7 +1331,6 @@ export default function NavigationMap({ closeMenu }) {
                                                 border: 'none',
                                                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                                                 cursor: 'pointer',
-                                                boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
                                                 padding: 0
                                             }}
                                         >
@@ -1354,7 +1353,7 @@ export default function NavigationMap({ closeMenu }) {
                                 if (!left || !right) return null;
                                 const leftX = left.x;
                                 const rightX = right.x;
-                                const y = Math.max(left.y, right.y) + (left.size / 2) + 12 + (searchCircleSize / 2);
+                                const y = Math.max(left.y, right.y) + (left.size / 2) + 20 + (searchCircleSize / 2);
                                 const lineLeft = leftX + (searchCircleSize / 2) + 4;
                                 const lineRight = rightX - (searchCircleSize / 2) - 4;
                                 const lineWidth = lineRight - lineLeft;

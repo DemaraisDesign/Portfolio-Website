@@ -1376,10 +1376,10 @@ export default function NavigationMap({ closeMenu }) {
                                             transition: 'opacity 0.4s ease'
                                         }}
                                     >
-                                        {/* Left line segment */}
-                                        <div style={{ flex: 1, height: 1, backgroundColor: 'rgba(13,18,22,0.15)' }} />
-                                        {/* Dot */}
-                                        <div style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: 'rgba(13,18,22,0.25)', flexShrink: 0, margin: '0 6px' }} />
+                                        {/* Left line segment — left section color */}
+                                        <div style={{ flex: 1, height: 2, backgroundColor: left.color, opacity: 0.5 }} />
+                                        {/* Left dot */}
+                                        <div style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: left.color, flexShrink: 0, margin: '0 6px' }} />
                                         {/* Text */}
                                         <span style={{
                                             fontSize: '12px', fontWeight: 700, color: THEME.dark,
@@ -1387,10 +1387,10 @@ export default function NavigationMap({ closeMenu }) {
                                             whiteSpace: 'nowrap', flexShrink: 0,
                                             padding: '0 2px'
                                         }}>Explore Selected Work</span>
-                                        {/* Dot */}
-                                        <div style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: 'rgba(13,18,22,0.25)', flexShrink: 0, margin: '0 6px' }} />
-                                        {/* Right line segment */}
-                                        <div style={{ flex: 1, height: 1, backgroundColor: 'rgba(13,18,22,0.15)' }} />
+                                        {/* Right dot */}
+                                        <div style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: right.color, flexShrink: 0, margin: '0 6px' }} />
+                                        {/* Right line segment — right section color */}
+                                        <div style={{ flex: 1, height: 2, backgroundColor: right.color, opacity: 0.5 }} />
                                     </div>
                                 );
                             });

@@ -965,6 +965,7 @@ export default function NavigationMap({ closeMenu }) {
     const [animPhase, setAnimPhase] = useState(0);
     const [parkedPetalData, setParkedPetalData] = useState(null);   // petal currently parked over section icon
     const [outgoingPetalData, setOutgoingPetalData] = useState(null); // petal springing back to fan
+    const [selectedSectionId, setSelectedSectionId] = useState(null); // Layer 3: selected work panel
     const isLaunched = animPhase >= 1;
     const isSettled = animPhase >= 2;
     const showLabels = animPhase >= 3;
@@ -1016,20 +1017,21 @@ export default function NavigationMap({ closeMenu }) {
 
     const handleSectionClick = (id) => {
         if (!isLaunched) return;
+        const section = SECTIONS.find(s => s.id === id);
+        if (section && section.link) {
+            if (closeMenu) closeMenu();
+            navigate(section.link);
+        }
+    };
 
-        if (viewport.w < 768) {
-            // Mobile: always navigate directly to the section — no drill-down level
-            const section = SECTIONS.find(s => s.id === id);
-            if (section && section.link) {
-                if (closeMenu) closeMenu();
-                navigate(section.link);
-            }
+    // Magnifying glass click — opens Layer 3 on phone, navigates on tablet/desktop
+    const handleExploreClick = (id) => {
+        if (!isLaunched) return;
+        const isMobilePhone = viewport.w < 768 && !(viewport.w > viewport.h && viewport.h < 500);
+        if (isMobilePhone) {
+            setSelectedSectionId(id);
         } else {
-            const section = SECTIONS.find(s => s.id === id);
-            if (section && section.link) {
-                if (closeMenu) closeMenu();
-                navigate(section.link);
-            }
+            // tablet/desktop: do nothing extra (label is already visible)
         }
     };
 
@@ -1353,7 +1355,7 @@ export default function NavigationMap({ closeMenu }) {
                                         };
                                     })()}>
                                         <button
-                                            onClick={() => handleSectionClick(sec.id)}
+                                            onClick={() => handleExploreClick(sec.id)}
                                             style={{
                                                 width: viewport.w >= 768 ? 38 : 32,
                                                 height: viewport.w >= 768 ? 38 : 32,
@@ -1438,6 +1440,179 @@ export default function NavigationMap({ closeMenu }) {
             })()}
 
 
+
+
+
+            {/* ── Layer 3: Selected Work panel (mobile phone only) ── */}
+            <AnimatePresence>
+                {selectedSectionId && viewport.w < 768 && !(viewport.w > viewport.h && viewport.h < 500) && (() => {
+                    const sec = SECTIONS.find(s => s.id === selectedSectionId);
+                    if (!sec) return null;
+                    return (
+                        <motion.div
+                            key="layer3-panel"
+                            initial={{ y: '100%' }}
+                            animate={{ y: 0 }}
+                            exit={{ y: '100%' }}
+                            transition={{ type: 'spring', stiffness: 280, damping: 30, mass: 0.9 }}
+                            style={{
+                                position: 'absolute', inset: 0,
+                                background: THEME.white,
+                                zIndex: 80,
+                                display: 'flex', flexDirection: 'column',
+                                overflowY: 'auto',
+                            }}
+                        >
+                            {/* Header */}
+                            <div style={{
+                                padding: '24px 24px 16px',
+                                background: `linear-gradient(135deg, ${sec.color}18 0%, ${THEME.white} 70%)`,
+                                borderBottom: `1px solid ${sec.color}30`,
+                                flexShrink: 0,
+                            }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '4px' }}>
+                                    <div style={{
+                                        width: 10, height: 10, borderRadius: '50%',
+                                        backgroundColor: sec.color, flexShrink: 0
+                                    }} />
+                                    <span style={{
+                                        fontSize: '11px', fontWeight: 700, color: sec.color,
+                                        letterSpacing: '0.08em', textTransform: 'uppercase'
+                                    }}>{sec.label}</span>
+                                </div>
+                                <h2 style={{
+                                    margin: 0, fontSize: '22px', fontWeight: 800,
+                                    color: THEME.dark, letterSpacing: '0.01em', lineHeight: 1.2
+                                }}>Selected Work</h2>
+                            </div>
+
+                            {/* Grid of case study circles */}
+                            <div style={{
+                                flex: 1,
+                                display: 'grid',
+                                gridTemplateColumns: 'repeat(2, 1fr)',
+                                gap: '24px 16px',
+                                padding: '24px 20px',
+                                alignContent: 'start',
+                            }}>
+                                {sec.children.map((child, idx) => {
+                                    const project = getProject(child.id);
+                                    const isLocked = project && !isProjectUnlocked(child.id) && !project?.isConstruction;
+                                    const isConstruction = project?.isConstruction;
+                                    const circleSize = 90;
+                                    const handleChildClick = () => {
+                                        if (isConstruction) {
+                                            // trigger construction gate
+                                        } else if (isLocked) {
+                                            requestAccess(child.id);
+                                        } else if (project?.link) {
+                                            if (closeMenu) closeMenu();
+                                            navigate(project.link);
+                                        }
+                                    };
+                                    return (
+                                        <motion.button
+                                            key={child.id}
+                                            onClick={handleChildClick}
+                                            initial={{ opacity: 0, y: 16 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ delay: idx * 0.05, type: 'spring', stiffness: 300, damping: 24 }}
+                                            style={{
+                                                background: 'none', border: 'none', padding: 0,
+                                                cursor: 'pointer', display: 'flex',
+                                                flexDirection: 'column', alignItems: 'center', gap: '10px',
+                                            }}
+                                        >
+                                            {/* Circle */}
+                                            <div style={{
+                                                width: circleSize, height: circleSize, borderRadius: '50%',
+                                                overflow: 'hidden', position: 'relative', flexShrink: 0,
+                                                boxShadow: `0 0 0 3px ${sec.color}`,
+                                                backgroundColor: child.img ? THEME.white : sec.color,
+                                            }}>
+                                                {child.img && (
+                                                    <img
+                                                        src={child.img}
+                                                        alt={child.label}
+                                                        style={{
+                                                            width: '100%', height: '100%',
+                                                            objectFit: child.contain ? 'contain' : 'cover',
+                                                            objectPosition: child.imgPosition || 'center',
+                                                            transform: child.imgScale ? `scale(${child.imgScale})` : 'none',
+                                                        }}
+                                                    />
+                                                )}
+                                                {/* Lock/clock overlay */}
+                                                {(isLocked || isConstruction) && (
+                                                    <div style={{
+                                                        position: 'absolute', inset: 0,
+                                                        backgroundColor: 'rgba(0,0,0,0.5)',
+                                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                                    }}>
+                                                        {isConstruction ? (
+                                                            <svg style={{ width: '35%', height: '35%' }} viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
+                                                                <circle cx="12" cy="12" r="10" fill="white" stroke="none" />
+                                                                <polyline points="12 6 12 12 15.5 15.5" stroke="rgba(0,0,0,0.6)" strokeWidth="3" fill="none" />
+                                                            </svg>
+                                                        ) : (
+                                                            <svg style={{ width: '35%', height: '35%' }} viewBox="0 0 24 24" fill="white" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                                <path d="M7 10V7a5 5 0 0 1 10 0v3" fill="none" />
+                                                                <rect x="3" y="10" width="18" height="12" rx="2" fill="white" stroke="none" />
+                                                                <circle cx="12" cy="16" r="1.5" fill="rgba(0,0,0,0.6)" stroke="rgba(0,0,0,0.6)" strokeWidth="3" />
+                                                            </svg>
+                                                        )}
+                                                    </div>
+                                                )}
+                                            </div>
+                                            {/* Label */}
+                                            <div style={{ textAlign: 'center' }}>
+                                                <div style={{
+                                                    fontSize: '13px', fontWeight: 700, color: THEME.dark,
+                                                    lineHeight: 1.25, letterSpacing: '0.01em',
+                                                }}>{child.label}</div>
+                                                {child.desc && (
+                                                    <div style={{
+                                                        fontSize: '10px', fontWeight: 600,
+                                                        color: THEME.textSub,
+                                                        textTransform: 'uppercase', letterSpacing: '0.05em',
+                                                        marginTop: '3px',
+                                                    }}>{child.desc}</div>
+                                                )}
+                                            </div>
+                                        </motion.button>
+                                    );
+                                })}
+                            </div>
+
+                            {/* Back button */}
+                            <div style={{
+                                flexShrink: 0, padding: '16px 24px 32px',
+                                display: 'flex', justifyContent: 'center',
+                                borderTop: `1px solid ${THEME.light}`,
+                            }}>
+                                <button
+                                    onClick={() => setSelectedSectionId(null)}
+                                    style={{
+                                        display: 'flex', alignItems: 'center', gap: '8px',
+                                        padding: '12px 28px',
+                                        borderRadius: '999px',
+                                        backgroundColor: sec.color,
+                                        color: THEME.white,
+                                        border: 'none', cursor: 'pointer',
+                                        fontSize: '14px', fontWeight: 700,
+                                        letterSpacing: '0.03em',
+                                    }}
+                                >
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M19 12H5M5 12l7-7M5 12l7 7" />
+                                    </svg>
+                                    Back
+                                </button>
+                            </div>
+                        </motion.div>
+                    );
+                })()}
+            </AnimatePresence>
 
         </div>
     );

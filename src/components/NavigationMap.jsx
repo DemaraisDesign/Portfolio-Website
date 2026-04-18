@@ -6,6 +6,7 @@ import { getProject } from '../data/projects';
 import { usePasswordGate } from './PasswordGate';
 import { useConstructionGate } from './ConstructionGate';
 import { audio } from '../utils/AudioEngine';
+import SectionPreheader from './SectionPreheader';
 // ═══════════════════════════════════════════════════
 //  MATH & COLOR UTILS
 // ═══════════════════════════════════════════════════
@@ -1495,16 +1496,12 @@ export default function NavigationMap({ closeMenu }) {
                                 </button>
                                 {/* Title — center */}
                                 <div style={{ textAlign: 'center' }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginBottom: '3px' }}>
-                                        <div style={{
-                                            width: 7, height: 7, borderRadius: '50%',
-                                            backgroundColor: sec.color, flexShrink: 0
-                                        }} />
-                                        <span style={{
-                                            fontSize: '10px', fontWeight: 700, color: sec.color,
-                                            letterSpacing: '0.08em', textTransform: 'uppercase'
-                                        }}>{sec.label}</span>
-                                    </div>
+                                    <SectionPreheader
+                                        text={sec.label}
+                                        color={sec.color}
+                                        textColor={THEME.dark}
+                                        align="center"
+                                    />
                                     <h2 style={{
                                         margin: 0, fontSize: '18px', fontWeight: 800,
                                         color: THEME.dark, letterSpacing: '0.01em', lineHeight: 1.2

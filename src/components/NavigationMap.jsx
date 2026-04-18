@@ -1469,25 +1469,11 @@ export default function NavigationMap({ closeMenu }) {
                                 background: `linear-gradient(135deg, ${sec.color}18 0%, ${THEME.white} 70%)`,
                                 borderBottom: `1px solid ${sec.color}30`,
                                 flexShrink: 0,
-                                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                                display: 'grid',
+                                gridTemplateColumns: '1fr auto 1fr',
+                                alignItems: 'center',
                             }}>
-                                <div>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                                        <div style={{
-                                            width: 8, height: 8, borderRadius: '50%',
-                                            backgroundColor: sec.color, flexShrink: 0
-                                        }} />
-                                        <span style={{
-                                            fontSize: '10px', fontWeight: 700, color: sec.color,
-                                            letterSpacing: '0.08em', textTransform: 'uppercase'
-                                        }}>{sec.label}</span>
-                                    </div>
-                                    <h2 style={{
-                                        margin: 0, fontSize: '20px', fontWeight: 800,
-                                        color: THEME.dark, letterSpacing: '0.01em', lineHeight: 1.2
-                                    }}>Selected Work</h2>
-                                </div>
-                                {/* Back button — top right */}
+                                {/* Back button — left */}
                                 <button
                                     onClick={() => setSelectedSectionId(null)}
                                     style={{
@@ -1498,7 +1484,8 @@ export default function NavigationMap({ closeMenu }) {
                                         color: THEME.white,
                                         border: 'none', cursor: 'pointer',
                                         fontSize: '13px', fontWeight: 700,
-                                        letterSpacing: '0.03em', flexShrink: 0,
+                                        letterSpacing: '0.03em',
+                                        justifySelf: 'start',
                                     }}
                                 >
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -1506,6 +1493,25 @@ export default function NavigationMap({ closeMenu }) {
                                     </svg>
                                     Back
                                 </button>
+                                {/* Title — center */}
+                                <div style={{ textAlign: 'center' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginBottom: '3px' }}>
+                                        <div style={{
+                                            width: 7, height: 7, borderRadius: '50%',
+                                            backgroundColor: sec.color, flexShrink: 0
+                                        }} />
+                                        <span style={{
+                                            fontSize: '10px', fontWeight: 700, color: sec.color,
+                                            letterSpacing: '0.08em', textTransform: 'uppercase'
+                                        }}>{sec.label}</span>
+                                    </div>
+                                    <h2 style={{
+                                        margin: 0, fontSize: '18px', fontWeight: 800,
+                                        color: THEME.dark, letterSpacing: '0.01em', lineHeight: 1.2
+                                    }}>Selected Work</h2>
+                                </div>
+                                {/* Spacer — right (mirrors left button for centering) */}
+                                <div />
                             </div>
 
                             {/* Grid of case study circles */}

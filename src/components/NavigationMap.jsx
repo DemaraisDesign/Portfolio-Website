@@ -1245,7 +1245,14 @@ export default function NavigationMap({ closeMenu }) {
                                         subDesc: isLandscapePhone ? null : 'Selected work links',
                                         isCompact: isLandscapePhone,
                                         show: showLabels,
-                                        align: isLandscapePhone ? 'center' : (viewport.w < 1280 ? (sec.isFocused ? 'right' : 'top') : (isShortDesktop && sec.quadrant.includes('b') ? 'top' : 'center'))
+                                        align: isLandscapePhone
+                                            ? 'center'
+                                            : (viewport.w >= 768 && viewport.w < 1280 && viewport.w > viewport.h)
+                                                // Landscape tablet: label on inner side
+                                                ? (sec.quadrant === 'tl' || sec.quadrant === 'bl' ? 'right' : 'left')
+                                                : (viewport.w < 1280
+                                                    ? (sec.isFocused ? 'right' : 'top')
+                                                    : (isShortDesktop && sec.quadrant.includes('b') ? 'top' : 'center'))
                                     }}
                                     isShortViewport={isShortDesktop}
                                     noFlyTransition={sec.isFocused && isNoFly}
@@ -1330,13 +1337,14 @@ export default function NavigationMap({ closeMenu }) {
                                 {viewport.w < 1280 && !isLandscapePhone && !focusedId && isSettled && (
                                     <div style={(() => {
                                         const isLandscapeTablet = viewport.w >= 768 && viewport.w < 1280 && viewport.w > viewport.h;
-                                        const isInnerRight = sec.quadrant === 'tl' || sec.quadrant === 'bl';
+                                        const isLeftSide = sec.quadrant === 'tl' || sec.quadrant === 'bl';
                                         if (isLandscapeTablet) {
                                             return {
                                                 position: 'absolute',
-                                                left: isInnerRight ? sec.x + (sec.size / 2) + 32 : sec.x - (sec.size / 2) - 32,
+                                                // Outer edge: left-side quadrants go further left, right-side go further right
+                                                left: isLeftSide ? sec.x - (sec.size / 2) - 32 : sec.x + (sec.size / 2) + 32,
                                                 top: sec.y,
-                                                transform: isInnerRight ? 'translateY(-50%)' : 'translate(-100%, -50%)',
+                                                transform: isLeftSide ? 'translate(-100%, -50%)' : 'translateY(-50%)',
                                                 display: 'flex', flexDirection: 'column', alignItems: 'center',
                                                 zIndex: 14, pointerEvents: 'auto',
                                                 opacity: showLabels ? 1 : 0,

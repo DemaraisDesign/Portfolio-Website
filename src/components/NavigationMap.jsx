@@ -1465,25 +1465,47 @@ export default function NavigationMap({ closeMenu }) {
                         >
                             {/* Header */}
                             <div style={{
-                                padding: '24px 24px 16px',
+                                padding: '20px 20px 16px',
                                 background: `linear-gradient(135deg, ${sec.color}18 0%, ${THEME.white} 70%)`,
                                 borderBottom: `1px solid ${sec.color}30`,
                                 flexShrink: 0,
+                                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                             }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '4px' }}>
-                                    <div style={{
-                                        width: 10, height: 10, borderRadius: '50%',
-                                        backgroundColor: sec.color, flexShrink: 0
-                                    }} />
-                                    <span style={{
-                                        fontSize: '11px', fontWeight: 700, color: sec.color,
-                                        letterSpacing: '0.08em', textTransform: 'uppercase'
-                                    }}>{sec.label}</span>
+                                <div>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                                        <div style={{
+                                            width: 8, height: 8, borderRadius: '50%',
+                                            backgroundColor: sec.color, flexShrink: 0
+                                        }} />
+                                        <span style={{
+                                            fontSize: '10px', fontWeight: 700, color: sec.color,
+                                            letterSpacing: '0.08em', textTransform: 'uppercase'
+                                        }}>{sec.label}</span>
+                                    </div>
+                                    <h2 style={{
+                                        margin: 0, fontSize: '20px', fontWeight: 800,
+                                        color: THEME.dark, letterSpacing: '0.01em', lineHeight: 1.2
+                                    }}>Selected Work</h2>
                                 </div>
-                                <h2 style={{
-                                    margin: 0, fontSize: '22px', fontWeight: 800,
-                                    color: THEME.dark, letterSpacing: '0.01em', lineHeight: 1.2
-                                }}>Selected Work</h2>
+                                {/* Back button — top right */}
+                                <button
+                                    onClick={() => setSelectedSectionId(null)}
+                                    style={{
+                                        display: 'flex', alignItems: 'center', gap: '6px',
+                                        padding: '8px 16px',
+                                        borderRadius: '999px',
+                                        backgroundColor: sec.color,
+                                        color: THEME.white,
+                                        border: 'none', cursor: 'pointer',
+                                        fontSize: '13px', fontWeight: 700,
+                                        letterSpacing: '0.03em', flexShrink: 0,
+                                    }}
+                                >
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M19 12H5M5 12l7-7M5 12l7 7" />
+                                    </svg>
+                                    Back
+                                </button>
                             </div>
 
                             {/* Grid of case study circles */}
@@ -1584,31 +1606,6 @@ export default function NavigationMap({ closeMenu }) {
                                 })}
                             </div>
 
-                            {/* Back button */}
-                            <div style={{
-                                flexShrink: 0, padding: '16px 24px 32px',
-                                display: 'flex', justifyContent: 'center',
-                                borderTop: `1px solid ${THEME.light}`,
-                            }}>
-                                <button
-                                    onClick={() => setSelectedSectionId(null)}
-                                    style={{
-                                        display: 'flex', alignItems: 'center', gap: '8px',
-                                        padding: '12px 28px',
-                                        borderRadius: '999px',
-                                        backgroundColor: sec.color,
-                                        color: THEME.white,
-                                        border: 'none', cursor: 'pointer',
-                                        fontSize: '14px', fontWeight: 700,
-                                        letterSpacing: '0.03em',
-                                    }}
-                                >
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                        <path d="M19 12H5M5 12l7-7M5 12l7 7" />
-                                    </svg>
-                                    Back
-                                </button>
-                            </div>
                         </motion.div>
                     );
                 })()}

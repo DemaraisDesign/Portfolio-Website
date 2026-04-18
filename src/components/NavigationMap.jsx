@@ -910,7 +910,7 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                     transform: isLabelVisible 
                         ? (labelData.align === 'right' ? 'translate(20px, -50%)' : (labelData.align === 'left' ? 'translate(calc(-100% - 20px), -50%)' : (labelData.align === 'top' ? 'translate(-50%, -100%)' : 'translate(-50%, 0)'))) 
                         : (labelData.align === 'right' ? 'translate(10px, -50%)' : (labelData.align === 'left' ? 'translate(calc(-100% - 10px), -50%)' : (labelData.align === 'top' ? 'translate(-50%, calc(-100% + 10px))' : 'translate(-50%, -10px)'))),
-                    marginTop: labelData.align === 'top' ? '-28px' : (labelData.align === 'right' || labelData.align === 'left' ? '0' : (labelData.isCompact ? '19px' : '28px')),
+                    marginTop: labelData.align === 'top' ? '-28px' : (labelData.align === 'right' || labelData.align === 'left' ? '0' : (labelData.isCompact ? '19px' : '16px')),
                     textAlign: isShortViewport ? (labelData.align === 'center' ? 'center' : 'left') : (labelData.align === 'right' ? 'left' : (labelData.align === 'left' ? 'right' : 'center')),
                     whiteSpace: (isShortViewport || labelData.align === 'top') ? 'nowrap' : 'normal',
                     width: (isShortViewport || labelData.align === 'top') ? 'auto' : '180px',

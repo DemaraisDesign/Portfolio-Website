@@ -439,7 +439,6 @@ const Explorations = () => {
                       </svg>
                       Under Construction
                     </span>
-                    <ArrowRight className="w-4 h-4 transition-transform group-hover/link:translate-x-1" />
                   </>
                 ) : isProjectUnlocked(item.id) ? (
                   <>

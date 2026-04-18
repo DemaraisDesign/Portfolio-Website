@@ -192,8 +192,8 @@ const AboutCircle = ({ phase }) => {
             position: 'absolute',
             width: s, height: s,
             borderRadius: '50%',
-            border: `3px solid ${color}`,
-            opacity: 0.75,
+            border: `20px solid ${color}`,
+            opacity: 0.45,
             animation: phase === 'rings' ? `${anim} ${dur} linear infinite` : 'none',
             animationDelay: delay,
           }} />
@@ -203,7 +203,7 @@ const AboutCircle = ({ phase }) => {
   };
 
   return (
-    <div style={{ position: 'relative', width: '100%', height: '100%', borderRadius: '50%', overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', background: '#e5e7eb' }}>
+    <div style={{ position: 'relative', width: '100%', height: '100%', borderRadius: '50%', overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', background: '#ffffff' }}>
       {Object.values(phases)}
     </div>
   );
@@ -222,7 +222,7 @@ const AboutMe = () => {
   const sentinelRings  = useRef(null);
 
   useEffect(() => {
-    // rootMargin: trigger when sentinel reaches ~180px from top (circle center on desktop)
+    // rootMargin: -260px triggers when sentinel crosses the sticky circle center (~240px from top)
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -231,17 +231,24 @@ const AboutMe = () => {
           if (el === sentinelStage.current)  setPhase('stage');
           if (el === sentinelScreen.current) setPhase('screen');
           if (el === sentinelSound.current)  setPhase('sound');
-          if (el === sentinelRings.current)  setPhase('rings');
         });
       },
-      { rootMargin: '-180px 0px 0px 0px', threshold: 0 }
+      { rootMargin: '-260px 0px 0px 0px', threshold: 0 }
     );
 
-    [sentinelStage, sentinelScreen, sentinelSound, sentinelRings].forEach(r => {
+    [sentinelStage, sentinelScreen, sentinelSound].forEach(r => {
       if (r.current) observer.observe(r.current);
     });
 
-    return () => observer.disconnect();
+    // Rings: separate observer — fires when the bottom sentinel reaches near the bottom
+    // of the viewport (circle is fully scrolled through / about to unstick)
+    const ringsObserver = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setPhase('rings'); },
+      { rootMargin: '0px 0px -10% 0px', threshold: 0 }
+    );
+    if (sentinelRings.current) ringsObserver.observe(sentinelRings.current);
+
+    return () => { observer.disconnect(); ringsObserver.disconnect(); };
   }, []);
 
   // Also reset to photo when scrolling back near the top of the section
@@ -306,12 +313,12 @@ const AboutMe = () => {
                   Sound design is where these principles face the smallest margin for error. A half second of timing. A couple of decibels too high or too low. The wrong music at a key moment, or sound where there should be silence…these decisions can make or break an entire project. And as with directing and UX, the discipline remains the same: staying open to letting what you observe override what you planned. Watching performers in rehearsal, collaborating with fellow designers, reading the room—the work is always listening first.
                 </motion.p>
 
-                {/* ── SENTINEL: rings ── */}
-                <div ref={sentinelRings} style={{ height: 0, visibility: 'hidden' }} aria-hidden="true" />
-
                 <motion.p variants={itemVariants}>
                   These aren't adjacent careers or siloed experiences. They're the same operating system running on different machines.
                 </motion.p>
+
+                {/* ── SENTINEL: rings — placed at very end so it fires late ── */}
+                <div ref={sentinelRings} style={{ height: 0, visibility: 'hidden' }} aria-hidden="true" />
               </DebugFlexCol>
             </div>
           </div>

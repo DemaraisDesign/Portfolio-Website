@@ -441,7 +441,7 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
 
             // Symmetrical placements in the general corners of the screen
             const isTablet = w >= 768 && w < 1280;
-            const dx = w < 768 ? origDx : (isTablet ? Math.max(180, w * 0.22) : Math.max(60, w * 0.08)); // Tablet: push far into corners
+            const dx = w < 768 ? origDx : (isTablet ? Math.max(140, w * 0.16) : Math.max(60, w * 0.08)); // Tablet: pull columns inward toward center
 
             // Constrain vertical pushes so nodes cannot clip top/bottom edges of screen
             const maxTopDy = Math.max(0, visualCenterY - 140);

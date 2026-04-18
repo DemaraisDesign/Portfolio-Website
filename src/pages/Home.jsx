@@ -114,16 +114,153 @@ const DisciplineModule = ({ title, img, color, darkColor, Icon, speed = 0.78, li
   );
 };
 
-const AboutMe = () => {
+// CSS ring animation keyframes injected once
+const RING_STYLE_ID = 'about-ring-keyframes';
+if (typeof document !== 'undefined' && !document.getElementById(RING_STYLE_ID)) {
+  const style = document.createElement('style');
+  style.id = RING_STYLE_ID;
+  style.textContent = `
+    @keyframes ring1Spin {
+      0%   { transform: rotateX(0deg)   rotateY(0deg)   rotateZ(0deg); }
+      100% { transform: rotateX(360deg) rotateY(240deg) rotateZ(120deg); }
+    }
+    @keyframes ring2Spin {
+      0%   { transform: rotateX(0deg)   rotateY(0deg)   rotateZ(0deg); }
+      100% { transform: rotateX(-240deg) rotateY(360deg) rotateZ(-90deg); }
+    }
+    @keyframes ring3Spin {
+      0%   { transform: rotateX(0deg)   rotateY(0deg)   rotateZ(0deg); }
+      100% { transform: rotateX(180deg) rotateY(-360deg) rotateZ(60deg); }
+    }
+    @keyframes ringFadeIn {
+      from { opacity: 0; transform: scale(0.85); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+  `;
+  document.head.appendChild(style);
+}
 
-  const containerVariants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.15, delayChildren: 0.3 } } };
-  const itemVariants = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } } };
+// Phases: photo → stage → screen → sound → rings
+const CIRCLE_PHASES = ['photo', 'stage', 'screen', 'sound', 'rings'];
+
+const AboutCircle = ({ phase }) => {
+  const size = '100%';
+
+  // Shared circle container styles
+  const circleBase = {
+    position: 'absolute', inset: 0,
+    borderRadius: '50%',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    overflow: 'hidden',
+    transition: 'opacity 0.7s ease',
+  };
+
+  const phases = {
+    photo: (
+      <div key="photo" style={{ ...circleBase, opacity: phase === 'photo' ? 1 : 0, pointerEvents: phase === 'photo' ? 'auto' : 'none' }}>
+        <img
+          src={IMAGES.headshotPlaceholder}
+          alt="Joseph Demarais"
+          style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 20%' }}
+        />
+      </div>
+    ),
+    stage: (
+      <div key="stage" style={{ ...circleBase, backgroundColor: BRAND.stage, opacity: phase === 'stage' ? 1 : 0, pointerEvents: 'none' }}>
+        <TheatreIcon color="#ffffff" isPlaying={false} speed={0} />
+      </div>
+    ),
+    screen: (
+      <div key="screen" style={{ ...circleBase, backgroundColor: BRAND.screens, opacity: phase === 'screen' ? 1 : 0, pointerEvents: 'none' }}>
+        <UXIcon color="#ffffff" isPlaying={false} speed={0} />
+      </div>
+    ),
+    sound: (
+      <div key="sound" style={{ ...circleBase, backgroundColor: BRAND.sound, opacity: phase === 'sound' ? 1 : 0, pointerEvents: 'none' }}>
+        <Waveform color="#ffffff" isPlaying={false} speed={0} />
+      </div>
+    ),
+    rings: (
+      <div key="rings" style={{ ...circleBase, backgroundColor: '#ffffff', opacity: phase === 'rings' ? 1 : 0, pointerEvents: 'none', perspective: '400px', animation: phase === 'rings' ? 'ringFadeIn 0.8s ease forwards' : 'none' }}>
+        {/* Three concentric rings — start face-on, then gently tilt */}
+        {[
+          { color: BRAND.purple, size: '90%',  dur: '14s', anim: 'ring1Spin', delay: '0.6s' },
+          { color: BRAND.blue,   size: '65%',  dur: '18s', anim: 'ring2Spin', delay: '0.9s' },
+          { color: BRAND.teal,   size: '40%',  dur: '22s', anim: 'ring3Spin', delay: '1.2s' },
+        ].map(({ color, size: s, dur, anim, delay }) => (
+          <div key={color} style={{
+            position: 'absolute',
+            width: s, height: s,
+            borderRadius: '50%',
+            border: `3px solid ${color}`,
+            opacity: 0.75,
+            animation: phase === 'rings' ? `${anim} ${dur} linear infinite` : 'none',
+            animationDelay: delay,
+          }} />
+        ))}
+      </div>
+    ),
+  };
 
   return (
-    <section className="bg-white relative">
+    <div style={{ position: 'relative', width: '100%', height: '100%', borderRadius: '50%', overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', background: '#e5e7eb' }}>
+      {Object.values(phases)}
+    </div>
+  );
+};
+
+const AboutMe = () => {
+  const [phase, setPhase] = useState('photo');
+
+  const containerVariants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.15, delayChildren: 0.3 } } };
+  const itemVariants = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: 'easeOut' } } };
+
+  // Sentinel refs — placed just before each phase-triggering paragraph
+  const sentinelStage  = useRef(null);
+  const sentinelScreen = useRef(null);
+  const sentinelSound  = useRef(null);
+  const sentinelRings  = useRef(null);
+
+  useEffect(() => {
+    // rootMargin: trigger when sentinel reaches ~180px from top (circle center on desktop)
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const el = entry.target;
+          if (el === sentinelStage.current)  setPhase('stage');
+          if (el === sentinelScreen.current) setPhase('screen');
+          if (el === sentinelSound.current)  setPhase('sound');
+          if (el === sentinelRings.current)  setPhase('rings');
+        });
+      },
+      { rootMargin: '-180px 0px 0px 0px', threshold: 0 }
+    );
+
+    [sentinelStage, sentinelScreen, sentinelSound, sentinelRings].forEach(r => {
+      if (r.current) observer.observe(r.current);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Also reset to photo when scrolling back near the top of the section
+  const sectionRef = useRef(null);
+  useEffect(() => {
+    const resetObs = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setPhase('photo'); },
+      { rootMargin: '0px 0px -80% 0px', threshold: 0 }
+    );
+    if (sectionRef.current) resetObs.observe(sectionRef.current);
+    return () => resetObs.disconnect();
+  }, []);
+
+  return (
+    <section ref={sectionRef} className="bg-white relative">
       <DebugSpacer id="Home_AboutMe_Top" defaultMobile={50} defaultDesktop={100} />
       <div className="w-full max-w-[1400px] mx-auto px-9 md:px-12 lg:px-24">
         <div className="flex flex-col md:flex-row justify-between items-start gap-12 md:gap-16">
+          {/* TEXT COLUMN */}
           <div className="w-full md:flex-1 order-2 md:order-1">
             <div>
               <h2 className="text-5xl md:text-7xl font-extrabold text-brand-ink font-outfit leading-tight tracking-wide uppercase">
@@ -133,11 +270,15 @@ const AboutMe = () => {
                   </motion.span>
                 </span>
               </h2>
-              <motion.div initial={{ width: 0 }} whileInView={{ width: 96 }} viewport={{ once: true }} transition={{ duration: 1, ease: "circOut" }} className="h-1 bg-gradient-to-r from-brand-blue via-brand-teal to-brand-purple rounded-full mt-8"></motion.div>
+              <motion.div initial={{ width: 0 }} whileInView={{ width: 96 }} viewport={{ once: true }} transition={{ duration: 1, ease: "circOut" }} className="h-1 bg-gradient-to-r from-brand-blue via-brand-teal to-brand-purple rounded-full mt-8" />
               <DebugFlexCol as={motion.div} idPrefix="Home_About" defaultMobile={20} defaultDesktop={30} className="flex flex-col text-brand-ink-body text-lg leading-relaxed mt-[30px] md:mt-[50px]" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-10%" }}>
                 <motion.p variants={itemVariants}>
                   If you laid my career out on a table it might look like someone emptied three different puzzles into one pile. As it turns out, the pieces fit together quite well. Each rewards the same habits: prepare obsessively, listen deeply, and cut anything that isn't earning its place.
                 </motion.p>
+
+                {/* ── SENTINEL: stage ── */}
+                <div ref={sentinelStage} style={{ height: 0, visibility: 'hidden' }} aria-hidden="true" />
+
                 <motion.p variants={itemVariants}>
                   I built that discipline most profoundly at Coeurage Theatre Company, an exclusively pay-what-you-want theater I co-founded in Los Angeles. We competed for the same awards as companies with far greater resources, in one of the most expensive cities in the world, and held our own. What those years actually gave me was more durable than any accolade: the habit of identifying what's essential to the storytelling, prioritizing resources toward those elements, and cutting anything extraneous without ego. We had all the artistic ambition in the world, but on our budgets there simply was no choice in the matter. And I wouldn't have had it any other way.
                 </motion.p>
@@ -147,48 +288,48 @@ const AboutMe = () => {
                 <motion.div variants={itemVariants} className="w-full">
                   <PullQuote content="Alignment is earned through clarity, inspiration, and mutual trust, not authority." />
                 </motion.div>
+
+                {/* ── SENTINEL: screen ── */}
+                <div ref={sentinelScreen} style={{ height: 0, visibility: 'hidden' }} aria-hidden="true" />
+
                 <motion.p variants={itemVariants}>
                   Most of it looked, at the time, like theater-specific knowledge. It wasn't. The further I've expanded my skillsets, the more clearly I've seen the same three habits showing up everywhere. UX research is the clearest example — essentially directing with a different deliverable. Same intake, same synthesis, different output. Both require deep logistical preparation before you enter the room. Both demand rigorous analysis to determine what someone actually needs beneath the surface of what they're saying. The listening has to be disciplined enough to change course based on what participants reveal in their words and behavior. And both require synthesis across conflicting perspectives, plus the nerve to make decisions that won't satisfy everyone. The pipelines are nearly identical.
                 </motion.p>
                 <motion.p variants={itemVariants}>
                   Moving into UX gave that framework somewhere to reflect back. Backstage processes became a user experience. An audience's journey from parking lot to curtain became a user experience. The director's job of deciding what the story needs, what messages I want to convey, and ruthlessly subordinating every sonic and visual element to serve those purposes…that's information architecture. Once I learned to think in terms of friction and cognitive load, I couldn't stop applying it to everything I do.
                 </motion.p>
+
+                {/* ── SENTINEL: sound ── */}
+                <div ref={sentinelSound} style={{ height: 0, visibility: 'hidden' }} aria-hidden="true" />
+
                 <motion.p variants={itemVariants}>
                   Sound design is where these principles face the smallest margin for error. A half second of timing. A couple of decibels too high or too low. The wrong music at a key moment, or sound where there should be silence…these decisions can make or break an entire project. And as with directing and UX, the discipline remains the same: staying open to letting what you observe override what you planned. Watching performers in rehearsal, collaborating with fellow designers, reading the room—the work is always listening first.
                 </motion.p>
+
+                {/* ── SENTINEL: rings ── */}
+                <div ref={sentinelRings} style={{ height: 0, visibility: 'hidden' }} aria-hidden="true" />
+
                 <motion.p variants={itemVariants}>
                   These aren't adjacent careers or siloed experiences. They're the same operating system running on different machines.
                 </motion.p>
               </DebugFlexCol>
             </div>
           </div>
+
+          {/* STICKY CIRCLE */}
           <div className="w-full md:w-auto shrink-0 md:sticky md:top-32 md:[@media(max-height:500px)]:static order-1 md:order-2 h-fit flex justify-start md:block z-[45]">
             <div className="relative w-48 h-48 md:w-56 md:h-56">
-              {/* 
-                  Shared Layout Transition:
-                  We use layoutId="profile-image" to tell Framer Motion these are the same logical element.
-                  When isExpanded is FALSE, we render this thumbnail.
-                  When isExpanded is TRUE, we render the overlay version below.
-                */}
-              <motion.div
-                className="w-full h-full rounded-full overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.1)] bg-gray-200"
-              >
-                <img
-                  src={IMAGES.headshotPlaceholder}
-                  alt="Joseph Demarais"
-                  className="object-cover w-full h-full grayscale-0 group-hover:grayscale transition-all duration-700 object-[center_20%]"
-                />
-              </motion.div>
+              <AboutCircle phase={phase} />
             </div>
           </div>
         </div>
       </div>
 
-
       <DebugSpacer id="Home_AboutMe_Bottom" defaultMobile={50} defaultDesktop={100} />
     </section>
   );
 };
+
 
 const getBrandColor = (d) => {
   switch (d) {

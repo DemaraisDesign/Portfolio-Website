@@ -1491,15 +1491,15 @@ export default function NavigationMap({ closeMenu }) {
                                 flex: 1,
                                 display: 'grid',
                                 gridTemplateColumns: 'repeat(2, 1fr)',
-                                gap: '24px 16px',
-                                padding: '24px 20px',
+                                gap: '16px 12px',
+                                padding: '20px 20px',
                                 alignContent: 'start',
                             }}>
                                 {sec.children.map((child, idx) => {
                                     const project = getProject(child.id);
                                     const isLocked = project && !isProjectUnlocked(child.id) && !project?.isConstruction;
                                     const isConstruction = project?.isConstruction;
-                                    const circleSize = 90;
+                                    const circleSize = 68;
                                     const handleChildClick = () => {
                                         if (isConstruction) {
                                             // trigger construction gate

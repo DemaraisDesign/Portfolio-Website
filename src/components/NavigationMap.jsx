@@ -1245,14 +1245,7 @@ export default function NavigationMap({ closeMenu }) {
                                         subDesc: isLandscapePhone ? null : 'Selected work links',
                                         isCompact: isLandscapePhone,
                                         show: showLabels,
-                                        align: isLandscapePhone
-                                            ? 'center'
-                                            : (viewport.w >= 768 && viewport.w < 1280 && viewport.w > viewport.h)
-                                                // Landscape tablet: label on inner side
-                                                ? (sec.quadrant === 'tl' || sec.quadrant === 'bl' ? 'right' : 'left')
-                                                : (viewport.w < 1280
-                                                    ? (sec.isFocused ? 'right' : 'top')
-                                                    : (isShortDesktop && sec.quadrant.includes('b') ? 'top' : 'center'))
+                                        align: isLandscapePhone ? 'center' : (viewport.w < 1280 ? (sec.isFocused ? 'right' : 'top') : (isShortDesktop && sec.quadrant.includes('b') ? 'top' : 'center'))
                                     }}
                                     isShortViewport={isShortDesktop}
                                     noFlyTransition={sec.isFocused && isNoFly}

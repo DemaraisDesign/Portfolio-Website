@@ -1,4 +1,4 @@
-import React, { useRef, useLayoutEffect, useState, useEffect } from 'react';
+import React, { useRef, useLayoutEffect, useState, useEffect, useCallback } from 'react';
 // eslint-disable-next-line no-unused-vars
 import { useAnimation, useInView, motion } from "framer-motion";
 
@@ -16,7 +16,7 @@ const SectionPreheader = ({ text, color = "#171717", textColor, customTrigger, a
         circleWidth: 10,
         gap: 12,
         expandScale: 4,
-        expandOffset: 15, // Initial calculate: ((10*4)-10)/2
+        expandOffset: 15,
         isMobile: false
     });
 
@@ -30,13 +30,7 @@ const SectionPreheader = ({ text, color = "#171717", textColor, customTrigger, a
 
             setDimensions(prev => {
                 if (prev.isMobile === isMobile && prev.circleWidth === cw) return prev;
-                return {
-                    circleWidth: cw,
-                    gap: g,
-                    expandScale: es,
-                    expandOffset: eo,
-                    isMobile: isMobile
-                };
+                return { circleWidth: cw, gap: g, expandScale: es, expandOffset: eo, isMobile };
             });
         };
 
@@ -45,92 +39,93 @@ const SectionPreheader = ({ text, color = "#171717", textColor, customTrigger, a
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    // Determines when to fire animation:
-    // If Custom Trigger provided (e.g. for Sticky Cards), use that.
-    // Otherwise, default to standard scroll/viewport detection.
     const shouldAnimate = customTrigger !== undefined ? customTrigger : isInView;
 
     // Store measured target positions
     const targetPos = useRef({ left: 0, right: 0 });
 
-    useLayoutEffect(() => {
-        if (textRef.current) {
-            const width = textRef.current.offsetWidth;
-
-            const travelDistance = (width / 2) + d.gap;
-
-            targetPos.current = {
-                left: -travelDistance,
-                right: travelDistance
-            };
-
-            // eslint-disable-next-line react-hooks/set-state-in-effect
-            if (!isMeasured) setIsMeasured(true);
-        }
-    }, [text, d, isMeasured]); // Re-measure when text OR dimensions change
-
+    // Track whether the intro animation has completed
     const hasAnimated = useRef(false);
 
-    React.useEffect(() => {
-        if (shouldAnimate && isMeasured && !hasAnimated.current) {
-            hasAnimated.current = true;
-            const animate = async () => {
-                // 0. Initial State: Center (x=0 relative to flex center)
-                controlsLeft.set({ scale: 0, x: 0, opacity: 1 });
-                controlsRight.set({ scale: 0, x: 0, opacity: 1 });
-                controlsText.set({ clipPath: "inset(0 50% 0 50%)", opacity: 0 });
+    // Measure text width and update targetPos — runs whenever text or dimensions change
+    useLayoutEffect(() => {
+        if (!textRef.current) return;
+        const width = textRef.current.offsetWidth;
+        const travelDistance = (width / 2) + d.gap;
+        targetPos.current = { left: -travelDistance, right: travelDistance };
+        if (!isMeasured) setIsMeasured(true);
+    }, [text, d]); // note: isMeasured deliberately excluded to avoid loop
 
-                // 1. Pop & Expand (Simultaneously reveal text)
-                const animations = [
-                    // Text Reveals
-                    controlsText.start({
-                        clipPath: "inset(0 0% 0 0%)",
-                        opacity: 1,
-                        transition: { duration: 0.5, ease: "backOut" }
-                    })
-                ];
+    // After animation completes, snap circles to updated positions on resize/reflow
+    useLayoutEffect(() => {
+        if (!hasAnimated.current || !showCircles || !isMeasured) return;
+        // Instantly reposition — no transition, no scale change
+        controlsLeft.set({ x: targetPos.current.left, scale: 1 });
+        controlsRight.set({ x: targetPos.current.right, scale: 1 });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [d, text]); // Re-snap whenever layout-affecting things change
 
-                if (showCircles) {
-                    animations.push(
-                        controlsLeft.start({
-                            scale: d.expandScale,
-                            x: targetPos.current.left - d.expandOffset,
-                            transition: { duration: 0.5, ease: "backOut" }
-                        }),
-                        controlsRight.start({
-                            scale: d.expandScale,
-                            x: targetPos.current.right + d.expandOffset,
-                            transition: { duration: 0.5, ease: "backOut" }
-                        })
-                    );
-                }
-
-                await Promise.all(animations);
-
-                // 2. Shrink to resting position (Only if circles exist)
-                if (showCircles) {
-                    await Promise.all([
-                        controlsLeft.start({
-                            scale: 1,
-                            x: targetPos.current.left,
-                            transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] }
-                        }),
-                        controlsRight.start({
-                            scale: 1,
-                            x: targetPos.current.right,
-                            transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] }
-                        })
-                    ]);
-                }
-            };
-            animate();
+    // Run the intro animation (once per mount, when in view + measured)
+    const runIntroAnimation = useCallback(async () => {
+        if (!showCircles) {
+            controlsText.set({ clipPath: "inset(0 50% 0 50%)", opacity: 0 });
+            await controlsText.start({
+                clipPath: "inset(0 0% 0 0%)",
+                opacity: 1,
+                transition: { duration: 0.5, ease: "backOut" }
+            });
+            return;
         }
-    }, [shouldAnimate, isMeasured, controlsLeft, controlsRight, controlsText, d, showCircles, text]);
+
+        controlsLeft.set({ scale: 0, x: 0, opacity: 1 });
+        controlsRight.set({ scale: 0, x: 0, opacity: 1 });
+        controlsText.set({ clipPath: "inset(0 50% 0 50%)", opacity: 0 });
+
+        // Phase 1: Expand + reveal text simultaneously
+        await Promise.all([
+            controlsText.start({
+                clipPath: "inset(0 0% 0 0%)",
+                opacity: 1,
+                transition: { duration: 0.5, ease: "backOut" }
+            }),
+            controlsLeft.start({
+                scale: d.expandScale,
+                x: targetPos.current.left - d.expandOffset,
+                transition: { duration: 0.5, ease: "backOut" }
+            }),
+            controlsRight.start({
+                scale: d.expandScale,
+                x: targetPos.current.right + d.expandOffset,
+                transition: { duration: 0.5, ease: "backOut" }
+            }),
+        ]);
+
+        // Phase 2: Shrink to resting position
+        await Promise.all([
+            controlsLeft.start({
+                scale: 1,
+                x: targetPos.current.left,
+                transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] }
+            }),
+            controlsRight.start({
+                scale: 1,
+                x: targetPos.current.right,
+                transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] }
+            })
+        ]);
+
+        hasAnimated.current = true;
+    }, [controlsLeft, controlsRight, controlsText, d, showCircles]);
+
+    useEffect(() => {
+        if (shouldAnimate && isMeasured && !hasAnimated.current) {
+            runIntroAnimation();
+        }
+    }, [shouldAnimate, isMeasured, runIntroAnimation]);
 
     // Determine effective alignment
     const effectiveAlign = (d.isMobile && mobileAlign) ? mobileAlign : align;
 
-    // For non-circle version, we just want simple text alignment without the intricate spacing
     const simpleStyle = !showCircles ? {} : {
         marginLeft: effectiveAlign === 'left' ? (d.gap + d.circleWidth / 2) : 0,
         marginRight: effectiveAlign === 'right' ? (d.gap + d.circleWidth / 2) : 0
@@ -142,9 +137,7 @@ const SectionPreheader = ({ text, color = "#171717", textColor, customTrigger, a
             className={`relative flex items-center ${effectiveAlign === 'right' ? 'justify-end' : 'justify-start'} py-2 mb-2`}
             style={simpleStyle}
         >
-            <div
-                className="relative flex items-center justify-center"
-            >
+            <div className="relative flex items-center justify-center">
                 {/* Left Circle */}
                 {showCircles && (
                     <motion.div

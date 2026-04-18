@@ -222,36 +222,36 @@ const AboutMe = () => {
   const sentinelRings  = useRef(null);
 
   useEffect(() => {
-    // rootMargin: -260px triggers when sentinel crosses the sticky circle center (~240px from top)
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          const el = entry.target;
-          if (el === sentinelStage.current)  setPhase('stage');
-          if (el === sentinelScreen.current) setPhase('screen');
-          if (el === sentinelSound.current)  setPhase('sound');
-        });
-      },
-      { rootMargin: '-260px 0px 0px 0px', threshold: 0 }
-    );
+    // The sticky circle sits at md:top-32 (128px) with height md:w-56 (224px).
+    // Its center is at ~240px from top. We trigger each phase as its sentinel
+    // crosses that point, and revert when scrolling back up.
+    const CIRCLE_CENTER_Y = 240;
 
-    [sentinelStage, sentinelScreen, sentinelSound].forEach(r => {
-      if (r.current) observer.observe(r.current);
-    });
+    const getSentinelTop = (ref) =>
+      ref.current ? ref.current.getBoundingClientRect().top : Infinity;
 
-    // Rings: separate observer — fires when the bottom sentinel reaches near the bottom
-    // of the viewport (circle is fully scrolled through / about to unstick)
-    const ringsObserver = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setPhase('rings'); },
-      { rootMargin: '0px 0px -10% 0px', threshold: 0 }
-    );
-    if (sentinelRings.current) ringsObserver.observe(sentinelRings.current);
+    const handleScroll = () => {
+      const stageY  = getSentinelTop(sentinelStage);
+      const screenY = getSentinelTop(sentinelScreen);
+      const soundY  = getSentinelTop(sentinelSound);
+      const ringsY  = getSentinelTop(sentinelRings);
 
-    return () => { observer.disconnect(); ringsObserver.disconnect(); };
+      // Rings: fire when sentinel reaches 80% of viewport (near bottom / circle about to unstick)
+      const ringsThreshold = window.innerHeight * 0.8;
+
+      if (ringsY <= ringsThreshold)     setPhase('rings');
+      else if (soundY  <= CIRCLE_CENTER_Y) setPhase('sound');
+      else if (screenY <= CIRCLE_CENTER_Y) setPhase('screen');
+      else if (stageY  <= CIRCLE_CENTER_Y) setPhase('stage');
+      else                                  setPhase('photo');
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // run once on mount in case we're already mid-section
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Also reset to photo when scrolling back near the top of the section
+  // Reset to photo when scrolling back to top of section
   const sectionRef = useRef(null);
   useEffect(() => {
     const resetObs = new IntersectionObserver(

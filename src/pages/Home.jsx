@@ -203,7 +203,7 @@ const AboutCircle = ({ phase }) => {
   };
 
   return (
-    <div style={{ position: 'relative', width: '100%', height: '100%', borderRadius: '50%', overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', background: '#ffffff' }}>
+    <div style={{ position: 'relative', width: '100%', height: '100%', borderRadius: '50%', overflow: 'hidden', background: '#ffffff' }}>
       {Object.values(phases)}
     </div>
   );
@@ -236,10 +236,9 @@ const AboutMe = () => {
       const soundY  = getSentinelTop(sentinelSound);
       const ringsY  = getSentinelTop(sentinelRings);
 
-      // Rings: fire when sentinel reaches 80% of viewport (near bottom / circle about to unstick)
-      const ringsThreshold = window.innerHeight * 0.8;
-
-      if (ringsY <= ringsThreshold)     setPhase('rings');
+      // Rings: fire when the end-of-section sentinel reaches the circle level
+      // (same threshold as others) — means you've scrolled all the way through
+      if (ringsY <= CIRCLE_CENTER_Y)       setPhase('rings');
       else if (soundY  <= CIRCLE_CENTER_Y) setPhase('sound');
       else if (screenY <= CIRCLE_CENTER_Y) setPhase('screen');
       else if (stageY  <= CIRCLE_CENTER_Y) setPhase('stage');

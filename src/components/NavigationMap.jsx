@@ -313,7 +313,7 @@ const SECTIONS = [
             { id: "ui-prototypes", label: "Prototypes", desc: '"Vibe" Coding', img: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1775591695/markus-spiske-hbb6GkG6p9M-unsplash_ycfhze.jpg", imgScale: 1.1 },
             { id: "redesigns", label: "Redesigns & Concepts", desc: "game audio", img: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1775492599/Screenshot_2026-04-06_at_9.50.34_AM_yqtrep.png" },
             { id: "surrija", label: "Project Surrija", desc: "XR Concept", img: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1775585447/Gemini_Generated_Image_90up1q90up1q90up_mqrrl4.jpg" },
-            { id: "ai-media", label: "Images, Video & Music", desc: "Media Experiments", img: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1775592998/tj2_fkyibp.png" },
+            { id: "ai-media", label: "Images, Video & Music", desc: "Media Experiments", img: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1776473055/tj2_fkyibp.png" },
         ],
     },
     {

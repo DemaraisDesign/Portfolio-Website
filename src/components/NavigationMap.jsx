@@ -346,7 +346,7 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
         sectionActive: isSmallMobile ? 80 : 110,
         sectionBg: focusedId ? 35 : 110, // Always 110 unless minimized as background nodes
         subPetalActive: 55,
-        subPetalDefault: w >= 1280 ? 55 : 17,
+        subPetalDefault: w >= 1280 ? 55 : 20,
         subPetalBg: 10,
     };
 
@@ -651,7 +651,7 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
                         petalAngle = fixedAngles[i];
                     } else {
                         // Distribute petals over upper 300° arc, leaving 60° gap at bottom for magnifying glass
-                        const gapAngle = Math.PI / 6; // 30° gap at 6 o'clock (magnifying glass removed — was 60°)
+                        const gapAngle = Math.PI / 4; // 45° gap at 6 o'clock — enough room for bottom pair to breathe
                         const arcAngle = (Math.PI * 2) - gapAngle;
                         const startAngle = (Math.PI / 2) + (gapAngle / 2); // Start just past the gap
                         const angleStep = count > 1 ? arcAngle / (count - 1) : 0;

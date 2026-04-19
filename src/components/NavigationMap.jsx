@@ -27,6 +27,12 @@ const THEME = {
         screen: "#4278A8",
         sound: "#00918D",
         exp: "#B14636"
+    },
+    lightShade: {
+        stage: "#D6CAFF",
+        screen: "#94DAFF",
+        sound: "#66E0C8",
+        exp: "#FF9A85"
     }
 };
 
@@ -280,7 +286,7 @@ const RoundedFilledHome = ({ color, size, ...props }) => (
 
 const SECTIONS = [
     {
-        id: "stage", label: "Stages", desc: "Artist Statement", color: THEME.purple, deep: THEME.deep.stage,
+        id: "stage", label: "Stages", desc: "Artist Statement", color: THEME.purple, deep: THEME.deep.stage, light: THEME.lightShade.stage,
         icon: TheatreIcon, quadrant: "tl", link: "/stage",
         children: [
             { id: "coeurage", label: "Coeurage Theatre", desc: "Leadership", img: getProject('coeurage')?.img },
@@ -293,7 +299,7 @@ const SECTIONS = [
         ],
     },
     {
-        id: "sound", label: "Sounds", desc: "Design Statement", color: THEME.teal, deep: THEME.deep.sound,
+        id: "sound", label: "Sounds", desc: "Design Statement", color: THEME.teal, deep: THEME.deep.sound, light: THEME.lightShade.sound,
         icon: Waveform, quadrant: "tr", link: "/sounds",
         children: [
             { id: "writers-theatre", label: "Writer's Theatre", desc: "Audio Dramas", img: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1774802925/1631371112504_rkyy1k.jpg" },
@@ -307,7 +313,7 @@ const SECTIONS = [
         ],
     },
     {
-        id: "lab", label: "Explorations", desc: "Thoughts on AI", color: THEME.orange, deep: THEME.deep.exp,
+        id: "lab", label: "Explorations", desc: "Thoughts on AI", color: THEME.orange, deep: THEME.deep.exp, light: THEME.lightShade.exp,
         icon: ExperimentsIcon, quadrant: "br", link: "/explorations",
         children: [
             { id: "ui-prototypes", label: "Prototypes", desc: '"Vibe" Coding', img: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1775591695/markus-spiske-hbb6GkG6p9M-unsplash_ycfhze.jpg", imgScale: 1.1 },
@@ -317,7 +323,7 @@ const SECTIONS = [
         ],
     },
     {
-        id: "ux", label: "Screens", desc: "Design Statement", color: THEME.blue, deep: THEME.deep.screen,
+        id: "ux", label: "Screens", desc: "Design Statement", color: THEME.blue, deep: THEME.deep.screen, light: THEME.lightShade.screen,
         icon: UXIcon, quadrant: "bl", link: "/screens",
         children: [
             { id: "morgan-stanley", label: "Morgan Stanley", desc: "Email Design", img: getProject('morgan-stanley')?.img, imgScale: getProject('morgan-stanley')?.imgScale },
@@ -669,7 +675,7 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
                 x: cxChild,
                 y: cyChild,
                 size: currentPetalSize,
-                color: sec.deep,
+                color: sec.light,
                 parentColor: sec.color,
                 visible: isLaunched,
                 isParentFocused: isFocused,

@@ -1060,7 +1060,7 @@ export default function NavigationMap({ closeMenu }) {
             id: sp.id,
             sectionId: sec.id,
             quadrant: sec.quadrant,
-            deepColor: sec.deep || sec.color, // Fallback to color if deep not defined on sec
+            deepColor: sec.dark || sec.color, // Fallback to color if dark not defined on sec
             startX: sp.x, startY: sp.y, startSize: sp.size,
             targetX: sec.x, targetY: sec.y, targetSize: sec.size,
             img: sp.img, color: sp.color || sec.color
@@ -1241,19 +1241,34 @@ export default function NavigationMap({ closeMenu }) {
                                 const isTop = pData.quadrant && pData.quadrant.includes('t');
                                 const r = pData.targetSize / 2;
                                 
-                                // Box Width: outeredge to outeredge (center distance + an icon radius on each side = targetSize)
-                                const boxWidth = (2 * layout.origDx) + pData.targetSize;
+                                // Node reference for top/bottom extremities and permanent back button placement
+                                const tlNode = layout.sections.find(s => s.quadrant === 'tl');
+                                const blNode = layout.sections.find(s => s.quadrant === 'bl');
+                                const topY = tlNode ? tlNode.y : layout.cy - layout.newDy;
+                                const botY = blNode ? blNode.y : layout.cy + layout.newDy;
+                                
+                                // Box Width: outeredge to outeredge (center distance + an icon radius on each side)
+                                const boxWidth = (2 * layout.origDx) + (2 * r);
                                 const boxLeft = layout.cx - layout.origDx - r;
 
                                 // Box Height & Top
-                                // Top Case Study: Top edge at center of icon. Bottom edge at bottom edge of bottom icons.
-                                // Bottom Case Study: Top edge at top edge of top icons. Bottom edge at center of bottom icon.
-                                const boxHeight = (2 * layout.newDy) + r;
-                                const boxTop = isTop ? layout.cy - layout.newDy : layout.cy - layout.newDy - r;
+                                let boxTop, boxHeight;
+                                if (isTop) {
+                                    // Top edge at exactly the horizontal center of the Top Case Study
+                                    boxTop = pData.targetY;
+                                    // Bottom edge reaches bottom of Bottom icons
+                                    boxHeight = (botY + r) - boxTop;
+                                } else {
+                                    // Top edge reaches top of Top icons
+                                    boxTop = topY - r;
+                                    // Bottom edge at exactly the horizontal center of Bottom Case Study
+                                    boxHeight = pData.targetY - boxTop;
+                                }
 
-                                // Back button: 12 o'clock positioned 20px above image
+                                // Back button: Permanent place 10px above the 12 o'clock (noon) position of the Stages icon
                                 const btnRadius = 22;
-                                const btnTop = pData.targetY - r - 20 - btnRadius;
+                                const btnLeft = tlNode ? tlNode.x : layout.cx - layout.origDx;
+                                const btnTop = topY - r - 10 - btnRadius;
 
                                 return (
                                     <>
@@ -1293,7 +1308,7 @@ export default function NavigationMap({ closeMenu }) {
                                             style={{
                                                 position: 'absolute',
                                                 top: btnTop,
-                                                left: pData.targetX,
+                                                left: btnLeft,
                                                 transform: 'translate(-50%, -50%)',
                                                 width: btnRadius * 2,
                                                 height: btnRadius * 2,

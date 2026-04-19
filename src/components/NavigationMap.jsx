@@ -346,7 +346,7 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
         sectionActive: isSmallMobile ? 80 : 110,
         sectionBg: focusedId ? 35 : 110, // Always 110 unless minimized as background nodes
         subPetalActive: 55,
-        subPetalDefault: w >= 1280 ? 55 : 14,
+        subPetalDefault: w >= 1280 ? 55 : 17,
         subPetalBg: 10,
     };
 
@@ -357,7 +357,7 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
 
     // The bounding box is bottom-heavy due to text, but visual weight is in the circles.
     // cy - 60 was too high (clipping). cy was too low. cy - 30 splits the difference mathematically.
-    const visualCenterY = w < 768 ? cy - 5 : cy;
+    const visualCenterY = w < 768 ? cy + 20 : cy;
 
     const origDx = w < 768 ? Math.max(90, w * 0.22) : Math.max(250, w * 0.35); // Pulled back out slightly
     const newDy = w < 768 ? Math.max(140, h * 0.21) : Math.max(180, h * 0.22);
@@ -651,7 +651,7 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
                         petalAngle = fixedAngles[i];
                     } else {
                         // Distribute petals over upper 300° arc, leaving 60° gap at bottom for magnifying glass
-                        const gapAngle = Math.PI / 3; // 60° gap centered on 6 o'clock
+                        const gapAngle = Math.PI / 6; // 30° gap at 6 o'clock (magnifying glass removed — was 60°)
                         const arcAngle = (Math.PI * 2) - gapAngle;
                         const startAngle = (Math.PI / 2) + (gapAngle / 2); // Start just past the gap
                         const angleStep = count > 1 ? arcAngle / (count - 1) : 0;

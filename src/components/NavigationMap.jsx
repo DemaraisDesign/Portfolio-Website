@@ -1053,6 +1053,7 @@ export default function NavigationMap({ closeMenu }) {
         // Fly the new petal forward immediately (same tick — simultaneous)
         setParkedPetalData({
             id: sp.id,
+            sectionId: sec.id,
             startX: sp.x, startY: sp.y, startSize: sp.size,
             targetX: sec.x, targetY: sec.y, targetSize: sec.size,
             img: sp.img, color: sp.color || sec.deep

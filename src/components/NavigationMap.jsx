@@ -650,8 +650,9 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
                         ];
                         petalAngle = fixedAngles[i];
                     } else {
-                        // Distribute petals over upper 300° arc, leaving 60° gap at bottom for magnifying glass
-                        const gapAngle = Math.PI / 3; // 60° gap restores perfect hexagonal symmetry for 6 items (top and bottom vertically aligned)
+                        // 6 items (Screens) needs exactly 60° to form a perfect hexagon with vertically aligned sides.
+                        // 7-8 items (Stages, Sounds) need a tighter 45° gap so the top petals don't get squished together.
+                        const gapAngle = count === 6 ? (Math.PI / 3) : (Math.PI / 4);
                         const arcAngle = (Math.PI * 2) - gapAngle;
                         const startAngle = (Math.PI / 2) + (gapAngle / 2); // Start just past the gap
                         const angleStep = count > 1 ? arcAngle / (count - 1) : 0;

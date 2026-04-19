@@ -1267,7 +1267,7 @@ export default function NavigationMap({ closeMenu }) {
                                 // marginTop: -btnRadius centers the element at btnTop, so we subtract btnRadius to put the *bottom* at targetY - r - 10
                                 const btnRadius = 22;
                                 const btnLeft = pData.targetX;
-                                const btnTop = pData.targetY - r - 10 - btnRadius;
+                                const btnTop = pData.targetY - r - 30 - btnRadius;
 
                                 return (
                                     <>

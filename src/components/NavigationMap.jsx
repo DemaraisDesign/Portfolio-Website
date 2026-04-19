@@ -1280,7 +1280,7 @@ export default function NavigationMap({ closeMenu }) {
                                                         }
                                                     }}
                                                     className={sec.isFocused || isLargeUnfocused ? "depth-active" : ""}
-                                                    zIndex={(isLargeUnfocused || sec.isFocused) ? 16 : 2}
+                                                    zIndex={(isLargeUnfocused || sec.isFocused || (viewport.w < 1280 && !focusedId)) ? 16 : 2}
                                                     showIcon={isSettled && (sec.isFocused || isLargeUnfocused)} useElastic={isSettled}
                                                     isResizing={isResizing} isChild={true} initialOpacity={opacityMul}
                                                     isDimmed={!sec.isFocused && !isLargeUnfocused}

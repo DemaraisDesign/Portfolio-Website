@@ -1291,7 +1291,7 @@ export default function NavigationMap({ closeMenu }) {
                                                     zIndex={(isLargeUnfocused || sec.isFocused || (viewport.w < 1280 && !focusedId)) ? 16 : 2}
                                                     showIcon={isSettled && (sec.isFocused || isLargeUnfocused)} useElastic={isSettled}
                                                     isResizing={isResizing} isChild={true} initialOpacity={opacityMul}
-                                                    isDimmed={!sec.isFocused && !isLargeUnfocused}
+                                                    isDimmed={false}
                                                     labelData={isLargeUnfocused ? { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: ((isShortDesktop || (viewport.w >= 768 && viewport.w < 1280)) && sec.quadrant.includes('b')) ? 'top' : 'center', img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: showLabels, forceSearchIcon: false } : { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: (isShortDesktop && sec.quadrant.includes('b')) ? 'top' : (viewport.w < 1280 ? sp.alignLabel : sp.alignLabel), img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: (viewport.w < 1280 && !focusedId) ? false : showLabels, forceSearchIcon: viewport.w < 1280 && !focusedId }}
                                                     isShortViewport={isShortDesktop || viewport.w < 1280}
                                                     noFlyTransition={isNoFly}

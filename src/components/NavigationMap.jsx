@@ -1311,7 +1311,7 @@ export default function NavigationMap({ closeMenu }) {
                                                     style={{
                                                         position: 'absolute',
                                                         top: boxTop,
-                                                        marginTop: -(blockHeight + 2),
+                                                        marginTop: -(blockHeight + 10),
                                                         left: textLeft,
                                                         maxWidth: availableWidth,
                                                         fontFamily: '"Outfit", sans-serif',

@@ -1250,33 +1250,40 @@ export default function NavigationMap({ closeMenu }) {
                                 const liveSize = liveSection ? liveSection.size : pData.targetSize;
                                 const r = liveSize / 2;
                                 
-                                // Node reference for top/bottom extremities and permanent back button placement
-                                const tlNode = layout.sections.find(s => s.quadrant === 'tl');
-                                const blNode = layout.sections.find(s => s.quadrant === 'bl');
-                                const topY = tlNode ? tlNode.y : layout.cy - layout.newDy;
-                                const botY = blNode ? blNode.y : layout.cy + layout.newDy;
-                                
-                                // Box Width: outer edges of icons (center to center + full diameter)
-                                const boxWidth = (2 * layout.origDx) + (2 * r);
-                                const boxLeft = layout.cx - layout.origDx - r;
+
+                                // ── Box geometry from live section positions ──
+                                // origDx/newDy are pre-launch constants that diverge from actual icon positions
+                                // at tablet breakpoints. Use the 4 real live section coords instead.
+                                const secTL = layout.sections.find(s => s.quadrant === 'tl');
+                                const secTR = layout.sections.find(s => s.quadrant === 'tr');
+                                const secBL = layout.sections.find(s => s.quadrant === 'bl');
+                                const secBR = layout.sections.find(s => s.quadrant === 'br');
+
+                                const topY   = secTL ? secTL.y : liveY;
+                                const botY   = secBL ? secBL.y : liveY;
+                                const leftX  = secTL ? secTL.x : liveX;
+                                const rightX = secTR ? secTR.x : liveX;
+
+                                // Box Width: outer edges of left and right icons
+                                const boxWidth = (rightX - leftX) + (2 * r);
+                                const boxLeft  = leftX - r;
 
                                 // Box Height & Top
                                 let boxTop, boxHeight;
                                 if (isTop) {
-                                    // Top Case Study: top edge through center of active image (cut-in), bottom at outer edge of bottom icons
-                                    boxTop = liveY;
+                                    // Top case study: cut-in at liveY (image center), extend to bottom outer edge of bottom icons
+                                    boxTop    = liveY;
                                     boxHeight = (botY + r) - boxTop;
                                 } else {
-                                    // Bottom Case Study: top at outer edge of top icons, bottom through center of active image (cut-in)
-                                    boxTop = topY - r;
+                                    // Bottom case study: cut-in at liveY (image center), extend to top outer edge of top icons
+                                    boxTop    = topY - r;
                                     boxHeight = liveY - boxTop;
                                 }
 
-                                // Back button: bottom edge sits exactly 10px above 12 o'clock of active image
-                                // marginTop: -btnRadius centers the element at btnTop, so we subtract btnRadius to put the *bottom* at targetY - r - 10
+                                // Back button: 12 o'clock of active section image, 30px clear gap
                                 const btnRadius = 22;
                                 const btnLeft = liveX;
-                                const btnTop = liveY - r - 30 - btnRadius;
+                                const btnTop  = liveY - r - 30 - btnRadius;
 
                                 return (
                                     <>

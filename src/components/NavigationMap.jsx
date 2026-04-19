@@ -1292,7 +1292,7 @@ export default function NavigationMap({ closeMenu }) {
                                             }}
                                         />
 
-                                        {/* Context Label — sits on the box top edge, to the right of the image */}
+                                        {/* Context Label — anchored just above box top edge, to the right of the image outline */}
                                         <motion.div
                                             key={`label-${pData.id}`}
                                             initial={{ opacity: 0 }}
@@ -1301,13 +1301,16 @@ export default function NavigationMap({ closeMenu }) {
                                             transition={{ duration: 0.4, ease: 'easeOut', delay: 0.4 }}
                                             style={{
                                                 position: 'absolute',
+                                                // boxTop is the cut-in edge. marginTop: -18 puts the full line of text above it.
                                                 top: boxTop,
-                                                left: pData.targetX + r + 14,
-                                                marginTop: -8, // ~half line-height of 13px text
+                                                marginTop: -18,
+                                                // Start after image circle right edge + 10px white outline + 8px gap
+                                                left: pData.targetX + r + 10 + 8,
                                                 whiteSpace: 'nowrap',
                                                 fontFamily: '"Outfit", sans-serif',
                                                 fontSize: '13px',
                                                 fontWeight: 700,
+                                                lineHeight: '16px',
                                                 letterSpacing: '0.08em',
                                                 textTransform: 'uppercase',
                                                 color: THEME.dark,

@@ -1090,7 +1090,7 @@ export default function NavigationMap({ closeMenu }) {
             <svg style={{
                 position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 0,
                 overflow: 'visible',
-                opacity: isLaunched && !focusedId && viewport.w >= 768 ? 1 : 0,
+                opacity: (isLaunched && !focusedId && viewport.w >= 768 && !parkedPetalData) ? 1 : 0,
                 transition: isResizing ? 'none' : 'opacity 0.8s ease 0.4s'
             }}>
                 {layout.sections.map(sec => {
@@ -1226,7 +1226,17 @@ export default function NavigationMap({ closeMenu }) {
 
                 return (
                     <>
-
+                        {/* Home Node */}
+                        <Node
+                            x={viewport.w / 2} y={viewport.h / 2} size={80}
+                            color={THEME.dark} iconColor={THEME.white} icon="home"
+                            onClick={handleHomeClick}
+                            className={isLaunched ? 'launched-node' : ''}
+                            zIndex={100}
+                            showIcon={isLaunched} useElastic={isLaunched}
+                            isResizing={isResizing}
+                            overrideOpacity={parkedPetalData ? 0 : undefined}
+                        />
 
                         {layout.sections.map((sec, secIdx) => (
                             <React.Fragment key={sec.id}>
@@ -1241,12 +1251,13 @@ export default function NavigationMap({ closeMenu }) {
                                     showIcon={isLaunched} useElastic={isLaunched}
                                     isResizing={isResizing} initialOpacity={1}
                                     disableAnimation={sec.isBg}
+                                    overrideOpacity={(parkedPetalData && parkedPetalData.sectionId !== sec.id) ? 0 : undefined}
                                     labelData={{
                                         title: sec.label + (isLandscapePhone ? '' : ' Overview'),
                                         desc: isLandscapePhone ? null : sec.desc,
                                         subDesc: isLandscapePhone ? null : 'Selected work links',
                                         isCompact: isLandscapePhone,
-                                        show: showLabels,
+                                        show: showLabels && !parkedPetalData,
                                         align: isLandscapePhone ? 'center' : (viewport.w < 1280 ? (sec.isFocused ? 'right' : 'top') : (isShortDesktop && sec.quadrant.includes('b') ? 'top' : 'center')),
                                         mobileTopOffset: viewport.w < 768 ? '-40px' : null
                                     }}
@@ -1297,8 +1308,8 @@ export default function NavigationMap({ closeMenu }) {
                                                     showIcon={isSettled && (sec.isFocused || isLargeUnfocused)} useElastic={isSettled}
                                                     isResizing={isResizing} isChild={true} initialOpacity={opacityMul}
                                                     isDimmed={!sec.isFocused && !isLargeUnfocused}
-                                                    overrideOpacity={(viewport.w < 1280 && !focusedId) ? 0.8 : undefined}
-                                                    labelData={isLargeUnfocused ? { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: ((isShortDesktop || (viewport.w >= 768 && viewport.w < 1280)) && sec.quadrant.includes('b')) ? 'top' : 'center', img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: showLabels, forceSearchIcon: false } : { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: (isShortDesktop && sec.quadrant.includes('b')) ? 'top' : (viewport.w < 1280 ? sp.alignLabel : sp.alignLabel), img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: (viewport.w < 1280 && !focusedId) ? false : showLabels, forceSearchIcon: viewport.w < 1280 && !focusedId }}
+                                                    overrideOpacity={parkedPetalData ? 0 : ((viewport.w < 1280 && !focusedId) ? 0.8 : undefined)}
+                                                    labelData={isLargeUnfocused ? { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: ((isShortDesktop || (viewport.w >= 768 && viewport.w < 1280)) && sec.quadrant.includes('b')) ? 'top' : 'center', img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: showLabels && !parkedPetalData, forceSearchIcon: false } : { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: (isShortDesktop && sec.quadrant.includes('b')) ? 'top' : (viewport.w < 1280 ? sp.alignLabel : sp.alignLabel), img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: (viewport.w < 1280 && !focusedId) ? false : (showLabels && !parkedPetalData), forceSearchIcon: viewport.w < 1280 && !focusedId }}
                                                     isShortViewport={isShortDesktop || viewport.w < 1280}
                                                     noFlyTransition={isNoFly}
                                                     alwaysShowLabel={isLargeUnfocused && !(isShortDesktop || viewport.w < 1280)}
@@ -1321,7 +1332,7 @@ export default function NavigationMap({ closeMenu }) {
                                             <motion.div
                                                 key={`wrapper-${sp.id}-${sec.isFocused ? 'focus' : 'bg'}`}
                                                 initial={{ opacity: 0, rotateY: -90 }}
-                                                animate={{ opacity: 1, rotateY: 0 }}
+                                                animate={{ opacity: parkedPetalData ? 0 : 1, rotateY: 0 }}
                                                 exit={{ opacity: 0, rotateY: 90 }}
                                                 transition={{ delay: focusedId ? nodeDelay : 0, type: "spring", stiffness: 60, damping: 12, mass: 0.8 }}
                                                 style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', perspective: '1000px' }}

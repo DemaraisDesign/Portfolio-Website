@@ -357,7 +357,7 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
 
     // The bounding box is bottom-heavy due to text, but visual weight is in the circles.
     // cy - 60 was too high (clipping). cy was too low. cy - 30 splits the difference mathematically.
-    const visualCenterY = w < 768 ? cy + 20 : cy;
+    const visualCenterY = w < 768 ? cy + 45 : cy;
 
     const origDx = w < 768 ? Math.max(90, w * 0.22) : Math.max(250, w * 0.35); // Pulled back out slightly
     const newDy = w < 768 ? Math.max(140, h * 0.21) : Math.max(180, h * 0.22);
@@ -911,7 +911,7 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                     transform: isLabelVisible 
                         ? (labelData.align === 'right' ? 'translate(20px, -50%)' : (labelData.align === 'left' ? 'translate(calc(-100% - 20px), -50%)' : (labelData.align === 'top' ? 'translate(-50%, -100%)' : 'translate(-50%, 0)'))) 
                         : (labelData.align === 'right' ? 'translate(10px, -50%)' : (labelData.align === 'left' ? 'translate(calc(-100% - 10px), -50%)' : (labelData.align === 'top' ? 'translate(-50%, calc(-100% + 10px))' : 'translate(-50%, -10px)'))),
-                    marginTop: labelData.align === 'top' ? '-28px' : (labelData.align === 'right' || labelData.align === 'left' ? '0' : (labelData.isCompact ? '19px' : '16px')),
+                    marginTop: labelData.align === 'top' ? (labelData.mobileTopOffset || '-28px') : (labelData.align === 'right' || labelData.align === 'left' ? '0' : (labelData.isCompact ? '19px' : '16px')),
                     textAlign: isShortViewport ? (labelData.align === 'center' ? 'center' : 'left') : (labelData.align === 'right' ? 'left' : (labelData.align === 'left' ? 'right' : 'center')),
                     whiteSpace: (isShortViewport || labelData.align === 'top') ? 'nowrap' : 'normal',
                     width: (isShortViewport || labelData.align === 'top') ? 'auto' : '180px',
@@ -1236,7 +1236,8 @@ export default function NavigationMap({ closeMenu }) {
                                         subDesc: isLandscapePhone ? null : 'Selected work links',
                                         isCompact: isLandscapePhone,
                                         show: showLabels,
-                                        align: isLandscapePhone ? 'center' : (viewport.w < 1280 ? (sec.isFocused ? 'right' : 'top') : (isShortDesktop && sec.quadrant.includes('b') ? 'top' : 'center'))
+                                        align: isLandscapePhone ? 'center' : (viewport.w < 1280 ? (sec.isFocused ? 'right' : 'top') : (isShortDesktop && sec.quadrant.includes('b') ? 'top' : 'center')),
+                                        mobileTopOffset: viewport.w < 768 ? '-53px' : null
                                     }}
                                     isShortViewport={isShortDesktop}
                                     noFlyTransition={sec.isFocused && isNoFly}

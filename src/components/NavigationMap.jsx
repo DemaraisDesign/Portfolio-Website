@@ -888,9 +888,16 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                             x: parkedData.startX - x,
                             y: parkedData.startY - y,
                             scale: parkedData.startSize / size,
+                            boxShadow: `0 0 0 0px ${THEME.dark}`
                         }}
-                        animate={{ x: 0, y: 0, scale: 1 }}
-                        transition={{ type: 'spring', stiffness: 260, damping: 16, mass: 0.9, delay: 0.15 }}
+                        animate={{ 
+                            x: 0, y: 0, scale: 1, 
+                            boxShadow: `0 0 0 10px ${THEME.dark}` 
+                        }}
+                        transition={{ 
+                            default: { type: 'spring', stiffness: 260, damping: 16, mass: 0.9, delay: 0.15 },
+                            boxShadow: { delay: 0.6, duration: 0.15, ease: "easeOut" }
+                        }}
                         style={{
                             position: 'absolute',
                             top: '50%',

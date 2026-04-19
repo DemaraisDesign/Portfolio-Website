@@ -1240,13 +1240,20 @@ export default function NavigationMap({ closeMenu }) {
                                 const pData = parkedPetalData;
                                 const isTop = pData.quadrant && pData.quadrant.includes('t');
                                 
-                                // Dynamic Dimensions tied exactly to invisible icons grid
+                                // To intersect exactly on the geometric centers of the 4 nodes:
                                 const boxWidth = 2 * layout.origDx;
-                                const boxHeight = (2 * layout.newDy) - 60; // Shipped ~60px shorter vertically
+                                const boxHeight = 2 * layout.newDy;
 
-                                // Exact anchoring to ensure perfectly aligned cutout corners
-                                const boxTop = isTop ? layout.cy - layout.newDy : layout.cy + layout.newDy - boxHeight;
+                                // The Box perfectly overlays the 4-node grid bounds, anchoring at the top-left node
+                                const boxTop = layout.cy - layout.newDy;
                                 const boxLeft = layout.cx - layout.origDx;
+
+                                // Back button replaces the Section Label, which lives above Top nodes and below Bottom nodes
+                                const btnRadius = 22;
+                                const btnOffset = (pData.targetSize / 2) + 14; // Minimal gap so it rests nicely by the case study image
+                                const btnTop = isTop 
+                                    ? pData.targetY - btnOffset - btnRadius 
+                                    : pData.targetY + btnOffset + btnRadius;
 
                                 return (
                                     <>
@@ -1285,11 +1292,11 @@ export default function NavigationMap({ closeMenu }) {
                                             }}
                                             style={{
                                                 position: 'absolute',
-                                                top: pData.targetY - (pData.targetSize / 2) - 36, // positioned exactly where descriptor text lived
+                                                top: btnTop,
                                                 left: pData.targetX,
                                                 transform: 'translate(-50%, -50%)',
-                                                width: 44,
-                                                height: 44,
+                                                width: btnRadius * 2,
+                                                height: btnRadius * 2,
                                                 borderRadius: '50%',
                                                 backgroundColor: THEME.purple,
                                                 color: '#fff',

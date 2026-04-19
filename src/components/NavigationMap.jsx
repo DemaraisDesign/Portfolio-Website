@@ -1292,38 +1292,53 @@ export default function NavigationMap({ closeMenu }) {
                                             }}
                                         />
 
-                                        {/* Context Label — two lines, constrained to box right edge */}
-                                        <motion.div
-                                            key={`label-${pData.id}`}
-                                            initial={{ opacity: 0 }}
-                                            animate={{ opacity: 1 }}
-                                            exit={{ opacity: 0 }}
-                                            transition={{ duration: 0.4, ease: 'easeOut', delay: 0.4 }}
-                                            style={{
-                                                position: 'absolute',
-                                                top: boxTop,
-                                                // 2 lines × 16px + 4px gap = 36px block height; sit it fully above the box edge
-                                                marginTop: -38,
-                                                left: pData.targetX + r + 18,
-                                                // Constrain to box's right edge so text never escapes the frame
-                                                maxWidth: (boxLeft + boxWidth) - (pData.targetX + r + 18) - 8,
-                                                fontFamily: '"Outfit", sans-serif',
-                                                fontSize: '13px',
-                                                fontWeight: 700,
-                                                lineHeight: '16px',
-                                                letterSpacing: '0.08em',
-                                                textTransform: 'uppercase',
-                                                color: THEME.dark,
-                                                pointerEvents: 'none',
-                                                zIndex: 20,
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                gap: '4px',
-                                            }}
-                                        >
-                                            <span style={{ whiteSpace: 'nowrap' }}>{pData.sectionLabel}</span>
-                                            <span style={{ whiteSpace: 'nowrap' }}>Selected Work</span>
-                                        </motion.div>
+                                        {/* Context Label — single line if it fits, two lines if it would overflow box right edge */}
+                                        {(() => {
+                                            const textLeft = pData.targetX + r + 18;
+                                            const availableWidth = (boxLeft + boxWidth) - textLeft - 8;
+                                            // Estimate: ~9px per uppercase char at 13px + 0.08em tracking
+                                            const singleLine = `${pData.sectionLabel}: Selected Work`;
+                                            const fitsOnOneLine = singleLine.length * 9 <= availableWidth;
+                                            const blockHeight = fitsOnOneLine ? 16 : 36;
+
+                                            return (
+                                                <motion.div
+                                                    key={`label-${pData.id}`}
+                                                    initial={{ opacity: 0 }}
+                                                    animate={{ opacity: 1 }}
+                                                    exit={{ opacity: 0 }}
+                                                    transition={{ duration: 0.4, ease: 'easeOut', delay: 0.4 }}
+                                                    style={{
+                                                        position: 'absolute',
+                                                        top: boxTop,
+                                                        marginTop: -(blockHeight + 2),
+                                                        left: textLeft,
+                                                        maxWidth: availableWidth,
+                                                        fontFamily: '"Outfit", sans-serif',
+                                                        fontSize: '13px',
+                                                        fontWeight: 700,
+                                                        lineHeight: '16px',
+                                                        letterSpacing: '0.08em',
+                                                        textTransform: 'uppercase',
+                                                        color: THEME.dark,
+                                                        pointerEvents: 'none',
+                                                        zIndex: 20,
+                                                        display: 'flex',
+                                                        flexDirection: 'column',
+                                                        gap: '4px',
+                                                    }}
+                                                >
+                                                    {fitsOnOneLine ? (
+                                                        <span style={{ whiteSpace: 'nowrap' }}>{singleLine}</span>
+                                                    ) : (
+                                                        <>
+                                                            <span style={{ whiteSpace: 'nowrap' }}>{pData.sectionLabel}:</span>
+                                                            <span style={{ whiteSpace: 'nowrap' }}>Selected Work</span>
+                                                        </>
+                                                    )}
+                                                </motion.div>
+                                            );
+                                        })()}
 
                                         {/* Back Button Overlay */}
                                         <motion.button

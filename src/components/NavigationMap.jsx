@@ -358,7 +358,7 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
         sectionActive: isSmallMobile ? 80 : 110,
         sectionBg: focusedId ? 35 : 110, // Always 110 unless minimized as background nodes
         subPetalActive: 55,
-        subPetalDefault: w >= 1280 ? 55 : 24,
+        subPetalDefault: w >= 1280 ? 55 : 25,
         subPetalBg: 10,
     };
 

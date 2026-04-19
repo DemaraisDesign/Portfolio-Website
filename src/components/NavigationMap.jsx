@@ -1278,7 +1278,7 @@ export default function NavigationMap({ closeMenu }) {
                                             initial={{ opacity: 0, scale: 0.95 }}
                                             animate={{ opacity: 1, scale: 1 }}
                                             exit={{ opacity: 0, scale: 0.95 }}
-                                            transition={{ duration: 0.4, ease: "easeOut", delay: 0.2 }}
+                                            transition={{ duration: 0.4, ease: "easeOut", delay: 0.85 }}
                                             style={{
                                                 position: 'absolute',
                                                 top: boxTop,
@@ -1307,7 +1307,7 @@ export default function NavigationMap({ closeMenu }) {
                                                     initial={{ opacity: 0 }}
                                                     animate={{ opacity: 1 }}
                                                     exit={{ opacity: 0 }}
-                                                    transition={{ duration: 0.4, ease: 'easeOut', delay: 0.4 }}
+                                                    transition={{ duration: 0.4, ease: 'easeOut', delay: 1.1 }}
                                                     style={{
                                                         position: 'absolute',
                                                         top: boxTop,
@@ -1346,7 +1346,7 @@ export default function NavigationMap({ closeMenu }) {
                                             initial={{ opacity: 0, scale: 0 }}
                                             animate={{ opacity: 1, scale: 1 }}
                                             exit={{ opacity: 0, scale: 0 }}
-                                            transition={{ duration: 0.3, ease: 'backOut', delay: 0.4 }}
+                                            transition={{ duration: 0.3, ease: 'backOut', delay: 1.2 }}
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 audio.playHover();

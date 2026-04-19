@@ -1240,7 +1240,15 @@ export default function NavigationMap({ closeMenu }) {
                             {(parkedPetalData && viewport.w < 1280) && (() => {
                                 const pData = parkedPetalData;
                                 const isTop = pData.quadrant && pData.quadrant.includes('t');
-                                const r = pData.targetSize / 2;
+
+                                // ── Live position from layout (NOT stale pData snapshot) ──
+                                // As viewport resizes, layout recalculates icon positions.
+                                // We must track those live values so box/button/label follow the icon.
+                                const liveSection = layout.sections.find(s => s.id === pData.sectionId);
+                                const liveX  = liveSection ? liveSection.x    : pData.targetX;
+                                const liveY  = liveSection ? liveSection.y    : pData.targetY;
+                                const liveSize = liveSection ? liveSection.size : pData.targetSize;
+                                const r = liveSize / 2;
                                 
                                 // Node reference for top/bottom extremities and permanent back button placement
                                 const tlNode = layout.sections.find(s => s.quadrant === 'tl');
@@ -1256,19 +1264,19 @@ export default function NavigationMap({ closeMenu }) {
                                 let boxTop, boxHeight;
                                 if (isTop) {
                                     // Top Case Study: top edge through center of active image (cut-in), bottom at outer edge of bottom icons
-                                    boxTop = pData.targetY;
+                                    boxTop = liveY;
                                     boxHeight = (botY + r) - boxTop;
                                 } else {
                                     // Bottom Case Study: top at outer edge of top icons, bottom through center of active image (cut-in)
                                     boxTop = topY - r;
-                                    boxHeight = pData.targetY - boxTop;
+                                    boxHeight = liveY - boxTop;
                                 }
 
                                 // Back button: bottom edge sits exactly 10px above 12 o'clock of active image
                                 // marginTop: -btnRadius centers the element at btnTop, so we subtract btnRadius to put the *bottom* at targetY - r - 10
                                 const btnRadius = 22;
-                                const btnLeft = pData.targetX;
-                                const btnTop = pData.targetY - r - 30 - btnRadius;
+                                const btnLeft = liveX;
+                                const btnTop = liveY - r - 30 - btnRadius;
 
                                 return (
                                     <>
@@ -1294,7 +1302,7 @@ export default function NavigationMap({ closeMenu }) {
 
                                         {/* Context Label — single line if it fits, two lines if it would overflow box right edge */}
                                         {(() => {
-                                            const textLeft = pData.targetX + r + 18;
+                                            const textLeft = liveX + r + 18;
                                             const availableWidth = (boxLeft + boxWidth) - textLeft - 8;
                                             // Estimate: ~9px per uppercase char at 13px + 0.08em tracking
                                             const singleLine = `${pData.sectionLabel}: Selected Work`;

@@ -1247,28 +1247,28 @@ export default function NavigationMap({ closeMenu }) {
                                 const topY = tlNode ? tlNode.y : layout.cy - layout.newDy;
                                 const botY = blNode ? blNode.y : layout.cy + layout.newDy;
                                 
-                                // Box Width: outeredge to outeredge (center distance + an icon radius on each side)
-                                const boxWidth = (2 * layout.origDx) + (2 * r);
-                                const boxLeft = layout.cx - layout.origDx - r;
+                                // Box Width: exactly the distance between left and right centers, securing corner cut-ins
+                                const boxWidth = 2 * layout.origDx;
+                                const boxLeft = layout.cx - layout.origDx;
 
                                 // Box Height & Top
                                 let boxTop, boxHeight;
                                 if (isTop) {
-                                    // Top edge at exactly the horizontal center of the Top Case Study
+                                    // Top Case Study: Top edge precisely splits the active image center. 
+                                    // Bottom edge extends completely over the lower icons' outer boundaries for breathing room.
                                     boxTop = pData.targetY;
-                                    // Bottom edge reaches bottom of Bottom icons
                                     boxHeight = (botY + r) - boxTop;
                                 } else {
-                                    // Top edge reaches top of Top icons
+                                    // Bottom Case Study: Bottom edge precisely splits the active image center.
+                                    // Top edge extends completely over the top icons' outer boundaries for breathing room.
                                     boxTop = topY - r;
-                                    // Bottom edge at exactly the horizontal center of Bottom Case Study
                                     boxHeight = pData.targetY - boxTop;
                                 }
 
-                                // Back button: Permanent place 10px above the 12 o'clock (noon) position of the Stages icon
+                                // Back button: ALWAYS 12 o'clock above the *active* image
                                 const btnRadius = 22;
-                                const btnLeft = tlNode ? tlNode.x : layout.cx - layout.origDx;
-                                const btnTop = topY - r - 10 - btnRadius;
+                                const btnLeft = pData.targetX;
+                                const btnTop = pData.targetY - r - 16 - btnRadius;
 
                                 return (
                                     <>

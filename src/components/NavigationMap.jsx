@@ -1292,7 +1292,7 @@ export default function NavigationMap({ closeMenu }) {
                                             }}
                                         />
 
-                                        {/* Context Label — anchored just above box top edge, to the right of the image outline */}
+                                        {/* Context Label — two lines, constrained to box right edge */}
                                         <motion.div
                                             key={`label-${pData.id}`}
                                             initial={{ opacity: 0 }}
@@ -1301,12 +1301,12 @@ export default function NavigationMap({ closeMenu }) {
                                             transition={{ duration: 0.4, ease: 'easeOut', delay: 0.4 }}
                                             style={{
                                                 position: 'absolute',
-                                                // boxTop is the cut-in edge. marginTop: -18 puts the full line of text above it.
                                                 top: boxTop,
-                                                marginTop: -18,
-                                                // Start after image circle right edge + 10px white outline + 8px gap
-                                                left: pData.targetX + r + 10 + 8,
-                                                whiteSpace: 'nowrap',
+                                                // 2 lines × 16px + 4px gap = 36px block height; sit it fully above the box edge
+                                                marginTop: -38,
+                                                left: pData.targetX + r + 18,
+                                                // Constrain to box's right edge so text never escapes the frame
+                                                maxWidth: (boxLeft + boxWidth) - (pData.targetX + r + 18) - 8,
                                                 fontFamily: '"Outfit", sans-serif',
                                                 fontSize: '13px',
                                                 fontWeight: 700,
@@ -1316,9 +1316,13 @@ export default function NavigationMap({ closeMenu }) {
                                                 color: THEME.dark,
                                                 pointerEvents: 'none',
                                                 zIndex: 20,
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                gap: '4px',
                                             }}
                                         >
-                                            {pData.sectionLabel}: Selected Work
+                                            <span style={{ whiteSpace: 'nowrap' }}>{pData.sectionLabel}</span>
+                                            <span style={{ whiteSpace: 'nowrap' }}>Selected Work</span>
                                         </motion.div>
 
                                         {/* Back Button Overlay */}

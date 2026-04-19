@@ -681,7 +681,7 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
                 x: cxChild,
                 y: cyChild,
                 size: currentPetalSize,
-                color: sec.dark,
+                color: sec.light,
                 parentColor: sec.color,
                 visible: isLaunched,
                 isParentFocused: isFocused,

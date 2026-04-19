@@ -1059,8 +1059,9 @@ export default function NavigationMap({ closeMenu }) {
         setParkedPetalData({
             id: sp.id,
             sectionId: sec.id,
+            sectionLabel: sec.label,
             quadrant: sec.quadrant,
-            deepColor: sec.dark || sec.color, // Fallback to color if dark not defined on sec
+            deepColor: sec.dark || sec.color,
             startX: sp.x, startY: sp.y, startSize: sp.size,
             targetX: sec.x, targetY: sec.y, targetSize: sec.size,
             img: sp.img, color: sp.color || sec.color
@@ -1290,6 +1291,36 @@ export default function NavigationMap({ closeMenu }) {
                                                 pointerEvents: 'auto', // block touches behind it
                                             }}
                                         />
+
+                                        {/* Context Label — appears in the light space created by cut-in */}
+                                        <motion.div
+                                            key={`label-${pData.id}`}
+                                            initial={{ opacity: 0, y: isTop ? 8 : -8 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0 }}
+                                            transition={{ duration: 0.4, ease: 'easeOut', delay: 0.35 }}
+                                            style={{
+                                                position: 'absolute',
+                                                // Vertically: center in the gap between back btn bottom and box edge
+                                                top: isTop
+                                                    ? pData.targetY - r - 15   // ~15px above top of image in the light space
+                                                    : pData.targetY + r + 15,  // ~15px below bottom of image in light space
+                                                left: layout.cx,
+                                                transform: 'translateX(-50%)',
+                                                whiteSpace: 'nowrap',
+                                                fontFamily: '"Outfit", sans-serif',
+                                                fontSize: '13px',
+                                                fontWeight: 700,
+                                                letterSpacing: '0.08em',
+                                                textTransform: 'uppercase',
+                                                color: THEME.dark,
+                                                opacity: 0.55,
+                                                pointerEvents: 'none',
+                                                zIndex: 20,
+                                            }}
+                                        >
+                                            {pData.sectionLabel}: Selected Work
+                                        </motion.div>
 
                                         {/* Back Button Overlay */}
                                         <motion.button

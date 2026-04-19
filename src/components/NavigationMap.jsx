@@ -1295,15 +1295,15 @@ export default function NavigationMap({ closeMenu }) {
                                         {/* Context Label — sits on the box top edge, to the right of the image */}
                                         <motion.div
                                             key={`label-${pData.id}`}
-                                            initial={{ opacity: 0, x: -8 }}
-                                            animate={{ opacity: 1, x: 0 }}
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
                                             exit={{ opacity: 0 }}
                                             transition={{ duration: 0.4, ease: 'easeOut', delay: 0.4 }}
                                             style={{
                                                 position: 'absolute',
                                                 top: boxTop,
                                                 left: pData.targetX + r + 14,
-                                                transform: 'translateY(-50%)',
+                                                marginTop: -8, // ~half line-height of 13px text
                                                 whiteSpace: 'nowrap',
                                                 fontFamily: '"Outfit", sans-serif',
                                                 fontSize: '13px',

@@ -1247,28 +1247,27 @@ export default function NavigationMap({ closeMenu }) {
                                 const topY = tlNode ? tlNode.y : layout.cy - layout.newDy;
                                 const botY = blNode ? blNode.y : layout.cy + layout.newDy;
                                 
-                                // Box Width: exactly the distance between left and right centers, securing corner cut-ins
-                                const boxWidth = 2 * layout.origDx;
-                                const boxLeft = layout.cx - layout.origDx;
+                                // Box Width: outer edges of icons (center to center + full diameter)
+                                const boxWidth = (2 * layout.origDx) + (2 * r);
+                                const boxLeft = layout.cx - layout.origDx - r;
 
                                 // Box Height & Top
                                 let boxTop, boxHeight;
                                 if (isTop) {
-                                    // Top Case Study: Top edge precisely splits the active image center. 
-                                    // Bottom edge extends completely over the lower icons' outer boundaries for breathing room.
+                                    // Top Case Study: top edge through center of active image (cut-in), bottom at outer edge of bottom icons
                                     boxTop = pData.targetY;
                                     boxHeight = (botY + r) - boxTop;
                                 } else {
-                                    // Bottom Case Study: Bottom edge precisely splits the active image center.
-                                    // Top edge extends completely over the top icons' outer boundaries for breathing room.
+                                    // Bottom Case Study: top at outer edge of top icons, bottom through center of active image (cut-in)
                                     boxTop = topY - r;
                                     boxHeight = pData.targetY - boxTop;
                                 }
 
-                                // Back button: ALWAYS 12 o'clock above the *active* image
+                                // Back button: ALWAYS directly above active image at 12 o'clock, 10px gap
+                                // Uses marginLeft/marginTop to avoid conflict with Framer scale transform
                                 const btnRadius = 22;
                                 const btnLeft = pData.targetX;
-                                const btnTop = pData.targetY - r - 16 - btnRadius;
+                                const btnTop = pData.targetY - r - 10;
 
                                 return (
                                     <>
@@ -1309,7 +1308,8 @@ export default function NavigationMap({ closeMenu }) {
                                                 position: 'absolute',
                                                 top: btnTop,
                                                 left: btnLeft,
-                                                transform: 'translate(-50%, -50%)',
+                                                marginTop: -btnRadius,
+                                                marginLeft: -btnRadius,
                                                 width: btnRadius * 2,
                                                 height: btnRadius * 2,
                                                 borderRadius: '50%',

@@ -769,6 +769,7 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                 left: x,
                 width: size,
                 height: size,
+                borderRadius: '50%',
                 opacity: initialOpacity * (overrideOpacity !== undefined ? overrideOpacity : (isDimmed ? 0.25 : 1.0)),
                 transform: 'translate(-50%, -50%)', zIndex: (hover || tapped) ? 30 : zIndex,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',

@@ -906,7 +906,6 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                             backgroundColor: parkedData.color,
                             zIndex: 200,
                             pointerEvents: 'none',
-                            boxShadow: '0 8px 32px rgba(0,0,0,0.25)',
                         }}
                     />
                 )}

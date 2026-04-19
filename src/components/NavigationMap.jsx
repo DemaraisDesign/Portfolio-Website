@@ -357,7 +357,7 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
 
     // The bounding box is bottom-heavy due to text, but visual weight is in the circles.
     // cy - 60 was too high (clipping). cy was too low. cy - 30 splits the difference mathematically.
-    const visualCenterY = w < 768 ? cy + 45 : cy;
+    const visualCenterY = w < 768 ? cy + 32 : cy;
 
     const origDx = w < 768 ? Math.max(90, w * 0.22) : Math.max(250, w * 0.35); // Pulled back out slightly
     const newDy = w < 768 ? Math.max(140, h * 0.21) : Math.max(180, h * 0.22);
@@ -1237,7 +1237,7 @@ export default function NavigationMap({ closeMenu }) {
                                         isCompact: isLandscapePhone,
                                         show: showLabels,
                                         align: isLandscapePhone ? 'center' : (viewport.w < 1280 ? (sec.isFocused ? 'right' : 'top') : (isShortDesktop && sec.quadrant.includes('b') ? 'top' : 'center')),
-                                        mobileTopOffset: viewport.w < 768 ? '-53px' : null
+                                        mobileTopOffset: viewport.w < 768 ? '-40px' : null
                                     }}
                                     isShortViewport={isShortDesktop}
                                     noFlyTransition={sec.isFocused && isNoFly}

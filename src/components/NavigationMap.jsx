@@ -662,12 +662,10 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
                         ];
                         petalAngle = fixedAngles[i];
                     } else {
-                        // 6 items (Screens) needs exactly 60° to form a perfect hexagon with vertically aligned sides.
-                        // 7-8 items (Stages, Sounds) need a tighter 45° gap so the top petals don't get squished together.
-                        const gapAngle = count === 6 ? (Math.PI / 3) : (Math.PI / 4);
-                        const arcAngle = (Math.PI * 2) - gapAngle;
-                        const startAngle = (Math.PI / 2) + (gapAngle / 2); // Start just past the gap
-                        const angleStep = count > 1 ? arcAngle / (count - 1) : 0;
+                        // Distribute evenly in a full circle starting exactly at 12 o'clock.
+                        // Since the magnifying glass is gone, we don't need an artificial bottom gap.
+                        const startAngle = -Math.PI / 2; // 12 o'clock
+                        const angleStep = (Math.PI * 2) / count;
                         petalAngle = startAngle + (i * angleStep);
                     }
 

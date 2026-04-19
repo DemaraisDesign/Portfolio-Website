@@ -1292,21 +1292,18 @@ export default function NavigationMap({ closeMenu }) {
                                             }}
                                         />
 
-                                        {/* Context Label — appears in the light space created by cut-in */}
+                                        {/* Context Label — sits on the box top edge, to the right of the image */}
                                         <motion.div
                                             key={`label-${pData.id}`}
-                                            initial={{ opacity: 0, y: isTop ? 8 : -8 }}
-                                            animate={{ opacity: 1, y: 0 }}
+                                            initial={{ opacity: 0, x: -8 }}
+                                            animate={{ opacity: 1, x: 0 }}
                                             exit={{ opacity: 0 }}
-                                            transition={{ duration: 0.4, ease: 'easeOut', delay: 0.35 }}
+                                            transition={{ duration: 0.4, ease: 'easeOut', delay: 0.4 }}
                                             style={{
                                                 position: 'absolute',
-                                                // Vertically: center in the gap between back btn bottom and box edge
-                                                top: isTop
-                                                    ? pData.targetY - r - 15   // ~15px above top of image in the light space
-                                                    : pData.targetY + r + 15,  // ~15px below bottom of image in light space
-                                                left: layout.cx,
-                                                transform: 'translateX(-50%)',
+                                                top: boxTop,
+                                                left: pData.targetX + r + 14,
+                                                transform: 'translateY(-50%)',
                                                 whiteSpace: 'nowrap',
                                                 fontFamily: '"Outfit", sans-serif',
                                                 fontSize: '13px',
@@ -1314,7 +1311,6 @@ export default function NavigationMap({ closeMenu }) {
                                                 letterSpacing: '0.08em',
                                                 textTransform: 'uppercase',
                                                 color: THEME.dark,
-                                                opacity: 0.55,
                                                 pointerEvents: 'none',
                                                 zIndex: 20,
                                             }}

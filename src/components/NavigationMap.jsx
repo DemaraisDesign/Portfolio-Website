@@ -1239,21 +1239,21 @@ export default function NavigationMap({ closeMenu }) {
                             {(parkedPetalData && viewport.w < 1280) && (() => {
                                 const pData = parkedPetalData;
                                 const isTop = pData.quadrant && pData.quadrant.includes('t');
+                                const r = pData.targetSize / 2;
                                 
-                                // To intersect exactly on the geometric centers of the 4 nodes:
-                                const boxWidth = 2 * layout.origDx;
-                                const boxHeight = 2 * layout.newDy;
+                                // Box Width: outeredge to outeredge (center distance + an icon radius on each side = targetSize)
+                                const boxWidth = (2 * layout.origDx) + pData.targetSize;
+                                const boxLeft = layout.cx - layout.origDx - r;
 
-                                // The Box perfectly overlays the 4-node grid bounds, anchoring at the top-left node
-                                const boxTop = layout.cy - layout.newDy;
-                                const boxLeft = layout.cx - layout.origDx;
+                                // Box Height & Top
+                                // Top Case Study: Top edge at center of icon. Bottom edge at bottom edge of bottom icons.
+                                // Bottom Case Study: Top edge at top edge of top icons. Bottom edge at center of bottom icon.
+                                const boxHeight = (2 * layout.newDy) + r;
+                                const boxTop = isTop ? layout.cy - layout.newDy : layout.cy - layout.newDy - r;
 
-                                // Back button replaces the Section Label, which lives above Top nodes and below Bottom nodes
+                                // Back button: 12 o'clock positioned 20px above image
                                 const btnRadius = 22;
-                                const btnOffset = (pData.targetSize / 2) + 14; // Minimal gap so it rests nicely by the case study image
-                                const btnTop = isTop 
-                                    ? pData.targetY - btnOffset - btnRadius 
-                                    : pData.targetY + btnOffset + btnRadius;
+                                const btnTop = pData.targetY - r - 20 - btnRadius;
 
                                 return (
                                     <>
@@ -1272,7 +1272,7 @@ export default function NavigationMap({ closeMenu }) {
                                                 height: boxHeight,
                                                 backgroundColor: pData.deepColor || THEME.dark,
                                                 borderRadius: 24,
-                                                zIndex: 15,
+                                                zIndex: 5,
                                                 pointerEvents: 'auto', // block touches behind it
                                             }}
                                         />

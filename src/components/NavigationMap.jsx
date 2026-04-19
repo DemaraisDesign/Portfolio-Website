@@ -1263,11 +1263,11 @@ export default function NavigationMap({ closeMenu }) {
                                     boxHeight = pData.targetY - boxTop;
                                 }
 
-                                // Back button: ALWAYS directly above active image at 12 o'clock, 10px gap
-                                // Uses marginLeft/marginTop to avoid conflict with Framer scale transform
+                                // Back button: bottom edge sits exactly 10px above 12 o'clock of active image
+                                // marginTop: -btnRadius centers the element at btnTop, so we subtract btnRadius to put the *bottom* at targetY - r - 10
                                 const btnRadius = 22;
                                 const btnLeft = pData.targetX;
-                                const btnTop = pData.targetY - r - 10;
+                                const btnTop = pData.targetY - r - 10 - btnRadius;
 
                                 return (
                                     <>

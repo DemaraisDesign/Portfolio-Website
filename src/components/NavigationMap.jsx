@@ -1263,7 +1263,9 @@ export default function NavigationMap({ closeMenu }) {
                                                     color={sp.color} ringColor={sp.parentColor} 
                                                     iconColor={THEME.white}
                                                     onClick={() => {
-                                                        if (viewport.w < 1280 && !focusedId) {
+                                                        if (viewport.w < 1280) {
+                                                            // Mobile/tablet: visual park only — no navigation
+                                                            // (destination links preserved in sp.link / sp.path for future use)
                                                             handleMobilePetalClick(sp, sec);
                                                         } else {
                                                             const path = sp.link || sp.path || `/work/${sp.id}`;

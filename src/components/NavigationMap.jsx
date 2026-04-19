@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import { ArrowRight, ExternalLink, Clock, Lock, Search } from "lucide-react";
+import { ArrowRight, ArrowLeft, ExternalLink, Clock, Lock, Search } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from "framer-motion";
 import { getProject } from '../data/projects';
@@ -693,8 +693,7 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
 
         return { ...sec, x: sx, y: sy, isFocused, isBg, size: currentSectionSize, subPetals };
     });
-
-    return { home: { x: hx_display, y: hy_display, size: SIZES.home }, sections };
+    return { home: { x: hx_display, y: hy_display, size: SIZES.home }, sections, cx, cy, origDx, newDy };
 };
 
 // ═══════════════════════════════════════════════════
@@ -1060,9 +1059,11 @@ export default function NavigationMap({ closeMenu }) {
         setParkedPetalData({
             id: sp.id,
             sectionId: sec.id,
+            quadrant: sec.quadrant,
+            deepColor: sec.deep || sec.color, // Fallback to color if deep not defined on sec
             startX: sp.x, startY: sp.y, startSize: sp.size,
             targetX: sec.x, targetY: sec.y, targetSize: sec.size,
-            img: sp.img, color: sp.color || sec.deep
+            img: sp.img, color: sp.color || sec.color
         });
     };
 
@@ -1233,6 +1234,81 @@ export default function NavigationMap({ closeMenu }) {
 
                 return (
                     <>
+                        {/* Central Expansion Box for Parked Petal */}
+                        <AnimatePresence>
+                            {(parkedPetalData && viewport.w < 1280) && (() => {
+                                const pData = parkedPetalData;
+                                const isTop = pData.quadrant && pData.quadrant.includes('t');
+                                
+                                // Dynamic Dimensions tied exactly to invisible icons grid
+                                const boxWidth = 2 * layout.origDx;
+                                const boxHeight = (2 * layout.newDy) - 60; // Shipped ~60px shorter vertically
+
+                                // Exact anchoring to ensure perfectly aligned cutout corners
+                                const boxTop = isTop ? layout.cy - layout.newDy : layout.cy + layout.newDy - boxHeight;
+                                const boxLeft = layout.cx - layout.origDx;
+
+                                return (
+                                    <>
+                                        {/* Main Dark Expansion Background */}
+                                        <motion.div
+                                            key={`expansion-${pData.id}`}
+                                            initial={{ opacity: 0, scale: 0.95 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            exit={{ opacity: 0, scale: 0.95 }}
+                                            transition={{ duration: 0.4, ease: "easeOut", delay: 0.2 }}
+                                            style={{
+                                                position: 'absolute',
+                                                top: boxTop,
+                                                left: boxLeft,
+                                                width: boxWidth,
+                                                height: boxHeight,
+                                                backgroundColor: pData.deepColor || THEME.dark,
+                                                borderRadius: 24,
+                                                zIndex: 15,
+                                                pointerEvents: 'auto', // block touches behind it
+                                            }}
+                                        />
+
+                                        {/* Back Button Overlay */}
+                                        <motion.button
+                                            key={`backBtn-${pData.id}`}
+                                            initial={{ opacity: 0, scale: 0 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            exit={{ opacity: 0, scale: 0 }}
+                                            transition={{ duration: 0.3, ease: 'backOut', delay: 0.4 }}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                audio.playHover();
+                                                setOutgoingPetalData(pData);
+                                                setParkedPetalData(null);
+                                            }}
+                                            style={{
+                                                position: 'absolute',
+                                                top: pData.targetY - (pData.targetSize / 2) - 36, // positioned exactly where descriptor text lived
+                                                left: pData.targetX,
+                                                transform: 'translate(-50%, -50%)',
+                                                width: 44,
+                                                height: 44,
+                                                borderRadius: '50%',
+                                                backgroundColor: THEME.purple,
+                                                color: '#fff',
+                                                zIndex: 25,
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                border: 'none',
+                                                cursor: 'pointer',
+                                                boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+                                            }}
+                                        >
+                                            <ArrowLeft size={24} strokeWidth={2.5} />
+                                        </motion.button>
+                                    </>
+                                );
+                            })()}
+                        </AnimatePresence>
+
                         {/* Home Node */}
                         <Node
                             x={viewport.w / 2} y={viewport.h / 2} size={80}

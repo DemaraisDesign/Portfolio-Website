@@ -1329,8 +1329,8 @@ export default function NavigationMap({ closeMenu }) {
 
                                         {/* Context Label — 18px from active circle outline; right-col is right-aligned */}
                                         {(() => {
-                                            // Geometric check: right col if live section X is right of center
-                                            const isRightCol = liveX > layout.cx;
+                                            // Use the live section's own quadrant — same source as secTL/secTR lookups above
+                                            const isRightCol = liveSection ? liveSection.quadrant.includes('r') : false;
 
                                             // Both cols: flush against circle outline (10px = white ring width, no additional gap)
                                             // Left col → text grows rightward from circle; Right col → text grows leftward from circle

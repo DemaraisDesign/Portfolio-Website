@@ -1296,12 +1296,11 @@ export default function NavigationMap({ closeMenu }) {
                                     boxHeight = liveY - boxTop;
                                 }
 
-                                // Back button: 12 o'clock of active section image, 30px clear gap
+                                // Back button: permanently anchored 30px above the TL (Stages) icon
+                                // — design intent: always lives above Stages, regardless of which sub-menu is open
                                 const btnRadius = 22;
-                                const btnLeft = liveX;
-                                // For top sections: button sits 30px above image top (in light zone above box)
-                                // For bottom sections: button sits 30px above image top (inside dark box, above image)
-                                const btnTop  = liveY - r - 30 - btnRadius;
+                                const btnLeft = secTL ? secTL.x : liveX;
+                                const btnTop  = (secTL ? secTL.y : liveY) - r - 30 - btnRadius;
 
                                 return (
                                     <>
@@ -1325,36 +1324,23 @@ export default function NavigationMap({ closeMenu }) {
                                             }}
                                         />
 
-                                        {/* Context Label — quadrant-aware positioning */}
+                                        {/* Context Label — 18px from active circle outline; right-col is right-aligned */}
                                         {(() => {
                                             const isRightCol = pData.quadrant && pData.quadrant.includes('r');
 
-                                            // LEFT col: label sits to the right of the image circle
-                                            // RIGHT col: label sits to the left of the image circle
-                                            const textLeft = isRightCol
-                                                ? boxLeft + 8
-                                                : liveX + r + 18;
-                                            const textRight = isRightCol
-                                                ? liveX - r - 18
-                                                : boxLeft + boxWidth - 8;
+                                            // Both cols: 18px from the active image circle outline
+                                            // Left col → text grows rightward from circle; Right col → text grows leftward from circle
+                                            const textLeft = isRightCol ? boxLeft + 8 : liveX + r + 18;
+                                            const textRight = isRightCol ? liveX - r - 18 : boxLeft + boxWidth - 8;
                                             const availableWidth = textRight - textLeft;
+                                            const textAlign = isRightCol ? 'right' : 'left';
 
-                                            // TOP sections: label is ABOVE the box (light zone above boxTop)
-                                            // BOTTOM sections: label is BELOW the image (light zone below liveY)
-                                            const labelTop = isTop
-                                                ? boxTop
-                                                : liveY;
-
-                                            // Estimate: ~9px per uppercase char at 13px + 0.08em tracking
+                                            // TOP sections: label ABOVE the box (light zone); BOTTOM: BELOW the image (light zone)
+                                            const labelTop = isTop ? boxTop : liveY;
                                             const singleLine = `${pData.sectionLabel}: Selected Work`;
                                             const fitsOnOneLine = singleLine.length * 9 <= availableWidth;
                                             const blockHeight = fitsOnOneLine ? 16 : 36;
-
-                                            // For top sections, shift label UP so its bottom sits 10px above the box
-                                            // For bottom sections, shift label DOWN so its top sits 10px below the image bottom
-                                            const labelMarginTop = isTop
-                                                ? -(blockHeight + 10)
-                                                : r + 10;
+                                            const labelMarginTop = isTop ? -(blockHeight + 10) : r + 10;
 
                                             return (
                                                 <motion.div
@@ -1369,6 +1355,7 @@ export default function NavigationMap({ closeMenu }) {
                                                         marginTop: labelMarginTop,
                                                         left: textLeft,
                                                         maxWidth: availableWidth,
+                                                        textAlign,
                                                         fontFamily: '"Outfit", sans-serif',
                                                         fontSize: '13px',
                                                         fontWeight: 700,
@@ -1380,6 +1367,7 @@ export default function NavigationMap({ closeMenu }) {
                                                         zIndex: 20,
                                                         display: 'flex',
                                                         flexDirection: 'column',
+                                                        alignItems: isRightCol ? 'flex-end' : 'flex-start',
                                                         gap: '4px',
                                                     }}
                                                 >

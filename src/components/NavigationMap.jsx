@@ -1445,7 +1445,7 @@ export default function NavigationMap({ closeMenu }) {
                                         isCompact: isLandscapePhone,
                                         show: showLabels && !parkedPetalData,
                                         align: isLandscapePhone ? 'center' : (viewport.w < 1280 ? (sec.isFocused ? 'right' : 'top') : (isShortDesktop && sec.quadrant.includes('b') ? 'top' : 'center')),
-                                        mobileTopOffset: viewport.w < 768 ? '-40px' : (viewport.w < 1280 ? '-36px' : null)
+                                        mobileTopOffset: viewport.w < 1280 ? '-40px' : null
                                     }}
                                     isShortViewport={isShortDesktop}
                                     noFlyTransition={sec.isFocused && isNoFly}

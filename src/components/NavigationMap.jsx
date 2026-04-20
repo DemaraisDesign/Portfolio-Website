@@ -1298,9 +1298,12 @@ export default function NavigationMap({ closeMenu }) {
 
                                 // Back button: permanently anchored 30px above the TL (Stages) icon
                                 // — design intent: always lives above Stages, regardless of which sub-menu is open
+                                // Left edge of button aligns with left edge of Stages circle (secTL.x - r)
                                 const btnRadius = 22;
-                                const btnLeft = secTL ? secTL.x : liveX;
-                                const btnTop  = (secTL ? secTL.y : liveY) - r - 30 - btnRadius;
+                                const btnTLx = secTL ? secTL.x : liveX;
+                                const btnTLy = secTL ? secTL.y : liveY;
+                                const btnLeft = btnTLx - r + btnRadius;   // left-edge aligned with circle left-edge
+                                const btnTop  = btnTLy - r - 30 - btnRadius;
 
                                 return (
                                     <>

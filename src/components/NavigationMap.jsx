@@ -1332,10 +1332,10 @@ export default function NavigationMap({ closeMenu }) {
                                             // Geometric check: right col if live section X is right of center
                                             const isRightCol = liveX > layout.cx;
 
-                                            // Both cols: 18px from the active image circle outline
+                                            // Both cols: flush against circle outline (10px = white ring width, no additional gap)
                                             // Left col → text grows rightward from circle; Right col → text grows leftward from circle
-                                            const textLeft = isRightCol ? boxLeft + 8 : liveX + r + 18;
-                                            const textRight = isRightCol ? liveX - r - 18 : boxLeft + boxWidth - 8;
+                                            const textLeft = isRightCol ? boxLeft + 8 : liveX + r + 10;
+                                            const textRight = isRightCol ? liveX - r - 10 : boxLeft + boxWidth - 8;
                                             const availableWidth = textRight - textLeft;
                                             const textAlign = isRightCol ? 'right' : 'left';
 

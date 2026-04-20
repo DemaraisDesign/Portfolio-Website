@@ -1071,6 +1071,14 @@ export default function NavigationMap({ closeMenu }) {
     const isShortDesktop = viewport.h < 680 && viewport.w >= 1280;
     const isLandscapePhone = viewport.w > viewport.h && viewport.h < 500 && viewport.w < 1280;
 
+    // Auto-close the mobile case study expansion when resizing to desktop
+    React.useEffect(() => {
+        if (viewport.w >= 1280 && (parkedPetalData || outgoingPetalData)) {
+            setParkedPetalData(null);
+            setOutgoingPetalData(null);
+        }
+    }, [viewport.w]);
+
     return (
         <div ref={containerRef} style={{
             width: '100%', height: '100%',

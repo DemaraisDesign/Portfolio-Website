@@ -1248,8 +1248,12 @@ export default function NavigationMap({ closeMenu }) {
                 return (
                     <>
                         {/* Central Expansion Box for Parked Petal */}
+                        {/* viewport.w < 1280 is OUTSIDE AnimatePresence so crossing the desktop breakpoint
+                            instantly unmounts this whole tree (no exit anim). AnimatePresence only
+                            handles the animated back-button close path. */}
+                        {viewport.w < 1280 && (
                         <AnimatePresence>
-                            {(parkedPetalData && viewport.w < 1280) && (() => {
+                            {parkedPetalData && (() => {
                                 const pData = parkedPetalData;
                                 const isTop = pData.quadrant && pData.quadrant.includes('t');
 
@@ -1406,6 +1410,7 @@ export default function NavigationMap({ closeMenu }) {
                                 );
                             })()}
                         </AnimatePresence>
+                        )}
 
                         {/* Home Node */}
                         <Node
@@ -1440,7 +1445,7 @@ export default function NavigationMap({ closeMenu }) {
                                         isCompact: isLandscapePhone,
                                         show: showLabels && !parkedPetalData,
                                         align: isLandscapePhone ? 'center' : (viewport.w < 1280 ? (sec.isFocused ? 'right' : 'top') : (isShortDesktop && sec.quadrant.includes('b') ? 'top' : 'center')),
-                                        mobileTopOffset: viewport.w < 768 ? '-40px' : null
+                                        mobileTopOffset: viewport.w < 768 ? '-40px' : (viewport.w < 1280 ? '-36px' : null)
                                     }}
                                     isShortViewport={isShortDesktop}
                                     noFlyTransition={sec.isFocused && isNoFly}

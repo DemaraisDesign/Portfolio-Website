@@ -982,6 +982,7 @@ export default function NavigationMap({ closeMenu }) {
     const [animPhase, setAnimPhase] = useState(0);
     const [parkedPetalData, setParkedPetalData] = useState(null);   // petal currently parked over section icon
     const [outgoingPetalData, setOutgoingPetalData] = useState(null); // petal springing back to fan
+    const [skipExitAnim, setSkipExitAnim] = useState(false);
 
     const isLaunched = animPhase >= 1;
     const isSettled = animPhase >= 2;
@@ -1074,8 +1075,11 @@ export default function NavigationMap({ closeMenu }) {
     // Auto-close the mobile case study expansion when resizing to desktop
     React.useEffect(() => {
         if (viewport.w >= 1280 && (parkedPetalData || outgoingPetalData)) {
+            setSkipExitAnim(true);
             setParkedPetalData(null);
             setOutgoingPetalData(null);
+        } else if (viewport.w < 1280) {
+            setSkipExitAnim(false);
         }
     }, [viewport.w]);
 
@@ -1300,8 +1304,8 @@ export default function NavigationMap({ closeMenu }) {
                                             key={`expansion-${pData.id}`}
                                             initial={{ opacity: 0, scale: 0.95 }}
                                             animate={{ opacity: 1, scale: 1 }}
-                                            exit={{ opacity: 0, scale: 0.95 }}
-                                            transition={{ duration: 0.4, ease: "easeOut", delay: 0.85 }}
+                                            exit={{ opacity: 0, scale: skipExitAnim ? 1 : 0.95 }}
+                                            transition={{ duration: skipExitAnim ? 0 : 0.4, ease: "easeOut", delay: skipExitAnim ? 0 : 0.85 }}
                                             style={{
                                                 position: 'absolute',
                                                 top: boxTop,
@@ -1330,7 +1334,7 @@ export default function NavigationMap({ closeMenu }) {
                                                     initial={{ opacity: 0 }}
                                                     animate={{ opacity: 1 }}
                                                     exit={{ opacity: 0 }}
-                                                    transition={{ duration: 0.4, ease: 'easeOut', delay: 1.1 }}
+                                                    transition={{ duration: skipExitAnim ? 0 : 0.4, ease: 'easeOut', delay: skipExitAnim ? 0 : 1.1 }}
                                                     style={{
                                                         position: 'absolute',
                                                         top: boxTop,
@@ -1369,7 +1373,7 @@ export default function NavigationMap({ closeMenu }) {
                                             initial={{ opacity: 0, scale: 0 }}
                                             animate={{ opacity: 1, scale: 1 }}
                                             exit={{ opacity: 0, scale: 0 }}
-                                            transition={{ duration: 0.3, ease: 'backOut', delay: 1.2 }}
+                                            transition={{ duration: skipExitAnim ? 0 : 0.3, ease: 'backOut', delay: skipExitAnim ? 0 : 1.2 }}
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 audio.playHover();

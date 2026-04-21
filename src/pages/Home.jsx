@@ -221,7 +221,7 @@ const AboutMe = () => {
           {/* STICKY CIRCLE */}
           <div className="w-full md:w-auto shrink-0 md:sticky md:top-32 md:[@media(max-height:500px)]:static order-1 md:order-2 h-fit flex justify-start md:block z-[45]">
             <div className="relative w-48 h-48 md:w-56 md:h-56">
-              <AboutCircle phase={phase} />
+              <AboutCircle />
             </div>
           </div>
         </div>

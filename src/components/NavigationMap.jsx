@@ -459,7 +459,7 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
 
             // Constrain vertical pushes so nodes cannot clip top/bottom edges of screen
             const maxTopDy = Math.max(0, visualCenterY - 140);
-            const maxBotDy = Math.max(0, h - visualCenterY - 100);
+            const maxBotDy = Math.max(0, h - visualCenterY - 75);
 
             let rawDy = w < 768 ? newDy : (isTablet ? Math.max(160, h * 0.22) : Math.max(220, h * 0.26));
             let rawTopDy = w < 768 ? newDy * 0.8 : (isTablet ? Math.max(140, h * 0.20) : Math.max(150, h * 0.22));
@@ -475,7 +475,7 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
                 const spacing = (w - 2 * padX) / 3;
                 targetX = padX + spacing * idx;
                 // Add bottom-padding safety constraint exclusively for super short desktop row so descriptor text never clips
-                targetY = isSuperShortDesktop ? Math.min(cy, h - 240) : cy;
+                targetY = isSuperShortDesktop ? Math.min(cy - 30, h - 260) : cy;
             } else {
                 if (sec.quadrant === 'bl') { targetX = cx - dx; targetY = visualCenterY + dy + (w < 768 ? 50 : 0); }
                 if (sec.quadrant === 'br') { targetX = cx + dx; targetY = visualCenterY + dy + (w < 768 ? 50 : 0); }

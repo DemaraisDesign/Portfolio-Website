@@ -196,7 +196,7 @@ const AnimatedHamburger = ({ isOpen, toggle, isScrolled, buttonRef, isHoveringMe
     <button
       onClick={toggle}
       ref={buttonRef}
-      className={`relative ${containerSize} flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 rounded-full z-[80] cursor-pointer transition-all duration-500`}
+      className={`relative ${containerSize} flex items-center justify-center focus:outline-none rounded-full z-[80] cursor-pointer transition-all duration-500`}
       style={{ transform: isMobile ? 'scale(1)' : (isScrolled ? 'scale(1)' : 'scale(1.25)') }}
       aria-label={isOpen ? "Close menu" : "Open menu"}
       aria-expanded={isOpen}

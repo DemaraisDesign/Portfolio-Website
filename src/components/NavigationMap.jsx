@@ -1171,7 +1171,7 @@ const ExpansionContent = ({ pData, isTop, liveX, liveY, r, boxLeft, boxTop, boxW
                 {/* Category Label */}
                 <span style={{
                     fontFamily: '"Outfit", sans-serif', fontSize: 11, fontWeight: 600,
-                    textTransform: 'uppercase', letterSpacing: '0.1em', color: 'rgba(255,255,255,0.45)',
+                    textTransform: 'uppercase', letterSpacing: '0.1em', color: 'rgba(255,255,255,0.7)',
                 }}>
                     {categoryLabel}
                 </span>
@@ -1187,7 +1187,7 @@ const ExpansionContent = ({ pData, isTop, liveX, liveY, r, boxLeft, boxTop, boxW
                 {/* Context blurb for gated states */}
                 {isUnderConstruction && cStatus !== 'success' && (
                     <p style={{
-                        fontFamily: '"Outfit", sans-serif', fontSize: 12, color: 'rgba(255,255,255,0.5)',
+                        fontFamily: '"Outfit", sans-serif', fontSize: 12, color: 'rgba(255,255,255,0.75)',
                         lineHeight: 1.4, margin: 0, padding: '0 4px',
                     }}>
                         Under construction. Leave your info and I'll let you know when it's live.
@@ -1195,7 +1195,7 @@ const ExpansionContent = ({ pData, isTop, liveX, liveY, r, boxLeft, boxTop, boxW
                 )}
                 {isLocked && !pwSuccess && (
                     <p style={{
-                        fontFamily: '"Outfit", sans-serif', fontSize: 12, color: 'rgba(255,255,255,0.5)',
+                        fontFamily: '"Outfit", sans-serif', fontSize: 12, color: 'rgba(255,255,255,0.75)',
                         lineHeight: 1.4, margin: 0, padding: '0 4px',
                     }}>
                         Enter the password to view this case study.
@@ -1227,7 +1227,7 @@ const ExpansionContent = ({ pData, isTop, liveX, liveY, r, boxLeft, boxTop, boxW
                     ) : isUnderConstruction ? (
                         /* ── CONSTRUCTION: INLINE EMAIL FORM ── */
                         cStatus === 'success' ? (
-                            <p role="status" style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)', lineHeight: 1.5, margin: 0 }}>
+                            <p role="status" style={{ fontSize: 12, color: 'rgba(255,255,255,0.85)', lineHeight: 1.5, margin: 0 }}>
                                 I'll notify you when it's published.
                             </p>
                         ) : (
@@ -1276,7 +1276,7 @@ const ExpansionContent = ({ pData, isTop, liveX, liveY, r, boxLeft, boxTop, boxW
                     ) : isLocked ? (
                         /* ── LOCKED: INLINE PASSWORD FORM ── */
                         pwSuccess ? (
-                            <p role="status" style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)', lineHeight: 1.5, margin: 0 }}>Redirecting you now...</p>
+                            <p role="status" style={{ fontSize: 12, color: 'rgba(255,255,255,0.85)', lineHeight: 1.5, margin: 0 }}>Redirecting you now...</p>
                         ) : (
                             <form onSubmit={handlePwSubmit} aria-label={`Unlock ${title}`} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                                 <label htmlFor={`pw-${pData.id}`} className="sr-only">Password</label>

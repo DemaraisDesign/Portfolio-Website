@@ -370,7 +370,7 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
     // The bounding box is bottom-heavy due to text, but visual weight is in the circles.
     // cy - 60 was too high (clipping). cy was too low. cy - 30 splits the difference mathematically.
     // Shifted up by 16px on w < 1280 to raise the cluster to meet tightened descriptor gaps natively.
-    const visualCenterY = w < 1280 ? (w < 768 ? cy + 16 : cy - 16) : cy;
+    const visualCenterY = w < 1280 ? (w < 768 ? cy - 8 : cy - 16) : cy;
 
     const origDx = w < 768 ? Math.max(90, w * 0.22) : Math.max(250, w * 0.35); // Pulled back out slightly
     const newDy = w < 768 ? Math.max(140, h * 0.21) : Math.max(180, h * 0.22);

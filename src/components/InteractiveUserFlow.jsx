@@ -227,7 +227,7 @@ const InteractiveUserFlow = ({ color = '#00CAE3' }) => {
         <div className="w-full font-sans" style={{ fontFamily: '"Outfit", "Inter", sans-serif' }}>
             <div className="relative w-full overflow-hidden bg-[#F5F7F8] border border-gray-200 rounded-2xl shadow-lg">
                 <div className="absolute inset-0 pointer-events-none opacity-[0.03]"
-                    style={{ backgroundImage: "radial-gradient(circle, #0D1216 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
+                    style={{ backgroundImage: "radial-gradient(circle, #141D26 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
 
                 {/* Dark Blue Header Block */}
                 <div className="relative z-20 flex flex-col px-6 md:px-8 pt-6 pb-8" style={{ backgroundColor: '#1b262f' }}>
@@ -435,7 +435,7 @@ const InteractiveUserFlow = ({ color = '#00CAE3' }) => {
 
                                                 {/* Text Content (Straight) */}
                                                 <div className="relative z-10 w-full text-center">
-                                                    <span className="text-sm md:text-base font-bold leading-snug md:leading-tight block" style={{ color: '#0D1216' }}>Do you have a <br /> Windows PC?</span>
+                                                    <span className="text-sm md:text-base font-bold leading-snug md:leading-tight block" style={{ color: '#141D26' }}>Do you have a <br /> Windows PC?</span>
                                                 </div>
                                             </motion.div>
                                         </div>
@@ -461,7 +461,7 @@ const InteractiveUserFlow = ({ color = '#00CAE3' }) => {
                                                 initial={{ scale: 0, opacity: 0 }}
                                                 animate={{ scale: 1, opacity: 1 }}
                                                 transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.7 }}
-                                                className="relative w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-sm md:text-base font-bold shadow-md cursor-pointer hover:shadow-lg" style={{ backgroundColor: '#00B782', color: '#0D1216' }}
+                                                className="relative w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-sm md:text-base font-bold shadow-md cursor-pointer hover:shadow-lg" style={{ backgroundColor: '#00B782', color: '#141D26' }}
                                             >
                                                 Y
                                             </motion.div>
@@ -490,7 +490,7 @@ const InteractiveUserFlow = ({ color = '#00CAE3' }) => {
                                                     initial={{ scale: 0, opacity: 0 }}
                                                     animate={{ scale: 1, opacity: 1 }}
                                                     transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.9 }}
-                                                    className="relative w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-sm md:text-base font-bold shadow-md hover:shadow-lg" style={{ backgroundColor: '#FF7474', color: '#0D1216' }}
+                                                    className="relative w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-sm md:text-base font-bold shadow-md hover:shadow-lg" style={{ backgroundColor: '#FF7474', color: '#141D26' }}
                                                 >
                                                     N
                                                 </motion.div>
@@ -501,14 +501,14 @@ const InteractiveUserFlow = ({ color = '#00CAE3' }) => {
                                                 <div className="absolute left-full top-1/2 -translate-y-1/2 flex items-center gap-[10px] ml-[10px]">
                                                     <motion.div
                                                         className="h-[2.5px] w-12 md:w-20 flex-shrink-0 z-10 rounded-full"
-                                                        style={{ backgroundColor: '#0D1216', transformOrigin: "left center" }}
+                                                        style={{ backgroundColor: '#141D26', transformOrigin: "left center" }}
                                                         initial={{ scaleX: 0, opacity: 0 }}
                                                         animate={{ scaleX: 1, opacity: 1 }}
                                                         transition={{ duration: 0.5, ease: "easeOut" }}
                                                     />
                                                     <motion.div
                                                         className="w-20 h-20 md:w-24 md:h-24 flex-shrink-0 flex items-center justify-center p-2 text-center rounded-full shadow-lg border border-transparent cursor-default z-20"
-                                                        style={{ backgroundColor: '#FF7474', color: '#0D1216' }}
+                                                        style={{ backgroundColor: '#FF7474', color: '#141D26' }}
                                                         initial={{ scale: 0.5, opacity: 0 }}
                                                         animate={{ scale: 1, opacity: 1 }}
                                                         transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.25 }}
@@ -607,7 +607,7 @@ const InteractiveUserFlow = ({ color = '#00CAE3' }) => {
 
                                                 {/* Text Content */}
                                                 <div className="relative z-10 w-full text-center px-4">
-                                                    <span className="text-sm md:text-base font-bold leading-snug md:leading-tight block" style={{ color: '#0D1216' }}>Do you have<br />Outlook or<br />Gmail?</span>
+                                                    <span className="text-sm md:text-base font-bold leading-snug md:leading-tight block" style={{ color: '#141D26' }}>Do you have<br />Outlook or<br />Gmail?</span>
                                                 </div>
                                             </motion.div>
                                         </div>
@@ -633,7 +633,7 @@ const InteractiveUserFlow = ({ color = '#00CAE3' }) => {
                                                 initial={{ scale: 0, opacity: 0 }}
                                                 animate={{ scale: 1, opacity: 1 }}
                                                 transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.7 }}
-                                                className="relative w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-sm md:text-base font-bold shadow-md cursor-pointer hover:shadow-lg" style={{ backgroundColor: '#00B782', color: '#0D1216' }}
+                                                className="relative w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-sm md:text-base font-bold shadow-md cursor-pointer hover:shadow-lg" style={{ backgroundColor: '#00B782', color: '#141D26' }}
                                             >
                                                 Y
                                             </motion.div>
@@ -662,7 +662,7 @@ const InteractiveUserFlow = ({ color = '#00CAE3' }) => {
                                                     initial={{ scale: 0, opacity: 0 }}
                                                     animate={{ scale: 1, opacity: 1 }}
                                                     transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.9 }}
-                                                    className="relative w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-sm md:text-base font-bold shadow-md hover:shadow-lg" style={{ backgroundColor: '#FF7474', color: '#0D1216' }}
+                                                    className="relative w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-sm md:text-base font-bold shadow-md hover:shadow-lg" style={{ backgroundColor: '#FF7474', color: '#141D26' }}
                                                 >
                                                     N
                                                 </motion.div>
@@ -673,14 +673,14 @@ const InteractiveUserFlow = ({ color = '#00CAE3' }) => {
                                                 <div className="absolute left-full top-1/2 -translate-y-1/2 flex items-center gap-[10px] ml-[10px]">
                                                     <motion.div
                                                         className="h-[2.5px] w-12 md:w-20 flex-shrink-0 z-10 rounded-full"
-                                                        style={{ backgroundColor: '#0D1216', transformOrigin: "left center" }}
+                                                        style={{ backgroundColor: '#141D26', transformOrigin: "left center" }}
                                                         initial={{ scaleX: 0, opacity: 0 }}
                                                         animate={{ scaleX: 1, opacity: 1 }}
                                                         transition={{ duration: 0.5, ease: "easeOut" }}
                                                     />
                                                     <motion.div
                                                         className="w-20 h-20 md:w-24 md:h-24 flex-shrink-0 flex items-center justify-center p-2 text-center rounded-full shadow-lg border border-transparent cursor-default z-20"
-                                                        style={{ backgroundColor: '#FF7474', color: '#0D1216' }}
+                                                        style={{ backgroundColor: '#FF7474', color: '#141D26' }}
                                                         initial={{ scale: 0.5, opacity: 0 }}
                                                         animate={{ scale: 1, opacity: 1 }}
                                                         transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.25 }}
@@ -778,7 +778,7 @@ const InteractiveUserFlow = ({ color = '#00CAE3' }) => {
 
                                                 {/* Text Content */}
                                                 <div className="relative z-10 w-full text-center px-4">
-                                                    <span className="text-[12px] md:text-sm font-bold leading-snug block" style={{ color: '#0D1216' }}>Are you<br />intending to<br />display on your<br />current device?</span>
+                                                    <span className="text-[12px] md:text-sm font-bold leading-snug block" style={{ color: '#141D26' }}>Are you<br />intending to<br />display on your<br />current device?</span>
                                                 </div>
                                             </motion.div>
                                         </div>
@@ -804,7 +804,7 @@ const InteractiveUserFlow = ({ color = '#00CAE3' }) => {
                                                 initial={{ scale: 0, opacity: 0 }}
                                                 animate={{ scale: 1, opacity: 1 }}
                                                 transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.7 }}
-                                                className="relative w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-sm md:text-base font-bold shadow-md cursor-pointer hover:shadow-lg" style={{ backgroundColor: '#00B782', color: '#0D1216' }}
+                                                className="relative w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-sm md:text-base font-bold shadow-md cursor-pointer hover:shadow-lg" style={{ backgroundColor: '#00B782', color: '#141D26' }}
                                             >
                                                 Y
                                             </motion.div>
@@ -833,7 +833,7 @@ const InteractiveUserFlow = ({ color = '#00CAE3' }) => {
                                                     initial={{ scale: 0, opacity: 0 }}
                                                     animate={{ scale: 1, opacity: 1 }}
                                                     transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.9 }}
-                                                    className="relative w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-sm md:text-base font-bold shadow-md hover:shadow-lg" style={{ backgroundColor: '#FF7474', color: '#0D1216' }}
+                                                    className="relative w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-sm md:text-base font-bold shadow-md hover:shadow-lg" style={{ backgroundColor: '#FF7474', color: '#141D26' }}
                                                 >
                                                     N
                                                 </motion.div>
@@ -871,7 +871,7 @@ const InteractiveUserFlow = ({ color = '#00CAE3' }) => {
                                     <div className="absolute top-[2029px] left-1/2 -translate-y-1/2 flex items-center z-10 ml-[167px]">
                                         <motion.div
                                             className="h-[2.5px] w-[90px] md:w-[130px] flex-shrink-0 rounded-full"
-                                            style={{ backgroundColor: '#0D1216', transformOrigin: "left center" }}
+                                            style={{ backgroundColor: '#141D26', transformOrigin: "left center" }}
                                             initial={{ scaleX: 0, opacity: 0 }}
                                             animate={{ scaleX: 1, opacity: 1 }}
                                             transition={{ duration: 0.7, ease: "easeOut" }}
@@ -896,7 +896,7 @@ const InteractiveUserFlow = ({ color = '#00CAE3' }) => {
 
                                                 {/* Text Content */}
                                                 <div className="relative z-10 w-full text-center px-4">
-                                                    <span className="text-[12px] md:text-sm font-bold leading-snug block" style={{ color: '#0D1216' }}>Do you have<br />another PC?</span>
+                                                    <span className="text-[12px] md:text-sm font-bold leading-snug block" style={{ color: '#141D26' }}>Do you have<br />another PC?</span>
                                                 </div>
                                             </motion.div>
                                         </div>
@@ -922,7 +922,7 @@ const InteractiveUserFlow = ({ color = '#00CAE3' }) => {
                                                 initial={{ scale: 0, opacity: 0 }}
                                                 animate={{ scale: 1, opacity: 1 }}
                                                 transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.7 }}
-                                                className="relative w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-sm md:text-base font-bold shadow-md cursor-pointer hover:shadow-lg" style={{ backgroundColor: '#00B782', color: '#0D1216' }}
+                                                className="relative w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-sm md:text-base font-bold shadow-md cursor-pointer hover:shadow-lg" style={{ backgroundColor: '#00B782', color: '#141D26' }}
                                             >
                                                 Y
                                             </motion.div>
@@ -950,7 +950,7 @@ const InteractiveUserFlow = ({ color = '#00CAE3' }) => {
                                                     initial={{ scale: 0, opacity: 0 }}
                                                     animate={{ scale: 1, opacity: 1 }}
                                                     transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.9 }}
-                                                    className="relative w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-sm md:text-base font-bold shadow-md hover:shadow-lg" style={{ backgroundColor: '#FF7474', color: '#0D1216' }}
+                                                    className="relative w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-sm md:text-base font-bold shadow-md hover:shadow-lg" style={{ backgroundColor: '#FF7474', color: '#141D26' }}
                                                 >
                                                     N
                                                 </motion.div>
@@ -1037,7 +1037,7 @@ const InteractiveUserFlow = ({ color = '#00CAE3' }) => {
                                     <div className="absolute top-[2029px] left-1/2 -translate-y-1/2 flex items-center z-10 ml-[544px] md:ml-[584px]">
                                         <motion.div
                                             className="h-[2.5px] w-[90px] md:w-[130px] flex-shrink-0 rounded-full"
-                                            style={{ backgroundColor: '#0D1216', transformOrigin: "left center" }}
+                                            style={{ backgroundColor: '#141D26', transformOrigin: "left center" }}
                                             initial={{ scaleX: 0, opacity: 0 }}
                                             animate={{ scaleX: 1, opacity: 1 }}
                                             transition={{ duration: 0.7, ease: "easeOut" }}
@@ -1061,7 +1061,7 @@ const InteractiveUserFlow = ({ color = '#00CAE3' }) => {
 
                                                 {/* Text Content */}
                                                 <div className="relative z-10 w-full text-center px-4">
-                                                    <span className="text-[12px] md:text-sm font-bold leading-snug block" style={{ color: '#0D1216' }}>Do you have<br />a smart TV?</span>
+                                                    <span className="text-[12px] md:text-sm font-bold leading-snug block" style={{ color: '#141D26' }}>Do you have<br />a smart TV?</span>
                                                 </div>
                                             </motion.div>
                                         </div>
@@ -1087,7 +1087,7 @@ const InteractiveUserFlow = ({ color = '#00CAE3' }) => {
                                                 initial={{ scale: 0, opacity: 0 }}
                                                 animate={{ scale: path5 === 'Y' || revealed.has('path5_Y') ? 1 : [1, 1.15, 1], opacity: path5 === 'Y' || revealed.has('path5_Y') ? 0.5 : 1 }}
                                                 transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.7 }}
-                                                className="relative w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-sm md:text-base font-bold shadow-md cursor-pointer hover:shadow-lg" style={{ backgroundColor: '#00B782', color: '#0D1216' }}
+                                                className="relative w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-sm md:text-base font-bold shadow-md cursor-pointer hover:shadow-lg" style={{ backgroundColor: '#00B782', color: '#141D26' }}
                                             >
                                                 Y
                                             </motion.div>
@@ -1115,7 +1115,7 @@ const InteractiveUserFlow = ({ color = '#00CAE3' }) => {
                                                     initial={{ scale: 0, opacity: 0 }}
                                                     animate={{ scale: 1, opacity: 1 }}
                                                     transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.9 }}
-                                                    className="relative w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-sm md:text-base font-bold shadow-md hover:shadow-lg" style={{ backgroundColor: '#FF7474', color: '#0D1216' }}
+                                                    className="relative w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-sm md:text-base font-bold shadow-md hover:shadow-lg" style={{ backgroundColor: '#FF7474', color: '#141D26' }}
                                                 >
                                                     N
                                                 </motion.div>
@@ -1126,14 +1126,14 @@ const InteractiveUserFlow = ({ color = '#00CAE3' }) => {
                                                 <div className="absolute left-full top-1/2 -translate-y-1/2 flex items-center gap-[10px] ml-[10px]">
                                                     <motion.div
                                                         className="h-[2.5px] w-12 md:w-20 flex-shrink-0 z-10 rounded-full"
-                                                        style={{ backgroundColor: '#0D1216', transformOrigin: "left center" }}
+                                                        style={{ backgroundColor: '#141D26', transformOrigin: "left center" }}
                                                         initial={{ scaleX: 0, opacity: 0 }}
                                                         animate={{ scaleX: 1, opacity: 1 }}
                                                         transition={{ duration: 0.5, ease: "easeOut" }}
                                                     />
                                                     <motion.div
                                                         className="w-20 h-20 md:w-24 md:h-24 flex-shrink-0 flex items-center justify-center p-2 text-center rounded-full shadow-lg border border-transparent cursor-default z-20"
-                                                        style={{ backgroundColor: '#FF7474', color: '#0D1216' }}
+                                                        style={{ backgroundColor: '#FF7474', color: '#141D26' }}
                                                         initial={{ scale: 0.5, opacity: 0 }}
                                                         animate={{ scale: 1, opacity: 1 }}
                                                         transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.25 }}
@@ -1183,7 +1183,7 @@ const InteractiveUserFlow = ({ color = '#00CAE3' }) => {
 
                                                 {/* Text Content */}
                                                 <div className="relative z-10 w-full text-center px-4">
-                                                    <span className="text-[12px] md:text-sm font-bold leading-snug block" style={{ color: '#0D1216' }}>Do you have<br />a dongle?</span>
+                                                    <span className="text-[12px] md:text-sm font-bold leading-snug block" style={{ color: '#141D26' }}>Do you have<br />a dongle?</span>
                                                 </div>
                                             </motion.div>
                                         </div>
@@ -1209,7 +1209,7 @@ const InteractiveUserFlow = ({ color = '#00CAE3' }) => {
                                                 initial={{ scale: 0, opacity: 0 }}
                                                 animate={{ scale: path6 === 'Y' || revealed.has('path6_Y') ? 1 : [1, 1.15, 1], opacity: path6 === 'Y' || revealed.has('path6_Y') ? 0.5 : 1 }}
                                                 transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.7 }}
-                                                className="relative w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-sm md:text-base font-bold shadow-md cursor-pointer hover:shadow-lg" style={{ backgroundColor: '#00B782', color: '#0D1216' }}
+                                                className="relative w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-sm md:text-base font-bold shadow-md cursor-pointer hover:shadow-lg" style={{ backgroundColor: '#00B782', color: '#141D26' }}
                                             >
                                                 Y
                                             </motion.div>
@@ -1237,7 +1237,7 @@ const InteractiveUserFlow = ({ color = '#00CAE3' }) => {
                                                     initial={{ scale: 0, opacity: 0 }}
                                                     animate={{ scale: 1, opacity: 1 }}
                                                     transition={{ duration: 0.4, delay: 0.9, ease: "easeOut" }}
-                                                    className="relative w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-sm md:text-base font-bold shadow-md hover:shadow-lg" style={{ backgroundColor: '#FF7474', color: '#0D1216' }}
+                                                    className="relative w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-sm md:text-base font-bold shadow-md hover:shadow-lg" style={{ backgroundColor: '#FF7474', color: '#141D26' }}
                                                 >
                                                     N
                                                 </motion.div>
@@ -1248,14 +1248,14 @@ const InteractiveUserFlow = ({ color = '#00CAE3' }) => {
                                                 <div className="absolute left-full top-1/2 -translate-y-1/2 flex items-center gap-[10px] ml-[10px]">
                                                     <motion.div
                                                         className="h-[2.5px] w-12 md:w-20 flex-shrink-0 z-10 rounded-full"
-                                                        style={{ backgroundColor: '#0D1216', transformOrigin: "left center" }}
+                                                        style={{ backgroundColor: '#141D26', transformOrigin: "left center" }}
                                                         initial={{ scaleX: 0, opacity: 0 }}
                                                         animate={{ scaleX: 1, opacity: 1 }}
                                                         transition={{ duration: 0.5, ease: "easeOut" }}
                                                     />
                                                     <motion.div
                                                         className="w-20 h-20 md:w-24 md:h-24 flex-shrink-0 flex items-center justify-center p-2 text-center rounded-full shadow-lg border border-transparent cursor-default z-20"
-                                                        style={{ backgroundColor: '#FF7474', color: '#0D1216' }}
+                                                        style={{ backgroundColor: '#FF7474', color: '#141D26' }}
                                                         initial={{ scale: 0.5, opacity: 0 }}
                                                         animate={{ scale: 1, opacity: 1 }}
                                                         transition={{ duration: 0.5, delay: 0.25, ease: "easeOut" }}
@@ -1383,7 +1383,7 @@ const InteractiveUserFlow = ({ color = '#00CAE3' }) => {
 
                                                 {/* Text Content */}
                                                 <div className="relative z-10 w-full text-center px-4">
-                                                    <span className="text-[12px] md:text-sm font-bold leading-snug block" style={{ color: '#0D1216' }}>Did you notice<br />the code?</span>
+                                                    <span className="text-[12px] md:text-sm font-bold leading-snug block" style={{ color: '#141D26' }}>Did you notice<br />the code?</span>
                                                 </div>
                                             </motion.div>
                                         </div>
@@ -1409,7 +1409,7 @@ const InteractiveUserFlow = ({ color = '#00CAE3' }) => {
                                                 initial={{ scale: 0, opacity: 0 }}
                                                 animate={{ scale: 1, opacity: 1 }}
                                                 transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.7 }}
-                                                className="relative w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-sm md:text-base font-bold shadow-md cursor-pointer hover:shadow-lg" style={{ backgroundColor: '#00B782', color: '#0D1216' }}
+                                                className="relative w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-sm md:text-base font-bold shadow-md cursor-pointer hover:shadow-lg" style={{ backgroundColor: '#00B782', color: '#141D26' }}
                                             >
                                                 Y
                                             </motion.div>
@@ -1437,7 +1437,7 @@ const InteractiveUserFlow = ({ color = '#00CAE3' }) => {
                                                     initial={{ scale: 0, opacity: 0 }}
                                                     animate={{ scale: 1, opacity: 1 }}
                                                     transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.9 }}
-                                                    className="relative w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-sm md:text-base font-bold shadow-md hover:shadow-lg" style={{ backgroundColor: '#FF7474', color: '#0D1216' }}
+                                                    className="relative w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-sm md:text-base font-bold shadow-md hover:shadow-lg" style={{ backgroundColor: '#FF7474', color: '#141D26' }}
                                                 >
                                                     N
                                                 </motion.div>
@@ -1448,14 +1448,14 @@ const InteractiveUserFlow = ({ color = '#00CAE3' }) => {
                                                 <div className="absolute left-full top-1/2 -translate-y-1/2 flex items-center gap-[10px] ml-[10px]">
                                                     <motion.div
                                                         className="h-[2.5px] w-12 md:w-20 flex-shrink-0 z-10 rounded-full"
-                                                        style={{ backgroundColor: '#0D1216', transformOrigin: "left center" }}
+                                                        style={{ backgroundColor: '#141D26', transformOrigin: "left center" }}
                                                         initial={{ scaleX: 0, opacity: 0 }}
                                                         animate={{ scaleX: 1, opacity: 1 }}
                                                         transition={{ duration: 0.5, ease: "easeOut" }}
                                                     />
                                                     <motion.div
                                                         className="w-20 h-20 md:w-24 md:h-24 flex-shrink-0 flex items-center justify-center p-2 text-center rounded-full shadow-lg border border-transparent cursor-default z-20"
-                                                        style={{ backgroundColor: '#FF7474', color: '#0D1216' }}
+                                                        style={{ backgroundColor: '#FF7474', color: '#141D26' }}
                                                         initial={{ scale: 0.5, opacity: 0 }}
                                                         animate={{ scale: 1, opacity: 1 }}
                                                         transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.25 }}
@@ -1551,7 +1551,7 @@ const InteractiveUserFlow = ({ color = '#00CAE3' }) => {
 
                                                 {/* Text Content */}
                                                 <div className="relative z-10 w-full text-center px-4">
-                                                    <span className="text-[12px] md:text-sm font-bold leading-snug block" style={{ color: '#0D1216' }}>Was the<br />connection<br />successful?</span>
+                                                    <span className="text-[12px] md:text-sm font-bold leading-snug block" style={{ color: '#141D26' }}>Was the<br />connection<br />successful?</span>
                                                 </div>
                                             </motion.div>
                                         </div>
@@ -1577,7 +1577,7 @@ const InteractiveUserFlow = ({ color = '#00CAE3' }) => {
                                                 initial={{ scale: 0, opacity: 0 }}
                                                 animate={{ scale: 1, opacity: 1 }}
                                                 transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.7 }}
-                                                className="relative w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-sm md:text-base font-bold shadow-md cursor-pointer hover:shadow-lg" style={{ backgroundColor: '#00B782', color: '#0D1216' }}
+                                                className="relative w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-sm md:text-base font-bold shadow-md cursor-pointer hover:shadow-lg" style={{ backgroundColor: '#00B782', color: '#141D26' }}
                                             >
                                                 Y
                                             </motion.div>
@@ -1606,7 +1606,7 @@ const InteractiveUserFlow = ({ color = '#00CAE3' }) => {
                                                     initial={{ scale: 0, opacity: 0 }}
                                                     animate={{ scale: 1, opacity: 1 }}
                                                     transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.9 }}
-                                                    className="relative w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-sm md:text-base font-bold shadow-md hover:shadow-lg" style={{ backgroundColor: '#FF7474', color: '#0D1216' }}
+                                                    className="relative w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-sm md:text-base font-bold shadow-md hover:shadow-lg" style={{ backgroundColor: '#FF7474', color: '#141D26' }}
                                                 >
                                                     N
                                                 </motion.div>
@@ -1617,14 +1617,14 @@ const InteractiveUserFlow = ({ color = '#00CAE3' }) => {
                                                 <div className="absolute left-full top-1/2 -translate-y-1/2 flex items-center gap-[10px] ml-[10px]">
                                                     <motion.div
                                                         className="h-[2.5px] w-12 md:w-20 flex-shrink-0 z-10 rounded-full"
-                                                        style={{ backgroundColor: '#0D1216', transformOrigin: "left center" }}
+                                                        style={{ backgroundColor: '#141D26', transformOrigin: "left center" }}
                                                         initial={{ scaleX: 0, opacity: 0 }}
                                                         animate={{ scaleX: 1, opacity: 1 }}
                                                         transition={{ duration: 0.5, ease: "easeOut" }}
                                                     />
                                                     <motion.div
                                                         className="w-20 h-20 md:w-24 md:h-24 flex-shrink-0 flex items-center justify-center p-2 text-center rounded-full shadow-lg border border-transparent cursor-default z-20"
-                                                        style={{ backgroundColor: '#FF7474', color: '#0D1216' }}
+                                                        style={{ backgroundColor: '#FF7474', color: '#141D26' }}
                                                         initial={{ scale: 0.5, opacity: 0 }}
                                                         animate={{ scale: 1, opacity: 1 }}
                                                         transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.25 }}
@@ -1891,7 +1891,7 @@ const InteractiveUserFlow = ({ color = '#00CAE3' }) => {
                                     <div key="node-success" className="absolute top-[5338px] left-1/2 -translate-x-1/2 z-20">
                                         <motion.div
                                             className="w-32 h-32 md:w-40 md:h-40 flex items-center justify-center p-4 text-center text-[16px] md:text-lg font-bold tracking-widest uppercase rounded-full shadow-lg border border-transparent cursor-pointer hover:shadow-xl transition-shadow"
-                                            style={{ backgroundColor: '#61F5B9', color: '#0D1216', willChange: 'transform', backfaceVisibility: 'hidden', WebkitFontSmoothing: 'subpixel-antialiased' }}
+                                            style={{ backgroundColor: '#61F5B9', color: '#141D26', willChange: 'transform', backfaceVisibility: 'hidden', WebkitFontSmoothing: 'subpixel-antialiased' }}
                                             initial={{ scale: 0, opacity: 0 }}
                                             animate={{
                                                 scale: activeStep === 22 ? [1, 1.05, 1] : 0.95,

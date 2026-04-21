@@ -161,7 +161,7 @@ const SectionPreheader = ({ text, color = "#171717", textColor, customTrigger, a
                     className="font-bold uppercase tracking-widest text-sm md:text-base whitespace-nowrap z-10 py-1 leading-normal"
                     style={{
                         fontFamily: "'Outfit', sans-serif",
-                        color: textColor || '#0D1216',
+                        color: textColor || '#141D26',
                         paddingLeft: '0.1em'
                     }}
                 >

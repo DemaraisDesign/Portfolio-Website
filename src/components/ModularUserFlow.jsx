@@ -435,7 +435,7 @@ export default function ModularUserFlow({ flowData, color = "#00CAE3" }) {
                                 <motion.div
                                   className="h-[2.5px] w-12 md:w-20 z-10 rounded-full"
                                   style={{
-                                    backgroundColor: "#0D1216",
+                                    backgroundColor: "#141D26",
                                     transformOrigin: "left center",
                                   }}
                                   initial={{ scaleX: 0, opacity: 0 }}
@@ -485,7 +485,7 @@ export default function ModularUserFlow({ flowData, color = "#00CAE3" }) {
           className="absolute inset-0 pointer-events-none opacity-[0.03]"
           style={{
             backgroundImage:
-              "radial-gradient(circle, #0D1216 1px, transparent 1px)",
+              "radial-gradient(circle, #141D26 1px, transparent 1px)",
             backgroundSize: "24px 24px",
           }}
         />

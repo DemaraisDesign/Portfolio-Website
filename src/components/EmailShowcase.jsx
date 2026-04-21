@@ -358,7 +358,7 @@ export default function EmailShowcase() {
                             onClick={() => goToSlide(index)}
                             className={`w-2 h-2 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#56C6FF]/50 focus:ring-offset-2 ${index === activeIndex
                                 ? 'bg-[#56C6FF] w-6'
-                                : 'bg-[#0D1216]/20 hover:bg-[#0D1216]/40'
+                                : 'bg-[#141D26]/20 hover:bg-[#141D26]/40'
                                 }`}
                             aria-label={`Go to email ${index + 1}`}
                             aria-current={index === activeIndex ? 'true' : 'false'}

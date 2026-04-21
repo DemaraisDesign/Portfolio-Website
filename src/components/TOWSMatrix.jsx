@@ -151,10 +151,10 @@ export default function TOWSMatrix({ color = "#56C6FF" }) {
             <div className="relative w-full overflow-hidden bg-white border border-gray-200 rounded-2xl shadow-lg">
 
                 <div className="absolute inset-0 pointer-events-none opacity-[0.03]"
-                    style={{ backgroundImage: "radial-gradient(circle, #0D1216 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
+                    style={{ backgroundImage: "radial-gradient(circle, #141D26 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
 
                 {/* Header matching AffinityMapDisplayNow */}
-                <div className="relative z-20 flex flex-col px-6 md:px-8 py-6" style={{ backgroundColor: '#0D1216' }}>
+                <div className="relative z-20 flex flex-col px-6 md:px-8 py-6" style={{ backgroundColor: '#141D26' }}>
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <div className="flex items-center gap-4">
                             <div className="flex items-center justify-center shrink-0 w-12 h-12 rounded-full shadow-sm border border-transparent text-[#04101A]" style={{ backgroundColor: color }}>

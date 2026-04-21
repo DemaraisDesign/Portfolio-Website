@@ -19,7 +19,7 @@ const easeInOut = (t) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t);
 const THEME = {
     purple: "#A88EFF", teal: "#00C2A3", blue: "#56C6FF",
     orange: "#CE4D35", yellow: "#FFDE21",
-    dark: "#0D1216", black: "#050508",
+    dark: "#141D26", black: "#050508",
     light: "#F5F7F8", white: "#FFFFFF",
     textSub: "rgba(13, 18, 22, 0.5)",
     deep: {

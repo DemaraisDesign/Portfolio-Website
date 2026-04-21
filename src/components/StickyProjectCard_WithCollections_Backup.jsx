@@ -189,7 +189,7 @@ const StickyProjectCard = ({
                     )}
 
                     {project.img === 'LOGO' ? (
-                        <div className="w-full h-full flex items-center justify-center bg-[#0D1216]">
+                        <div className="w-full h-full flex items-center justify-center bg-[#141D26]">
                             <div className="relative w-[340px] h-[320px] md:w-[510px] md:h-[480px]">
                                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[120px] h-[120px] md:w-[180px] md:h-[180px] rounded-full" style={{ backgroundColor: BRAND_COLORS.purple }} />
                                 <div className="absolute bottom-0 left-0 w-[120px] h-[120px] md:w-[180px] md:h-[180px] rounded-full" style={{ backgroundColor: BRAND_COLORS.blue }} />

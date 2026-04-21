@@ -571,7 +571,7 @@ export default function AffinityMap({ impactData, color, isEmbedded }) {
                 {/* Subtle dot pattern background */}
                 {!isEmbedded && (
                     <div className="absolute inset-0 pointer-events-none opacity-[0.03]"
-                        style={{ backgroundImage: "radial-gradient(circle, #0D1216 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
+                        style={{ backgroundImage: "radial-gradient(circle, #141D26 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
                 )}
 
                 {/* Top Section */}

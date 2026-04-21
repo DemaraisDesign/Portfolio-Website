@@ -296,7 +296,7 @@ const InteractiveUserFlowToBe = ({ color = '#56C6FF' }) => {
     <div className="w-full font-sans" style={{ fontFamily: '"Outfit", "Inter", sans-serif' }}>
       <div className="relative w-full overflow-hidden bg-[#F5F7F8] border border-gray-200 rounded-2xl shadow-lg">
         <div className="absolute inset-0 pointer-events-none opacity-[0.03]"
-          style={{ backgroundImage: "radial-gradient(circle, #0D1216 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
+          style={{ backgroundImage: "radial-gradient(circle, #141D26 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
 
         {/* Dark Blue Header Block */}
         <div className="relative z-20 flex flex-col px-6 md:px-8 pt-6 pb-8" style={{ backgroundColor: '#1b262f' }}>
@@ -604,7 +604,7 @@ const InteractiveUserFlowToBe = ({ color = '#56C6FF' }) => {
 
                         {/* Text Content */}
                         <div className="relative z-10 w-full text-center px-4">
-                          <span className="text-[12px] md:text-sm font-bold leading-snug block" style={{ color: '#0D1216' }}>Watch general<br />tutorial?</span>
+                          <span className="text-[12px] md:text-sm font-bold leading-snug block" style={{ color: '#141D26' }}>Watch general<br />tutorial?</span>
                         </div>
                       </motion.div>
                     </div>
@@ -630,7 +630,7 @@ const InteractiveUserFlowToBe = ({ color = '#56C6FF' }) => {
                         initial={{ scale: 0, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.7 }}
-                        className="relative w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-sm md:text-base font-bold shadow-md cursor-pointer hover:shadow-lg" style={{ backgroundColor: '#00B782', color: '#0D1216' }}
+                        className="relative w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-sm md:text-base font-bold shadow-md cursor-pointer hover:shadow-lg" style={{ backgroundColor: '#00B782', color: '#141D26' }}
                       >
                         Y
                       </motion.div>
@@ -659,7 +659,7 @@ const InteractiveUserFlowToBe = ({ color = '#56C6FF' }) => {
                           initial={{ scale: 0, opacity: 0 }}
                           animate={{ scale: 1, opacity: 1 }}
                           transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.9 }}
-                          className="relative w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-sm md:text-base font-bold shadow-md hover:shadow-lg" style={{ backgroundColor: '#FF7474', color: '#0D1216' }}
+                          className="relative w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-sm md:text-base font-bold shadow-md hover:shadow-lg" style={{ backgroundColor: '#FF7474', color: '#141D26' }}
                         >
                           N
                         </motion.div>
@@ -670,14 +670,14 @@ const InteractiveUserFlowToBe = ({ color = '#56C6FF' }) => {
                         <div className="absolute left-full top-1/2 -translate-y-1/2 flex items-center gap-[10px] ml-[10px]">
                           <motion.div
                             className="h-[2.5px] w-8 md:w-12 flex-shrink-0 z-10 rounded-full"
-                            style={{ backgroundColor: '#0D1216', transformOrigin: "left center" }}
+                            style={{ backgroundColor: '#141D26', transformOrigin: "left center" }}
                             initial={{ scaleX: 0, opacity: 0 }}
                             animate={{ scaleX: 1, opacity: 1 }}
                             transition={{ duration: 0.5, ease: "easeOut" }}
                           />
                           <motion.div
                             className="w-32 md:w-40 h-10 flex-shrink-0 flex items-center justify-center px-3 text-center rounded-theme-sm shadow-md border border-brand-dark/10 cursor-pointer z-20 hover:shadow-lg transition-shadow"
-                            style={{ backgroundColor: '#56C6FF', color: '#0D1216' }}
+                            style={{ backgroundColor: '#56C6FF', color: '#141D26' }}
                             initial={{ scale: 0.5, opacity: 0 }}
                             animate={{
                               scale: activeStep === 6 && pathWatchGeneral === 'N' && !path10 && !revealed.has('path10_Y') ? [1, 1.05, 1] : 0.95,
@@ -855,7 +855,7 @@ const InteractiveUserFlowToBe = ({ color = '#56C6FF' }) => {
 
                         {/* Text Content */}
                         <div className="relative z-10 w-full text-center px-4">
-                          <span className="text-[12px] md:text-sm font-bold leading-snug block" style={{ color: '#0D1216' }}>View playlist<br />tutorial?</span>
+                          <span className="text-[12px] md:text-sm font-bold leading-snug block" style={{ color: '#141D26' }}>View playlist<br />tutorial?</span>
                         </div>
                       </motion.div>
                     </div>
@@ -881,7 +881,7 @@ const InteractiveUserFlowToBe = ({ color = '#56C6FF' }) => {
                         initial={{ scale: 0, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.7 }}
-                        className="relative w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-sm md:text-base font-bold shadow-md cursor-pointer hover:shadow-lg" style={{ backgroundColor: '#00B782', color: '#0D1216' }}
+                        className="relative w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-sm md:text-base font-bold shadow-md cursor-pointer hover:shadow-lg" style={{ backgroundColor: '#00B782', color: '#141D26' }}
                       >
                         Y
                       </motion.div>
@@ -910,7 +910,7 @@ const InteractiveUserFlowToBe = ({ color = '#56C6FF' }) => {
                           initial={{ scale: 0, opacity: 0 }}
                           animate={{ scale: 1, opacity: 1 }}
                           transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.9 }}
-                          className="relative w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-sm md:text-base font-bold shadow-md hover:shadow-lg" style={{ backgroundColor: '#FF7474', color: '#0D1216' }}
+                          className="relative w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-sm md:text-base font-bold shadow-md hover:shadow-lg" style={{ backgroundColor: '#FF7474', color: '#141D26' }}
                         >
                           N
                         </motion.div>
@@ -921,7 +921,7 @@ const InteractiveUserFlowToBe = ({ color = '#56C6FF' }) => {
                         <div className="absolute left-full top-1/2 -translate-y-1/2 flex items-center gap-[10px] ml-[10px]">
                           <motion.div
                             className="h-[2.5px] w-8 md:w-12 flex-shrink-0 z-10 rounded-full"
-                            style={{ backgroundColor: '#0D1216', transformOrigin: "left center" }}
+                            style={{ backgroundColor: '#141D26', transformOrigin: "left center" }}
                             initial={{ scaleX: 0, opacity: 0 }}
                             animate={{ scaleX: 1, opacity: 1 }}
                             transition={{ duration: 0.5, ease: "easeOut" }}
@@ -929,7 +929,7 @@ const InteractiveUserFlowToBe = ({ color = '#56C6FF' }) => {
                           <div className="relative z-20">
                             <motion.div
                               className="w-32 md:w-40 h-10 flex-shrink-0 flex items-center justify-center px-3 text-center rounded-theme-sm shadow-md border border-brand-dark/10 cursor-pointer hover:shadow-lg transition-shadow"
-                              style={{ backgroundColor: '#56C6FF', color: '#0D1216' }}
+                              style={{ backgroundColor: '#56C6FF', color: '#141D26' }}
                               initial={{ scale: 0.5, opacity: 0 }}
                               animate={{
                                 scale: activeStep === 8 && path11 === 'N' && !path13 && !revealed.has('path13_Y') ? [1, 1.05, 1] : 0.95,
@@ -1164,7 +1164,7 @@ const InteractiveUserFlowToBe = ({ color = '#56C6FF' }) => {
 
                         {/* Text Content */}
                         <div className="relative z-10 w-full text-center px-4">
-                          <span className="text-[12px] md:text-sm font-bold leading-snug block" style={{ color: '#0D1216' }}>Save<br />content?</span>
+                          <span className="text-[12px] md:text-sm font-bold leading-snug block" style={{ color: '#141D26' }}>Save<br />content?</span>
                         </div>
                       </motion.div>
                     </div>
@@ -1190,7 +1190,7 @@ const InteractiveUserFlowToBe = ({ color = '#56C6FF' }) => {
                         initial={{ scale: 0, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.7 }}
-                        className="relative w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-sm md:text-base font-bold shadow-md cursor-pointer hover:shadow-lg" style={{ backgroundColor: '#00B782', color: '#0D1216' }}
+                        className="relative w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-sm md:text-base font-bold shadow-md cursor-pointer hover:shadow-lg" style={{ backgroundColor: '#00B782', color: '#141D26' }}
                       >
                         Y
                       </motion.div>
@@ -1218,7 +1218,7 @@ const InteractiveUserFlowToBe = ({ color = '#56C6FF' }) => {
                           initial={{ scale: 0, opacity: 0 }}
                           animate={{ scale: 1, opacity: 1 }}
                           transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.9 }}
-                          className="relative w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-sm md:text-base font-bold shadow-md hover:shadow-lg" style={{ backgroundColor: '#FF7474', color: '#0D1216' }}
+                          className="relative w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-sm md:text-base font-bold shadow-md hover:shadow-lg" style={{ backgroundColor: '#FF7474', color: '#141D26' }}
                         >
                           N
                         </motion.div>
@@ -1229,7 +1229,7 @@ const InteractiveUserFlowToBe = ({ color = '#56C6FF' }) => {
                         <div className="absolute left-full top-1/2 -translate-y-1/2 flex items-center gap-[10px] ml-[10px]">
                           <motion.div
                             className="h-[2.5px] w-8 md:w-12 flex-shrink-0 z-10 rounded-full"
-                            style={{ backgroundColor: '#0D1216', transformOrigin: "left center" }}
+                            style={{ backgroundColor: '#141D26', transformOrigin: "left center" }}
                             initial={{ scaleX: 0, opacity: 0 }}
                             animate={{ scaleX: 1, opacity: 1 }}
                             transition={{ duration: 0.5, ease: "easeOut" }}
@@ -1237,7 +1237,7 @@ const InteractiveUserFlowToBe = ({ color = '#56C6FF' }) => {
                           <div className="relative z-20">
                             <motion.div
                               className="w-32 md:w-40 h-10 flex-shrink-0 flex items-center justify-center px-3 text-center rounded-theme-sm shadow-md border border-brand-dark/10 cursor-pointer hover:shadow-lg transition-shadow"
-                              style={{ backgroundColor: '#56C6FF', color: '#0D1216' }}
+                              style={{ backgroundColor: '#56C6FF', color: '#141D26' }}
                               initial={{ scale: 0.5, opacity: 0 }}
                               animate={{
                                 scale: activeStep === 12 && path18 === 'N' && !path21 && !revealed.has('path21_Y') ? [1, 1.05, 1] : 0.95,
@@ -1413,7 +1413,7 @@ const InteractiveUserFlowToBe = ({ color = '#56C6FF' }) => {
                         <div key="node-success" className="absolute top-[3957px] left-1/2 -translate-x-1/2 z-20">
                             <motion.div
                                 className="w-32 h-32 md:w-40 md:h-40 flex items-center justify-center p-4 text-center text-[16px] md:text-lg font-bold tracking-widest uppercase rounded-full shadow-lg border border-transparent cursor-pointer hover:shadow-xl transition-shadow"
-                                style={{ backgroundColor: '#61F5B9', color: '#0D1216', willChange: 'transform', backfaceVisibility: 'hidden', WebkitFontSmoothing: 'subpixel-antialiased' }}
+                                style={{ backgroundColor: '#61F5B9', color: '#141D26', willChange: 'transform', backfaceVisibility: 'hidden', WebkitFontSmoothing: 'subpixel-antialiased' }}
                                 initial={{ scale: 0, opacity: 0 }}
                                 animate={{
                                     scale: activeStep >= 14 && path22 === 'Y' ? [1, 1.05, 1] : 0.95,

@@ -421,7 +421,7 @@ export default function AffinityMap2({ color }) {
                 style={{ minHeight: 600 }}>
 
                 <div className="absolute inset-0 pointer-events-none opacity-[0.03]"
-                    style={{ backgroundImage: "radial-gradient(circle, #0D1216 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
+                    style={{ backgroundImage: "radial-gradient(circle, #141D26 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
 
                 <div className="relative z-20 flex flex-col px-6 md:px-8 pt-6 pb-8" style={{ backgroundColor: '#1b262f' }}>
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">

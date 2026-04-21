@@ -98,10 +98,11 @@ const StatementCard = ({ statement, index, isHoverReady }) => {
             
             <motion.p 
                 className="w-full pr-10 md:pr-14 lg:pr-[72px] xl:pr-[88px] text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-outfit font-light leading-[1.35] lg:leading-[1.25] tracking-tight text-brand-ink/95 m-0 transition-colors duration-300"
-                initial={{ opacity: 0, filter: "blur(12px)", y: 10 }}
-                whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ duration: 1.2, delay: baseTextDelay, ease: "easeOut" }}
+                style={{ willChange: "opacity, transform" }}
             >
                 {statement.segments.map((seg, i) => (
                     <span 

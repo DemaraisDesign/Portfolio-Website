@@ -1035,6 +1035,247 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
 
 
 // ═══════════════════════════════════════════════════
+//  EXPANSION CONTENT COMPONENT (inline password/construction forms)
+// ═══════════════════════════════════════════════════
+const CORRECT_PASSWORD = 'design';
+
+const ExpansionContent = ({ pData, isTop, liveX, liveY, r, boxLeft, boxTop, boxWidth, boxHeight, closeMenu, navigate, unlockProject }) => {
+    const project = getProject(pData.id);
+    const [isUnlocked, setIsUnlocked] = useState(!project || unlockProject(pData.id));
+    const isUnderConstruction = project?.isConstruction;
+    const isAvailable = !isUnderConstruction && isUnlocked;
+    const isLocked = !isUnlocked && !isUnderConstruction;
+
+    // Password form state
+    const [password, setPassword] = useState('');
+    const [pwError, setPwError] = useState(false);
+    const [pwSuccess, setPwSuccess] = useState(false);
+    const pwRef = useRef(null);
+
+    // Construction form state
+    const [cName, setCName] = useState('');
+    const [cEmail, setCEmail] = useState('');
+    const [cStatus, setCStatus] = useState('idle'); // idle | sending | success | error
+
+    // Reset forms when switching projects
+    useEffect(() => {
+        setPassword(''); setPwError(false); setPwSuccess(false);
+        setCName(''); setCEmail(''); setCStatus('idle');
+        setIsUnlocked(!getProject(pData.id) || unlockProject(pData.id));
+    }, [pData.id]);
+
+    const sec = SECTIONS.find(s => s.id === pData.sectionId);
+    const currentChild = sec?.children.find(c => c.id === pData.id);
+    const categoryLabel = currentChild?.desc || project?.cat || '';
+    const title = currentChild?.label || project?.title || '';
+
+    // Content positioning: avoid the parked circle
+    const circleRelY = liveY - boxTop;
+    const contentPadding = 24;
+    const contentTop = isTop ? circleRelY + r + 20 : contentPadding;
+    const contentHeight = isTop ? (boxHeight - contentTop - contentPadding) : (circleRelY - r - 20 - contentPadding);
+
+    const handlePwSubmit = (e) => {
+        e.preventDefault();
+        if (password.toLowerCase().trim() === CORRECT_PASSWORD) {
+            setPwSuccess(true);
+            setPwError(false);
+        } else {
+            setPwError(true);
+            setPassword('');
+            setTimeout(() => pwRef.current?.focus(), 100);
+        }
+    };
+
+    const handleConstructionSubmit = (e) => {
+        e.preventDefault();
+        if (!cName || !cEmail) { setCStatus('error'); setTimeout(() => setCStatus('idle'), 2000); return; }
+        setCStatus('sending');
+        setTimeout(() => { setCStatus('success'); console.log(`WAITLIST: ${cName}, ${cEmail}`); }, 1200);
+    };
+
+    // After password success, navigate after a beat
+    useEffect(() => {
+        if (pwSuccess) {
+            const timer = setTimeout(() => {
+                setIsUnlocked(true);
+                closeMenu();
+                navigate(`/work/${pData.id}`);
+            }, 1000);
+            return () => clearTimeout(timer);
+        }
+    }, [pwSuccess]);
+
+    const inputStyle = {
+        width: '100%', padding: '10px 14px', fontSize: 14,
+        fontFamily: '"Outfit", sans-serif', border: '1.5px solid rgba(255,255,255,0.25)',
+        borderRadius: 8, outline: 'none', backgroundColor: 'rgba(255,255,255,0.08)',
+        color: '#fff', boxSizing: 'border-box', transition: 'border-color 0.2s',
+    };
+    const inputErrorStyle = { ...inputStyle, borderColor: '#ef4444' };
+
+    const ghostBtnStyle = {
+        width: '100%', padding: '10px 16px', fontSize: 12, fontWeight: 700,
+        fontFamily: '"Outfit", sans-serif', textTransform: 'uppercase', letterSpacing: '0.08em',
+        color: '#ffffff', backgroundColor: 'rgba(255,255,255,0.12)',
+        border: '1px solid rgba(255,255,255,0.2)', borderRadius: 10,
+        cursor: 'pointer', transition: 'transform 0.15s, background-color 0.2s',
+        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+    };
+
+    return (
+        <AnimatePresence mode="wait">
+            <motion.div
+                key={pData.id}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1, transition: { duration: 0.3, delay: 0.15 } }}
+                exit={{ opacity: 0, transition: { duration: 0.15 } }}
+                style={{
+                    position: 'absolute', top: contentTop, left: contentPadding, right: contentPadding,
+                    height: contentHeight, display: 'flex', flexDirection: 'column',
+                    alignItems: 'center', justifyContent: 'center', gap: 8,
+                    textAlign: 'center', pointerEvents: 'auto',
+                }}
+            >
+                {/* Status Icon */}
+                {(isUnderConstruction || isLocked) && !pwSuccess && (
+                    <div style={{ marginBottom: 2 }}>
+                        {isUnderConstruction ? (
+                            <svg width="28" height="28" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
+                                <circle cx="12" cy="12" r="10" fill="rgba(255,255,255,0.15)" stroke="none" />
+                                <polyline points="12 6 12 12 15.5 15.5" stroke="white" strokeWidth="2.5" fill="none" />
+                            </svg>
+                        ) : (
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="rgba(255,255,255,0.9)" stroke="rgba(255,255,255,0.9)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M7 10V7a5 5 0 0 1 10 0v3" fill="none" />
+                                <rect x="3" y="10" width="18" height="12" rx="2" fill="rgba(255,255,255,0.9)" stroke="none" />
+                                <circle cx="12" cy="16" r="1.5" fill={pData.deepColor || THEME.dark} stroke={pData.deepColor || THEME.dark} strokeWidth="3" />
+                            </svg>
+                        )}
+                    </div>
+                )}
+
+                {/* Success Icon (replaces lock/construction on success) */}
+                {(pwSuccess || cStatus === 'success') && (
+                    <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 400, damping: 15 }}>
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="#22c55e" stroke="#22c55e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <circle cx="12" cy="12" r="10" fill="#22c55e" stroke="none" />
+                            <polyline points="9 12 11.5 14.5 16 9.5" stroke="white" strokeWidth="2.5" fill="none" />
+                        </svg>
+                    </motion.div>
+                )}
+
+                {/* Category Label */}
+                <span style={{
+                    fontFamily: '"Outfit", sans-serif', fontSize: 11, fontWeight: 600,
+                    textTransform: 'uppercase', letterSpacing: '0.1em', color: 'rgba(255,255,255,0.45)',
+                }}>
+                    {categoryLabel}
+                </span>
+
+                {/* Title */}
+                <h3 style={{
+                    fontFamily: '"Outfit", sans-serif', fontSize: title.length > 20 ? 18 : 22,
+                    fontWeight: 700, color: '#ffffff', lineHeight: 1.2, margin: 0, padding: '0 8px',
+                }}>
+                    {pwSuccess ? 'Welcome In' : cStatus === 'success' ? "You're on the list!" : title}
+                </h3>
+
+                {/* Interactive Actions */}
+                <div style={{ marginTop: 4, width: '100%', maxWidth: 240 }}>
+                    {isAvailable ? (
+                        /* ── VIEW CASE STUDY ── */
+                        <button
+                            onClick={(e) => { e.stopPropagation(); closeMenu(); navigate(`/work/${pData.id}`); }}
+                            style={{
+                                width: '100%', padding: '11px 20px', fontSize: 12, fontWeight: 700,
+                                fontFamily: '"Outfit", sans-serif', textTransform: 'uppercase', letterSpacing: '0.08em',
+                                color: pData.deepColor || THEME.dark, backgroundColor: '#ffffff',
+                                border: 'none', borderRadius: 10, cursor: 'pointer',
+                                transition: 'transform 0.15s', display: 'flex', alignItems: 'center',
+                                justifyContent: 'center', gap: 8,
+                            }}
+                            onMouseDown={e => e.currentTarget.style.transform = 'scale(0.96)'}
+                            onMouseUp={e => e.currentTarget.style.transform = 'scale(1)'}
+                        >
+                            View Case Study
+                            <ArrowRight size={14} strokeWidth={2.5} />
+                        </button>
+
+                    ) : isUnderConstruction ? (
+                        /* ── CONSTRUCTION: INLINE EMAIL FORM ── */
+                        cStatus === 'success' ? (
+                            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)', lineHeight: 1.5, margin: 0 }}>
+                                I'll notify you when it's published.
+                            </p>
+                        ) : (
+                            <form onSubmit={handleConstructionSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                                <input
+                                    type="text" value={cName} placeholder="Name"
+                                    onChange={e => { setCName(e.target.value); if (cStatus === 'error') setCStatus('idle'); }}
+                                    style={cStatus === 'error' && !cName ? inputErrorStyle : inputStyle}
+                                    onFocus={e => e.target.style.borderColor = 'rgba(255,255,255,0.5)'}
+                                    onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.25)'}
+                                />
+                                <input
+                                    type="email" value={cEmail} placeholder="Email"
+                                    onChange={e => { setCEmail(e.target.value); if (cStatus === 'error') setCStatus('idle'); }}
+                                    style={cStatus === 'error' && !cEmail ? inputErrorStyle : inputStyle}
+                                    onFocus={e => e.target.style.borderColor = 'rgba(255,255,255,0.5)'}
+                                    onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.25)'}
+                                />
+                                <button type="submit" disabled={cStatus === 'sending'} style={{
+                                    ...ghostBtnStyle,
+                                    opacity: cStatus === 'sending' ? 0.6 : 1,
+                                    cursor: cStatus === 'sending' ? 'not-allowed' : 'pointer',
+                                }}>
+                                    {cStatus === 'sending' ? (
+                                        <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
+                                            style={{ width: 14, height: 14, border: '2px solid rgba(255,255,255,0.3)', borderTopColor: 'white', borderRadius: '50%' }} />
+                                    ) : 'Notify Me'}
+                                </button>
+                            </form>
+                        )
+
+                    ) : isLocked ? (
+                        /* ── LOCKED: INLINE PASSWORD FORM ── */
+                        pwSuccess ? (
+                            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)', lineHeight: 1.5, margin: 0 }}>Redirecting you now...</p>
+                        ) : (
+                            <form onSubmit={handlePwSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                                <input
+                                    ref={pwRef}
+                                    type="password" value={password} placeholder="Password"
+                                    onChange={e => { setPassword(e.target.value); setPwError(false); }}
+                                    style={pwError ? inputErrorStyle : inputStyle}
+                                    onFocus={e => e.target.style.borderColor = 'rgba(255,255,255,0.5)'}
+                                    onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.25)'}
+                                />
+                                {pwError && (
+                                    <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                                        style={{ color: '#ef4444', fontSize: 11, margin: 0, textAlign: 'left' }}>
+                                        Incorrect password.
+                                    </motion.p>
+                                )}
+                                <button type="submit" style={ghostBtnStyle}>
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M7 10V7a5 5 0 0 1 10 0v3" fill="none" />
+                                        <rect x="3" y="10" width="18" height="12" rx="2" fill="currentColor" stroke="none" />
+                                        <circle cx="12" cy="16" r="1.5" fill={pData.deepColor || THEME.dark} stroke={pData.deepColor || THEME.dark} strokeWidth="3" />
+                                    </svg>
+                                    Unlock
+                                </button>
+                            </form>
+                        )
+                    ) : null}
+                </div>
+            </motion.div>
+        </AnimatePresence>
+    );
+};
+
+
+// ═══════════════════════════════════════════════════
 //  INDICATOR STRIP COMPONENT
 // ═══════════════════════════════════════════════════
 const IndicatorStrip = ({ pData, handleCycleToChild, boxLeft, boxWidth, boxHeight, boxTop, theTheme }) => {
@@ -1574,202 +1815,16 @@ export default function NavigationMap({ closeMenu }) {
                                             }}
                                         >
                                             {/* ── Content Panel ── */}
-                                            {(() => {
-                                                const project = getProject(pData.id);
-                                                const isLocked = project && !isProjectUnlocked(pData.id);
-                                                const isUnderConstruction = project?.isConstruction;
-                                                const isAvailable = project && !isUnderConstruction && isProjectUnlocked(pData.id);
-                                                
-                                                // Get the current child from SECTIONS for the desc (category label)
-                                                const sec = SECTIONS.find(s => s.id === pData.sectionId);
-                                                const currentChild = sec?.children.find(c => c.id === pData.id);
-                                                const categoryLabel = currentChild?.desc || project?.cat || '';
-                                                const title = currentChild?.label || project?.title || '';
-
-                                                // Content positioning: avoid the parked circle
-                                                // The circle is at (liveX - boxLeft, liveY - boxTop) relative to the box
-                                                const circleRelX = liveX - boxLeft;
-                                                const circleRelY = liveY - boxTop;
-                                                const isCircleTop = isTop;
-                                                
-                                                // Content sits in the half of the box opposite the circle
-                                                const contentPadding = 24;
-                                                const contentTop = isCircleTop ? circleRelY + r + 20 : contentPadding;
-                                                const contentHeight = isCircleTop ? (boxHeight - contentTop - contentPadding) : (circleRelY - r - 20 - contentPadding);
-
-                                                return (
-                                                    <AnimatePresence mode="wait">
-                                                        <motion.div
-                                                            key={pData.id}
-                                                            initial={{ opacity: 0 }}
-                                                            animate={{ opacity: 1, transition: { duration: 0.3, delay: 0.15 } }}
-                                                            exit={{ opacity: 0, transition: { duration: 0.15 } }}
-                                                            style={{
-                                                                position: 'absolute',
-                                                                top: contentTop,
-                                                                left: contentPadding,
-                                                                right: contentPadding,
-                                                                height: contentHeight,
-                                                                display: 'flex',
-                                                                flexDirection: 'column',
-                                                                alignItems: 'center',
-                                                                justifyContent: 'center',
-                                                                gap: 10,
-                                                                textAlign: 'center',
-                                                                pointerEvents: 'auto',
-                                                            }}
-                                                        >
-                                                            {/* Status Icon — Lock or Construction */}
-                                                            {(isUnderConstruction || isLocked) && (
-                                                                <div style={{ marginBottom: 2 }}>
-                                                                    {isUnderConstruction ? (
-                                                                        <svg width="28" height="28" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
-                                                                            <circle cx="12" cy="12" r="10" fill="rgba(255,255,255,0.15)" stroke="none" />
-                                                                            <polyline points="12 6 12 12 15.5 15.5" stroke="white" strokeWidth="2.5" fill="none" />
-                                                                        </svg>
-                                                                    ) : (
-                                                                        <svg width="28" height="28" viewBox="0 0 24 24" fill="rgba(255,255,255,0.9)" stroke="rgba(255,255,255,0.9)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                                                            <path d="M7 10V7a5 5 0 0 1 10 0v3" fill="none" />
-                                                                            <rect x="3" y="10" width="18" height="12" rx="2" fill="rgba(255,255,255,0.9)" stroke="none" />
-                                                                            <circle cx="12" cy="16" r="1.5" fill={pData.deepColor || THEME.dark} stroke={pData.deepColor || THEME.dark} strokeWidth="3" />
-                                                                        </svg>
-                                                                    )}
-                                                                </div>
-                                                            )}
-
-                                                            {/* Category Label */}
-                                                            <span style={{
-                                                                fontFamily: '"Outfit", sans-serif',
-                                                                fontSize: 11,
-                                                                fontWeight: 600,
-                                                                textTransform: 'uppercase',
-                                                                letterSpacing: '0.1em',
-                                                                color: 'rgba(255,255,255,0.45)',
-                                                            }}>
-                                                                {categoryLabel}
-                                                            </span>
-
-                                                            {/* Title */}
-                                                            <h3 style={{
-                                                                fontFamily: '"Outfit", sans-serif',
-                                                                fontSize: title.length > 20 ? 18 : 22,
-                                                                fontWeight: 700,
-                                                                color: '#ffffff',
-                                                                lineHeight: 1.2,
-                                                                margin: 0,
-                                                                padding: '0 8px',
-                                                            }}>
-                                                                {title}
-                                                            </h3>
-
-                                                            {/* Interactive Actions */}
-                                                            <div style={{ marginTop: 6, width: '100%', maxWidth: 220 }}>
-                                                                {isAvailable ? (
-                                                                    /* View Case Study Button */
-                                                                    <button
-                                                                        onClick={(e) => {
-                                                                            e.stopPropagation();
-                                                                            closeMenu();
-                                                                            navigate(`/work/${pData.id}`);
-                                                                        }}
-                                                                        style={{
-                                                                            width: '100%',
-                                                                            padding: '11px 20px',
-                                                                            fontSize: 12,
-                                                                            fontWeight: 700,
-                                                                            fontFamily: '"Outfit", sans-serif',
-                                                                            textTransform: 'uppercase',
-                                                                            letterSpacing: '0.08em',
-                                                                            color: pData.deepColor || THEME.dark,
-                                                                            backgroundColor: '#ffffff',
-                                                                            border: 'none',
-                                                                            borderRadius: 10,
-                                                                            cursor: 'pointer',
-                                                                            transition: 'transform 0.15s, opacity 0.2s',
-                                                                            display: 'flex',
-                                                                            alignItems: 'center',
-                                                                            justifyContent: 'center',
-                                                                            gap: 8,
-                                                                        }}
-                                                                        onMouseDown={e => e.currentTarget.style.transform = 'scale(0.96)'}
-                                                                        onMouseUp={e => e.currentTarget.style.transform = 'scale(1)'}
-                                                                    >
-                                                                        View Case Study
-                                                                        <ArrowRight size={14} strokeWidth={2.5} />
-                                                                    </button>
-                                                                ) : isUnderConstruction ? (
-                                                                    /* Construction: Notify Me mini-form */
-                                                                    <button
-                                                                        onClick={(e) => {
-                                                                            e.stopPropagation();
-                                                                            requestConstructionAccess(`/work/${pData.id}`);
-                                                                        }}
-                                                                        style={{
-                                                                            width: '100%',
-                                                                            padding: '11px 20px',
-                                                                            fontSize: 12,
-                                                                            fontWeight: 700,
-                                                                            fontFamily: '"Outfit", sans-serif',
-                                                                            textTransform: 'uppercase',
-                                                                            letterSpacing: '0.08em',
-                                                                            color: '#ffffff',
-                                                                            backgroundColor: 'rgba(255,255,255,0.12)',
-                                                                            border: '1px solid rgba(255,255,255,0.2)',
-                                                                            borderRadius: 10,
-                                                                            cursor: 'pointer',
-                                                                            transition: 'transform 0.15s, background-color 0.2s',
-                                                                        }}
-                                                                        onMouseEnter={e => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.2)'}
-                                                                        onMouseLeave={e => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.12)'}
-                                                                        onMouseDown={e => e.currentTarget.style.transform = 'scale(0.96)'}
-                                                                        onMouseUp={e => e.currentTarget.style.transform = 'scale(1)'}
-                                                                    >
-                                                                        Notify Me
-                                                                    </button>
-                                                                ) : isLocked ? (
-                                                                    /* Password-gated: Unlock button */
-                                                                    <button
-                                                                        onClick={(e) => {
-                                                                            e.stopPropagation();
-                                                                            requestAccess(`/work/${pData.id}`);
-                                                                        }}
-                                                                        style={{
-                                                                            width: '100%',
-                                                                            padding: '11px 20px',
-                                                                            fontSize: 12,
-                                                                            fontWeight: 700,
-                                                                            fontFamily: '"Outfit", sans-serif',
-                                                                            textTransform: 'uppercase',
-                                                                            letterSpacing: '0.08em',
-                                                                            color: '#ffffff',
-                                                                            backgroundColor: 'rgba(255,255,255,0.12)',
-                                                                            border: '1px solid rgba(255,255,255,0.2)',
-                                                                            borderRadius: 10,
-                                                                            cursor: 'pointer',
-                                                                            transition: 'transform 0.15s, background-color 0.2s',
-                                                                            display: 'flex',
-                                                                            alignItems: 'center',
-                                                                            justifyContent: 'center',
-                                                                            gap: 8,
-                                                                        }}
-                                                                        onMouseEnter={e => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.2)'}
-                                                                        onMouseLeave={e => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.12)'}
-                                                                        onMouseDown={e => e.currentTarget.style.transform = 'scale(0.96)'}
-                                                                        onMouseUp={e => e.currentTarget.style.transform = 'scale(1)'}
-                                                                    >
-                                                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                                                            <path d="M7 10V7a5 5 0 0 1 10 0v3" fill="none" />
-                                                                            <rect x="3" y="10" width="18" height="12" rx="2" fill="currentColor" stroke="none" />
-                                                                            <circle cx="12" cy="16" r="1.5" fill={pData.deepColor || THEME.dark} stroke={pData.deepColor || THEME.dark} strokeWidth="3" />
-                                                                        </svg>
-                                                                        Unlock
-                                                                    </button>
-                                                                ) : null}
-                                                            </div>
-                                                        </motion.div>
-                                                    </AnimatePresence>
-                                                );
-                                            })()}
+                                            <ExpansionContent
+                                                pData={pData}
+                                                isTop={isTop}
+                                                liveX={liveX} liveY={liveY} r={r}
+                                                boxLeft={boxLeft} boxTop={boxTop}
+                                                boxWidth={boxWidth} boxHeight={boxHeight}
+                                                closeMenu={closeMenu}
+                                                navigate={navigate}
+                                                unlockProject={isProjectUnlocked}
+                                            />
                                         </motion.div>
                                         {/* Solid Hole Mask moved directly into Node component to resolve z-index stacking constraints */}
 

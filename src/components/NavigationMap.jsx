@@ -1704,7 +1704,7 @@ export default function NavigationMap({ closeMenu }) {
                                     flipDelay={viewport.w < 1280 ? 0 : (sec.isFocused && focusedId ? 1.0 : (!focusedId ? secIdx * 0.15 : 0))}
                                     sizeDelay={viewport.w < 1280 ? 0 : (sec.isFocused && focusedId ? 1.0 : (!focusedId ? secIdx * 0.15 : 0))}
                                     parkedData={(viewport.w < 1280 && parkedPetalData?.id && sec.children && sec.children.some(c => c.id === parkedPetalData.id)) ? parkedPetalData : null}
-                                    alwaysShowLabel={!focusedId && viewport.w < 1280}
+                                    alwaysShowLabel={!focusedId && (viewport.w < 1280 || isSuperShortDesktop)}
                                 />
                                 <AnimatePresence mode="popLayout">
                                     {(sec.isFocused || !focusedId) && sec.subPetals.map((sp, idx) => {

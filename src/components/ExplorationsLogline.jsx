@@ -96,50 +96,25 @@ const StatementCard = ({ statement, index, isHoverReady }) => {
         >
             <FancyBullet isHovered={isHovered} baseStatementDelay={baseStatementDelay} />
             
-            <p className="w-full pr-10 md:pr-14 lg:pr-[72px] xl:pr-[88px] text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-outfit font-light leading-[1.35] lg:leading-[1.25] tracking-tight text-brand-ink/95 m-0 transition-colors duration-300">
-                {statement.segments.map((seg, i) => {
-                    const words = seg.text.split(/(\s+)/);
-                    return (
+            <motion.p 
+                className="w-full pr-10 md:pr-14 lg:pr-[72px] xl:pr-[88px] text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-outfit font-light leading-[1.35] lg:leading-[1.25] tracking-tight text-brand-ink/95 m-0 transition-colors duration-300"
+                initial={{ opacity: 0, filter: "blur(12px)", y: 10 }}
+                whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 1.2, delay: baseTextDelay, ease: "easeOut" }}
+            >
+                {statement.segments.map((seg, i) => (
+                    <React.Fragment key={i}>
                         <span 
-                            key={i} 
                             className={`transition-all duration-500 ease-out ${seg.highlight && isHovered ? 'font-extrabold' : (seg.highlight ? 'font-bold opacity-90' : 'opacity-100')}`}
-                            style={{ 
-                                color: seg.highlight ? BRAND_COLORS.black : 'inherit',
-                            }}
+                            style={{ color: seg.highlight ? BRAND_COLORS.black : 'inherit' }}
                         >
-                            {words.map((word, wordI) => {
-                                if (word.trim() === '') {
-                                    globalCharIndex += word.length;
-                                    return <span key={wordI}>{word}</span>;
-                                }
-                                
-                                return (
-                                    <span key={wordI} className="inline-block whitespace-nowrap">
-                                        {word.split('').map((char, charI) => {
-                                            const charDelay = baseTextDelay + (globalCharIndex * 0.015);
-                                            globalCharIndex++;
-                                            
-                                            return (
-                                                <motion.span
-                                                    key={charI}
-                                                    className="inline-block"
-                                                    initial={{ opacity: 0, filter: "blur(12px)", y: 6 }}
-                                                    whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
-                                                    viewport={{ once: true, margin: "-50px" }}
-                                                    transition={{ duration: 0.8, delay: charDelay, ease: "easeOut" }}
-                                                >
-                                                    {char}
-                                                </motion.span>
-                                            );
-                                        })}
-                                    </span>
-                                );
-                            })}
-                            {' '}
+                            {seg.text}
                         </span>
-                    );
-                })}
-            </p>
+                        {' '}
+                    </React.Fragment>
+                ))}
+            </motion.p>
         </motion.div>
     );
 };

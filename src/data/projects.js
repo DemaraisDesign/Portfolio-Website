@@ -27,7 +27,7 @@ export const PROJECTS = [
     img: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1774552010/secretsnip_1_nqzchf.png",
     heroImg: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1774401635/secretsnip_qhdqxo.png",
     heroContain: true,
-    desc: "A record of the visual, sonic, and dramaturgical development of a production that balances childlike wonder with the macabre, bridging the gap between candle-smoked folklore and modern psychological depth.",
+    desc: "Balancing surreal, dream-like wonder with the macabre, and bridging the gap between candle-smoked folklore and modern psychological depth.",
     type: "single",
   },
   {
@@ -37,7 +37,7 @@ export const PROJECTS = [
     discipline: "stage",
     themeColor: BRAND_COLORS.stageDeep,
     img: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1774553184/Sparrowsnip_1_ioaa9x.png",
-    desc: "A record of the visual, sonic, and dramaturgical development of my production, fusing small-town Midwestern grit with a bold graphic novel aesthetic to uncover the delicate balance between adolescent belonging and the heavy burden of guilt.",
+    desc: "Fusing small town, Midwestern idealism with a graphic novel aesthetic to explore the delicate balance between adolescent belonging and the heavy burden of guilt.",
     type: "single",
   },
   {
@@ -60,7 +60,7 @@ export const PROJECTS = [
     img: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1775787793/Gemini_Generated_Image_a05auxa05auxa05a_onqe8v.jpg",
     imgPosition: "center",
     heroImg: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1774401846/YB_Stages_ymktne.jpg",
-    desc: "A record of the visual, sonic, and dramaturgical development of my production, honoring the true story of a boy's beautiful imagination while navigating the heavy burden of his terminal illness through a vibrant, childlike lens.",
+    desc: "Honoring the true story of a boy's beautiful imagination while navigating the heavy burden of his terminal illness through a vibrant, childlike lens.",
     type: "single",
   },
   {
@@ -71,7 +71,7 @@ export const PROJECTS = [
     discipline: "stage",
     themeColor: BRAND_COLORS.stageDeep,
     img: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1775159592/Gemini_Generated_Image_c4ichjc4ichjc4ic_ovvkbt.jpg",
-    desc: "A record of the visual, sonic, and dramaturgical development of my production, fusing surreal minimalism with a childlike Theatre of Cruelty to explore the juxtaposition of the ruthlessness of youth with the purity and innocence of childhood love.",
+    desc: "Fusing surreal minimalism with a unique, childlike Theatre of Cruelty tone to explore the juxtaposition of the ruthlessness of youth with the innocence of childhood love.",
     type: "single",
   },
   {
@@ -94,7 +94,7 @@ export const PROJECTS = [
     discipline: "sound",
     themeColor: BRAND_COLORS.soundDeep,
     img: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1775161229/Gemini_Generated_Image_5ey5f65ey5f65ey5_1_or2k8e.png",
-    desc: "A record of the sonic development of a series of fully produced audio dramas. Four classic horror stories commissioned and recorded during the isolation of Covid lockdowns, when sound and voice had to conjure every world.",
+    desc: "Four classic horror stories commissioned and recorded during the isolation of Covid lockdowns, when sound and voice had to conjure every world.",
     type: "single",
   },
   {
@@ -104,7 +104,7 @@ export const PROJECTS = [
     discipline: "sound",
     themeColor: BRAND_COLORS.soundDeep,
     img: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1775163338/Gemini_Generated_Image_bmp8vubmp8vubmp8_afdoky.jpg",
-    desc: "A record of the sonic development of an Emmy nominated film adaptation of Dickens' classic. A one-man production in which sound design had to conjure Victorian London, three ghosts, and the emotional weight of a story told by a single performer.",
+    desc: "A record of the sonic development of an Emmy nominated film adaptation of Dickens' classic.",
     type: "single",
   },
   {
@@ -115,7 +115,7 @@ export const PROJECTS = [
     discipline: "sound",
     themeColor: BRAND_COLORS.soundDeep,
     img: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1775159964/higherlcaousel_pcipy4.png",
-    desc: "Interactive audio implementation using GMetri, a web-based tool for immersive and interactive content. Reached 700k+ students across New York and Florida.",
+    desc: "Interactive audio design for GMetri, a web-based tool for immersive and interactive content. Reached 700k+ students across New York and Florida.",
     type: "single",
   },
   {
@@ -126,7 +126,7 @@ export const PROJECTS = [
     discipline: "sound",
     themeColor: BRAND_COLORS.soundDeep,
     img: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1775162827/Gemini_Generated_Image_cjt6l4cjt6l4cjt6_jbbgp0.jpg",
-    desc: "A record of the sonic development of a meditative creation myth. Three scientists on a dying polar plain, constructing and deconstructing the systems of gender, faith, and time itself, while the world thaws around them.",
+    desc: "Three scientists on a dying polar plain, constructing and deconstructing the systems of gender, faith, and time itself, while the world thaws around them.",
     type: "single",
   },
   {
@@ -136,7 +136,7 @@ export const PROJECTS = [
     discipline: "sound",
     themeColor: BRAND_COLORS.soundDeep,
     img: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1775158384/Gemini_Generated_Image_3iecg93iecg93iec_gr3usg.jpg",
-    desc: "Drawn almost entirely from nature, the landscape itself supports the emotional weight of the story through touches of music and metaphor.",
+    desc: "Drawn almost entirely from nature, the landscape itself supports the emotional weight of this subtle dystopian story through touches of music and metaphor.",
     type: "single",
   },
   {
@@ -147,7 +147,7 @@ export const PROJECTS = [
     discipline: "sound",
     themeColor: BRAND_COLORS.soundDeep,
     img: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1775165440/Gemini_Generated_Image_ymlnahymlnahymln_viquel.jpg",
-    desc: "A record of the sonic development of a production that begins before dawn and ends at dusk. Dylan Thomas's \"play for voices\" builds a complete world that leans heavily on language and sound, one that lives equally in dreams and in the waking life of a small town by the sea.",
+    desc: "Dylan Thomas's \"play for voices\" builds a complete world that leans heavily on language and sound, one that lives equally in dreams and in the waking life of a small town by the sea.",
     type: "single",
   },
   {
@@ -157,7 +157,7 @@ export const PROJECTS = [
     discipline: "sound",
     themeColor: BRAND_COLORS.soundDeep,
     img: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1775162375/Gemini_Generated_Image_p9xsqdp9xsqdp9xs_1_a4lsop.png",
-    desc: "A record of the sonic development of a production that bridges the painful reality of grief and the fantastical realm of the imagination — finding the emotional truth underneath the monsters, the magic, and the 80's/90s nostalgia.",
+    desc: "A show that bridges the painful reality of grief and the fantastical realm of the imagination — finding the emotional truth underneath the monsters, the magic, and the 80's/90s nostalgia.",
     type: "single",
   },
   {
@@ -168,7 +168,7 @@ export const PROJECTS = [
     discipline: "sound",
     themeColor: BRAND_COLORS.soundDeep,
     img: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1775186682/nomad_j6cl80.png",
-    desc: "Nine different radio plays based at specific coordinates around Los Angeles, using existing locations as inspiration. The fully produced aural stories were recorded during the Covid 19 lockdowns.",
+    desc: "Nine different radio plays based at specific coordinates around Los Angeles, fully produced and recorded in isoloation during the Covid 19 lockdowns.",
     type: "single",
   },
 

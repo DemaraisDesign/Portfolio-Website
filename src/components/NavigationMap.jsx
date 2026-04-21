@@ -1184,26 +1184,28 @@ const ExpansionContent = ({ pData, isTop, liveX, liveY, r, boxLeft, boxTop, boxW
                     {pwSuccess ? 'Welcome In' : cStatus === 'success' ? "You're on the list!" : title}
                 </h3>
 
-                {/* Context blurb for gated states */}
-                {isUnderConstruction && cStatus !== 'success' && (
-                    <p style={{
-                        fontFamily: '"Outfit", sans-serif', fontSize: 12, color: 'rgba(255,255,255,0.75)',
-                        lineHeight: 1.4, margin: 0, padding: '0 4px',
-                    }}>
-                        Leave your info...I'll prioritize it and let you know when it's live.
-                    </p>
-                )}
-                {isLocked && !pwSuccess && (
-                    <p style={{
-                        fontFamily: '"Outfit", sans-serif', fontSize: 12, color: 'rgba(255,255,255,0.75)',
-                        lineHeight: 1.4, margin: 0, padding: '0 4px',
-                    }}>
-                        Enter the password to view this case study.
-                    </p>
-                )}
+                {/* Interactive Actions & Blurbs */}
+                <div style={{ marginTop: 4, width: '100%', maxWidth: 240, display: 'flex', flexDirection: 'column', gap: 12 }}>
+                    
+                    {/* Context blurb for gated states */}
+                    {isUnderConstruction && cStatus !== 'success' && (
+                        <p style={{
+                            fontFamily: '"Outfit", sans-serif', fontSize: 12, color: 'rgba(255,255,255,0.75)',
+                            lineHeight: 1.4, margin: 0, padding: '0 4px',
+                        }}>
+                            Leave your info...I'll prioritize it and let you know when it's live.
+                        </p>
+                    )}
+                    {isLocked && !pwSuccess && (
+                        <p style={{
+                            fontFamily: '"Outfit", sans-serif', fontSize: 12, color: 'rgba(255,255,255,0.75)',
+                            lineHeight: 1.4, margin: 0, padding: '0 4px',
+                        }}>
+                            Enter the password to view this case study.
+                        </p>
+                    )}
 
-                {/* Interactive Actions */}
-                <div style={{ marginTop: 4, width: '100%', maxWidth: 240 }}>
+                    {/* Forms / Buttons */}
                     {isAvailable ? (
                         /* ── VIEW CASE STUDY ── */
                         <button

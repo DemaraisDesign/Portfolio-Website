@@ -13,7 +13,7 @@ const STATEMENT_DATA = [
     {
         segments: [
             { text: "The work I make is " },
-            { text: "lean and highly theatrical", highlight: true },
+            { text: "efficient and theatrical", highlight: true },
             { text: ", with sound and light carrying as much narrative weight as text." }
         ]
     },

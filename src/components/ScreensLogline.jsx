@@ -5,7 +5,7 @@ import { BRAND_COLORS } from '../utils/theme';
 const STATEMENT_DATA = [
     {
         segments: [
-            { text: "Good design strips away anything that isn't " },
+            { text: "I believe that good design strips away anything that isn't " },
             { text: "earning its place", highlight: true },
             { text: " and trusts that what's left will work harder." }
         ]
@@ -19,8 +19,8 @@ const STATEMENT_DATA = [
     },
     {
         segments: [
-            { text: "My process keeps changing — most recently because AI is " },
-            { text: "reducing the distance", highlight: true },
+            { text: "My process keeps changing as emerging technologies " },
+            { text: "reduce the distance", highlight: true },
             { text: " between what I can imagine and what I can build." }
         ]
     }

@@ -6,9 +6,9 @@ import { audio } from '../utils/AudioEngine';
 const STATEMENT_DATA = [
     {
         segments: [
-            { text: "I read scripts through the " },
-            { text: "lens of an actor and a director", highlight: true },
-            { text: " long before I start thinking about sound." }
+            { text: "I do the dramaturgy long before I " },
+            { text: "design the sound", highlight: true },
+            { text: "." }
         ]
     },
     {

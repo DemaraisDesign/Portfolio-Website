@@ -104,7 +104,7 @@ export const PROJECTS = [
     discipline: "sound",
     themeColor: BRAND_COLORS.soundDeep,
     img: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1775163338/Gemini_Generated_Image_bmp8vubmp8vubmp8_afdoky.jpg",
-    desc: "A record of the sonic development of an Emmy nominated film adaptation of Dickens' classic.",
+    desc: "The sonic development of a one-man, Emmy nominated film adaptation of Dickens' classic.",
     type: "single",
   },
   {

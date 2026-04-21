@@ -352,7 +352,7 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
 
     const isSmallMobile = w <= 430 || h <= 430;
     const isLandscapePhone = w > h && h < 500 && w < 1280;
-    const isSuperShortDesktop = h <= 550 && w >= 1280;
+    const isSuperShortDesktop = h < 600 && w >= 1280;
 
     const SIZES = {
         home: (focusedId || (isLaunched && w < 1280)) ? 60 : (isLaunched && w >= 1280 ? 55 : 110),
@@ -1291,7 +1291,7 @@ export default function NavigationMap({ closeMenu }) {
     };
 
     const isShortDesktop = viewport.h < 680 && viewport.w >= 1280;
-    const isSuperShortDesktop = viewport.h <= 550 && viewport.w >= 1280;
+    const isSuperShortDesktop = viewport.h < 600 && viewport.w >= 1280;
     const isLandscapePhone = viewport.w > viewport.h && viewport.h < 500 && viewport.w < 1280;
 
     // Auto-close the mobile case study expansion when resizing to desktop

@@ -53,7 +53,7 @@ const DemaraisLogo = ({ className = "", textColor = "", forceWhiteDots = false, 
     <motion.div
       className={`flex items-center ${className}`}
       style={{ gap: s.containerGap }}
-      aria-label="Demarais Design Logo"
+      aria-label="Joseph Demarais Logo"
       variants={animateEntrance ? containerVariants : {}}
       initial={animateEntrance ? "hidden" : "visible"}
       animate={animateEntrance ? "visible" : "visible"}
@@ -83,7 +83,7 @@ const DemaraisLogo = ({ className = "", textColor = "", forceWhiteDots = false, 
         variants={animateEntrance ? textVariant : {}}
         className={`font-outfit font-light ${s.text} tracking-[0.04em] uppercase leading-none ${finalTextColor} transition-colors duration-300`}
       >
-        DEMARAIS DESIGN
+        JOSEPH DEMARAIS
       </motion.div>
     </motion.div>
   );

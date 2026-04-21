@@ -1181,6 +1181,24 @@ const ExpansionContent = ({ pData, isTop, liveX, liveY, r, boxLeft, boxTop, boxW
                     {pwSuccess ? 'Welcome In' : cStatus === 'success' ? "You're on the list!" : title}
                 </h3>
 
+                {/* Context blurb for gated states */}
+                {isUnderConstruction && cStatus !== 'success' && (
+                    <p style={{
+                        fontFamily: '"Outfit", sans-serif', fontSize: 12, color: 'rgba(255,255,255,0.5)',
+                        lineHeight: 1.4, margin: 0, padding: '0 4px',
+                    }}>
+                        Under construction. Leave your info and I'll let you know when it's live.
+                    </p>
+                )}
+                {isLocked && !pwSuccess && (
+                    <p style={{
+                        fontFamily: '"Outfit", sans-serif', fontSize: 12, color: 'rgba(255,255,255,0.5)',
+                        lineHeight: 1.4, margin: 0, padding: '0 4px',
+                    }}>
+                        Enter the password to view this case study.
+                    </p>
+                )}
+
                 {/* Interactive Actions */}
                 <div style={{ marginTop: 4, width: '100%', maxWidth: 240 }}>
                     {isAvailable ? (

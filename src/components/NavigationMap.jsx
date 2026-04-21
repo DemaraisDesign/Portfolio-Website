@@ -1114,12 +1114,12 @@ const ExpansionContent = ({ pData, isTop, liveX, liveY, r, boxLeft, boxTop, boxW
     };
     const inputErrorStyle = { ...inputStyle, borderColor: '#ef4444' };
 
-    const ghostBtnStyle = {
+    const brandBtnStyle = {
         width: '100%', padding: '10px 16px', fontSize: 12, fontWeight: 700,
         fontFamily: '"Outfit", sans-serif', textTransform: 'uppercase', letterSpacing: '0.08em',
-        color: '#ffffff', backgroundColor: 'rgba(255,255,255,0.12)',
-        border: '1px solid rgba(255,255,255,0.2)', borderRadius: 10,
-        cursor: 'pointer', transition: 'transform 0.15s, background-color 0.2s',
+        color: '#ffffff', backgroundColor: pData.color,
+        border: 'none', borderRadius: 10,
+        cursor: 'pointer', transition: 'transform 0.15s, opacity 0.2s',
         display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
     };
 
@@ -1208,7 +1208,7 @@ const ExpansionContent = ({ pData, isTop, liveX, liveY, r, boxLeft, boxTop, boxW
                             style={{
                                 width: '100%', padding: '11px 20px', fontSize: 12, fontWeight: 700,
                                 fontFamily: '"Outfit", sans-serif', textTransform: 'uppercase', letterSpacing: '0.08em',
-                                color: pData.deepColor || THEME.dark, backgroundColor: '#ffffff',
+                                color: '#ffffff', backgroundColor: pData.color,
                                 border: 'none', borderRadius: 10, cursor: 'pointer',
                                 transition: 'transform 0.15s', display: 'flex', alignItems: 'center',
                                 justifyContent: 'center', gap: 8,
@@ -1243,7 +1243,7 @@ const ExpansionContent = ({ pData, isTop, liveX, liveY, r, boxLeft, boxTop, boxW
                                     onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.25)'}
                                 />
                                 <button type="submit" disabled={cStatus === 'sending'} style={{
-                                    ...ghostBtnStyle,
+                                    ...brandBtnStyle,
                                     opacity: cStatus === 'sending' ? 0.6 : 1,
                                     cursor: cStatus === 'sending' ? 'not-allowed' : 'pointer',
                                 }}>
@@ -1275,7 +1275,7 @@ const ExpansionContent = ({ pData, isTop, liveX, liveY, r, boxLeft, boxTop, boxW
                                         Incorrect password.
                                     </motion.p>
                                 )}
-                                <button type="submit" style={ghostBtnStyle}>
+                                <button type="submit" style={brandBtnStyle}>
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                         <path d="M7 10V7a5 5 0 0 1 10 0v3" fill="none" />
                                         <rect x="3" y="10" width="18" height="12" rx="2" fill="currentColor" stroke="none" />

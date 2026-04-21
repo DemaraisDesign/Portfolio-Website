@@ -1133,7 +1133,7 @@ const ExpansionContent = ({ pData, isTop, liveX, liveY, r, boxLeft, boxTop, boxW
                 style={{
                     position: 'absolute', top: contentTop, left: contentPadding, right: contentPadding,
                     height: contentHeight, display: 'flex', flexDirection: 'column',
-                    alignItems: 'center', justifyContent: 'flex-start', paddingTop: Math.max(12, contentHeight * 0.18), gap: 8,
+                    alignItems: 'center', justifyContent: 'center', paddingBottom: contentHeight * 0.15, gap: 8,
                     textAlign: 'center', pointerEvents: 'auto',
                 }}
             >

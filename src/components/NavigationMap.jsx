@@ -1190,7 +1190,7 @@ const ExpansionContent = ({ pData, isTop, liveX, liveY, r, boxLeft, boxTop, boxW
                         fontFamily: '"Outfit", sans-serif', fontSize: 12, color: 'rgba(255,255,255,0.75)',
                         lineHeight: 1.4, margin: 0, padding: '0 4px',
                     }}>
-                        Under construction. Leave your info and I'll let you know when it's live.
+                        Leave your info...I'll prioritize it and let you know when it's live.
                     </p>
                 )}
                 {isLocked && !pwSuccess && (

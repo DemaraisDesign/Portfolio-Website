@@ -1135,8 +1135,10 @@ const ExpansionContent = ({ pData, isTop, liveX, liveY, r, boxLeft, boxTop, boxW
                 style={{
                     position: 'absolute', top: contentTop, left: contentPadding, right: contentPadding,
                     height: contentHeight, display: 'flex', flexDirection: 'column',
-                    alignItems: 'center', justifyContent: 'center', paddingBottom: contentHeight * 0.15, gap: 8,
-                    textAlign: 'center', pointerEvents: 'auto',
+                    alignItems: 'center', justifyContent: 'center', 
+                    paddingBottom: isTop ? contentHeight * 0.15 : 0, 
+                    paddingTop: !isTop ? contentHeight * 0.10 : 0, 
+                    gap: 8, textAlign: 'center', pointerEvents: 'auto',
                 }}
             >
                 {/* Status Icon */}

@@ -322,8 +322,8 @@ const SECTIONS = [
         id: "lab", label: "Explorations", desc: "Thoughts on AI", color: THEME.orange, deep: THEME.deep.exp, light: THEME.lightShade.exp, dark: THEME.darkShade.exp,
         icon: ExperimentsIcon, quadrant: "br", link: "/explorations",
         children: [
-            { id: "ui-prototypes", label: "Prototypes", desc: '"Vibe" Coding', img: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1775591695/markus-spiske-hbb6GkG6p9M-unsplash_ycfhze.jpg", imgScale: 1.1 },
             { id: "redesigns", label: "Redesigns & Concepts", desc: "game audio", img: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1775492599/Screenshot_2026-04-06_at_9.50.34_AM_yqtrep.png" },
+            { id: "ui-prototypes", label: "Prototypes", desc: '"Vibe" Coding', img: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1775591695/markus-spiske-hbb6GkG6p9M-unsplash_ycfhze.jpg", imgScale: 1.1 },
             { id: "surrija", label: "Project Surrija", desc: "XR Concept", img: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1775585447/Gemini_Generated_Image_90up1q90up1q90up_mqrrl4.jpg" },
             { id: "ai-media", label: "Images, Video & Music", desc: "Media Experiments", img: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1776473055/tj2_fkyibp.png" },
         ],
@@ -369,7 +369,8 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
 
     // The bounding box is bottom-heavy due to text, but visual weight is in the circles.
     // cy - 60 was too high (clipping). cy was too low. cy - 30 splits the difference mathematically.
-    const visualCenterY = w < 768 ? cy + 32 : cy;
+    // Shifted up by 16px on w < 1280 to raise the cluster to meet tightened descriptor gaps natively.
+    const visualCenterY = w < 1280 ? (w < 768 ? cy + 16 : cy - 16) : cy;
 
     const origDx = w < 768 ? Math.max(90, w * 0.22) : Math.max(250, w * 0.35); // Pulled back out slightly
     const newDy = w < 768 ? Math.max(140, h * 0.21) : Math.max(180, h * 0.22);
@@ -846,7 +847,15 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                                 opacity: 0.9
                             }}>
                                 {labelData?.forceSearchIcon ? (
-                                    <Search color={iconColor || "white"} strokeWidth={2.5} style={{ width: '35%', height: '35%' }} />
+                                    <div style={{
+                                        width: '45%', height: '45%', borderRadius: '50%',
+                                        backgroundColor: ringColor || iconColor || THEME.dark,
+                                        border: 'none',
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                                    }}>
+                                        <Search color="white" strokeWidth={2.5} style={{ width: '55%', height: '55%' }} />
+                                    </div>
                                 ) : getProject(labelData.projectId)?.isConstruction ? (
                                     <svg style={{ width: '35%', height: '35%', opacity: 1 }} viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
                                         <circle cx="12" cy="12" r="10" fill="white" stroke="none" />
@@ -877,24 +886,56 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                     </div>
                 )}
             </motion.div>
-
-            {/* Incoming: new petal flies to section icon center and parks */}
+            {/* Solid Hole Mask: Permanently opaque circle to prevent animated Section icons bleeding through crossfades */}
             <AnimatePresence>
                 {parkedData && (
                     <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1, transition: { duration: 0.2, delay: 0.1 } }}
+                        exit={{ opacity: 0, transition: { duration: 0.2 } }}
+                        style={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            width: size + 20,
+                            height: size + 20,
+                            marginTop: -(size + 20) / 2,
+                            marginLeft: -(size + 20) / 2,
+                            borderRadius: '50%',
+                            backgroundColor: THEME.light,
+                            zIndex: 190,
+                            pointerEvents: 'none'
+                        }}
+                    />
+                )}
+            </AnimatePresence>
+
+            {/* Incoming: new petal flies to section icon center and parks */}
+            <AnimatePresence mode="wait">
+                {parkedData && (
+                    <motion.div
                         key={`petal-in-${parkedData.id}`}
-                        initial={{
+                        initial={parkedData.isCycling ? {
+                            opacity: 0, scale: 0.95, x: 0, y: 0, boxShadow: `0 0 0 10px ${THEME.light}`
+                        } : {
                             x: parkedData.startX - x,
                             y: parkedData.startY - y,
                             scale: parkedData.startSize / size,
+                            opacity: 0,
                             boxShadow: `0 0 0 0px ${THEME.light}`
                         }}
                         animate={{ 
-                            x: 0, y: 0, scale: 1, 
+                            x: 0, y: 0, scale: 1, opacity: 1,
                             boxShadow: `0 0 0 10px ${THEME.light}` 
                         }}
-                        transition={{ 
+                        exit={{ 
+                            opacity: 0, 
+                            scale: 0.95, 
+                            transition: { duration: 0.15, ease: "easeIn" } 
+                        }}
+                        transition={parkedData.isCycling ? { duration: 0.25, ease: "easeOut" } : { 
                             default: { type: 'spring', stiffness: 260, damping: 16, mass: 0.9, delay: 0.15 },
+                            opacity: { duration: 0.15, ease: "linear" },
                             boxShadow: { delay: 0.6, duration: 0.15, ease: "easeOut" }
                         }}
                         style={{
@@ -972,6 +1013,172 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
 
 
 // ═══════════════════════════════════════════════════
+//  INDICATOR STRIP COMPONENT
+// ═══════════════════════════════════════════════════
+const IndicatorStrip = ({ pData, handleCycleToChild, boxLeft, boxWidth, boxHeight, boxTop, theTheme }) => {
+    const sec = SECTIONS.find(s => s.id === pData.sectionId);
+    if (!sec) return null;
+
+    const children = sec.children;
+    const currentIdx = children.findIndex(c => c.id === pData.id);
+    const isLeftCol  = pData.quadrant.includes('l');
+
+    const dotD = 14;
+    const safeUsableHeight = boxHeight - 96;
+    const dotStep = Math.max(20, Math.floor((safeUsableHeight - dotD) / 8));
+    const stripH  = (children.length - 1) * dotStep + dotD;
+    const firstDotY = boxTop + boxHeight / 2 - stripH / 2 + dotD / 2;
+
+    const arrowX = isLeftCol ? boxLeft : boxLeft + boxWidth;
+    const dotX   = isLeftCol ? boxLeft - 26 : boxLeft + boxWidth + 26;
+
+    // Local visual state for smooth magnetic dragging 
+    const [dragging, setDragging] = useState(false);
+    const [dragY, setDragY] = useState(firstDotY + currentIdx * dotStep);
+    const dragStartY  = useRef(null);
+    const hasDragged  = useRef(false);
+
+    // Provide a magnetic pull radius
+    const magnetRadius = 14;
+
+    // Follow parent state when not dragging
+    useEffect(() => {
+        if (!dragging) setDragY(firstDotY + currentIdx * dotStep);
+    }, [currentIdx, dragging, firstDotY, dotStep]);
+
+    const handlePointerDown = (e) => {
+        hasDragged.current = false;
+        setDragging(true);
+        // Start tracking relative offset to prevent jumps if the mouse didn't land exactly on the arrow 
+        dragStartY.current = e.clientY - dragY;
+        e.currentTarget.setPointerCapture(e.pointerId);
+        e.stopPropagation();
+    };
+
+    const handlePointerMove = (e) => {
+        if (!dragging || dragStartY.current === null) return;
+        
+        let targetY = e.clientY - dragStartY.current;
+        if (Math.abs(e.clientY - (dragStartY.current + dragY)) > 4) hasDragged.current = true;
+
+        // Strip constraints
+        const minTop = firstDotY;
+        const maxBottom = firstDotY + (children.length - 1) * dotStep;
+        targetY = Math.max(minTop, Math.min(maxBottom, targetY));
+
+        // Magnetic physics: gently warp cursor coordinates towards the nearest dot
+        const closestIdx = Math.max(0, Math.min(children.length - 1, Math.round((targetY - firstDotY) / dotStep)));
+        const closestDotY = firstDotY + closestIdx * dotStep;
+        
+        const dist = targetY - closestDotY;
+        let RenderedY = targetY;
+        let isWithinMagnet = false;
+
+        // If very close to a dot, dynamically magnetize towards it. It's a continuous, smooth stickiness.
+        if (Math.abs(dist) < magnetRadius) {
+            RenderedY = closestDotY + (dist * 0.4); 
+            isWithinMagnet = true;
+        }
+
+        setDragY(RenderedY);
+
+        // ONLY update case study when physically "landing" or sticking to a new dot
+        // NOT when the arrow is floating in between circles
+        if (isWithinMagnet && closestIdx !== currentIdx) {
+            handleCycleToChild(pData.sectionId, closestIdx);
+        }
+    };
+
+    const handlePointerUp = (e) => {
+        if (!dragging) return;
+        e.currentTarget.releasePointerCapture(e.pointerId);
+        setDragging(false);
+        dragStartY.current = null;
+        // On release, useEffect will automatically spring the arrow exactly to the active dot. 
+    };
+
+    const handleArrowClick = (e) => {
+        e.stopPropagation();
+        if (hasDragged.current) { hasDragged.current = false; return; }
+        const nextIdx = (currentIdx + 1) % children.length;
+        handleCycleToChild(pData.sectionId, nextIdx);
+    };
+
+    return (
+        <>
+            {/* Arrow — position driven by local activeVisualIdx */}
+            <motion.div
+                key={`arr-${pData.sectionId}`}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ opacity: { delay: 1.15, duration: 0.3 } }}
+                onPointerDown={handlePointerDown}
+                onPointerMove={handlePointerMove}
+                onPointerUp={handlePointerUp}
+                onClick={handleArrowClick}
+                style={{
+                    position: 'absolute',
+                    left: arrowX,
+                    top: dragY,
+                    // Reduced spring bounce (from 1.56 to 1.15) for a slightly tighter, slightly faster snap.
+                    transition: dragging ? 'none' : 'top 0.35s cubic-bezier(0.34, 1.15, 0.64, 1)',
+                    transform: isLeftCol ? 'translate(0%, -50%)' : 'translate(-100%, -50%)',
+                    zIndex: 27,
+                    cursor: dragging ? 'grabbing' : 'grab',
+                    pointerEvents: 'auto',
+                    touchAction: 'none',
+                    display: 'flex', alignItems: 'center',
+                    userSelect: 'none',
+                }}
+            >
+                <svg width="16" height="22" viewBox="0 0 16 22" overflow="visible">
+                    <polygon
+                        points={isLeftCol ? "14,2 14,20 2,11" : "2,2 2,20 14,11"}
+                        fill={theTheme.light}
+                        stroke={theTheme.light}
+                        strokeWidth="4"
+                        strokeLinejoin="round"
+                        strokeLinecap="round"
+                    />
+                </svg>
+            </motion.div>
+
+            {/* Dot indicators — color tied to REAL currentIdx, not visual */}
+            {children.map((child, idx) => {
+                const isActive = idx === currentIdx;
+                return (
+                    <motion.div
+                        key={`iDot-${child.id}`}
+                        initial={{ opacity: 0, scale: 0 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0 }}
+                        transition={{ opacity: { delay: 1.1 + idx * 0.05, duration: 0.3 }, scale: { duration: 0.2 } }}
+                        onClick={() => { if (!dragging) handleCycleToChild(pData.sectionId, idx); }}
+                        style={{
+                            position: 'absolute',
+                            left: dotX,
+                            top: firstDotY + idx * dotStep,
+                            marginLeft: -dotD / 2,
+                            marginTop:  -dotD / 2,
+                            width: dotD, height: dotD,
+                            borderRadius: '50%',
+                            backgroundColor: isActive ? sec.color : 'rgba(13, 18, 22, 0.2)',
+                            zIndex: 27,
+                            cursor: 'pointer',
+                            pointerEvents: 'auto',
+                            touchAction: 'none',
+                            transition: 'background-color 0.25s ease',
+                        }}
+                    />
+                );
+            })}
+        </>
+    );
+};
+
+
+// ═══════════════════════════════════════════════════
 //  MAIN COMPONENT
 // ═══════════════════════════════════════════════════
 export default function NavigationMap({ closeMenu }) {
@@ -983,6 +1190,8 @@ export default function NavigationMap({ closeMenu }) {
     const [parkedPetalData, setParkedPetalData] = useState(null);   // petal currently parked over section icon
     const [outgoingPetalData, setOutgoingPetalData] = useState(null); // petal springing back to fan
     const [skipExitAnim, setSkipExitAnim] = useState(false);
+    const indicatorDragStartY   = useRef(null);
+    const indicatorDragStartIdx = useRef(null);
 
     const isLaunched = animPhase >= 1;
     const isSettled = animPhase >= 2;
@@ -1050,7 +1259,7 @@ export default function NavigationMap({ closeMenu }) {
     };
 
     // Mobile-only: fly new petal forward AND reverse old one simultaneously
-    const handleMobilePetalClick = (sp, sec) => {
+    const handleMobilePetalClick = (sp, sec, originX, originY) => {
         if (parkedPetalData?.id === sp.id) return; // already parked here
 
         // Kick the currently parked petal back to its fan position (runs in parallel)
@@ -1063,10 +1272,21 @@ export default function NavigationMap({ closeMenu }) {
             sectionLabel: sec.label,
             quadrant: sec.quadrant,
             deepColor: sec.dark || sec.color,
-            startX: sp.x, startY: sp.y, startSize: sp.size,
+            startX: originX !== undefined ? originX : sp.x, 
+            startY: originY !== undefined ? originY : sp.y, 
+            startSize: sp.size,
             targetX: sec.x, targetY: sec.y, targetSize: sec.size,
-            img: sp.img, color: sp.color || sec.color
+            img: sp.img, color: sec.color, midColor: sec.deep
         });
+    };
+
+    // Cycle to a specific child within the open section — no fly-back, just crossfades the image.
+    const handleCycleToChild = (sectionId, childIdx) => {
+        const sec = SECTIONS.find(s => s.id === sectionId);
+        if (!sec || !parkedPetalData) return;
+        const child = sec.children[childIdx];
+        if (!child || child.id === parkedPetalData.id) return;
+        setParkedPetalData(prev => ({ ...prev, id: child.id, img: child.img }));
     };
 
     const isShortDesktop = viewport.h < 680 && viewport.w >= 1280;
@@ -1210,14 +1430,18 @@ export default function NavigationMap({ closeMenu }) {
                 {outgoingPetalData && viewport.w < 1280 && (
                     <motion.div
                         key={`petal-out-${outgoingPetalData.id}`}
-                        initial={{ x: 0, y: 0, scale: 1 }}
+                        initial={{ x: 0, y: 0, scale: 1, opacity: 1 }}
                         animate={{
                             x: outgoingPetalData.startX - outgoingPetalData.targetX,
                             y: outgoingPetalData.startY - outgoingPetalData.targetY,
                             scale: outgoingPetalData.startSize / outgoingPetalData.targetSize,
+                            opacity: 0,
                         }}
                         onAnimationComplete={() => setOutgoingPetalData(null)}
-                        transition={{ type: 'spring', stiffness: 260, damping: 16, mass: 0.9 }}
+                        transition={{ 
+                            default: { type: 'spring', stiffness: 260, damping: 16, mass: 0.9 },
+                            opacity: { duration: 0.15, delay: 0.45, ease: "easeOut" }
+                        }}
                         style={{
                             position: 'absolute',
                             top: outgoingPetalData.targetY,
@@ -1309,11 +1533,10 @@ export default function NavigationMap({ closeMenu }) {
                                     <>
                                         {/* Main Dark Expansion Background */}
                                         <motion.div
-                                            key={`expansion-${pData.id}`}
+                                            key={`expansion-${pData.sectionId}`}
                                             initial={{ opacity: 0, scale: 0.95 }}
-                                            animate={{ opacity: 1, scale: 1 }}
-                                            exit={{ opacity: 0, scale: skipExitAnim ? 1 : 0.95 }}
-                                            transition={{ duration: skipExitAnim ? 0 : 0.4, ease: "easeOut", delay: skipExitAnim ? 0 : 0.85 }}
+                                            animate={{ opacity: 1, scale: 1, transition: { duration: 0.4, ease: "easeOut", delay: 0.85 } }}
+                                            exit={{ opacity: 0, scale: skipExitAnim ? 1 : 0.95, transition: { duration: skipExitAnim ? 0 : 0.2, ease: "easeOut", delay: 0 } }}
                                             style={{
                                                 position: 'absolute',
                                                 top: boxTop,
@@ -1326,6 +1549,7 @@ export default function NavigationMap({ closeMenu }) {
                                                 pointerEvents: 'auto', // block touches behind it
                                             }}
                                         />
+                                        {/* Solid Hole Mask moved directly into Node component to resolve z-index stacking constraints */}
 
                                         {/* Context Label — 18px from active circle outline; right-col is right-aligned */}
                                         {(() => {
@@ -1344,21 +1568,20 @@ export default function NavigationMap({ closeMenu }) {
                                             const singleLine = `${pData.sectionLabel}: Selected Work`;
                                             const fitsOnOneLine = singleLine.length * 9 <= availableWidth;
                                             const blockHeight = fitsOnOneLine ? 16 : 36;
-                                            const labelMarginTop = isTop ? -(blockHeight + 10) : r + 10;
+                                            const labelMarginTop = isTop ? -(blockHeight + 10) : 10;
 
                                             return (
                                                 <motion.div
-                                                    key={`label-${pData.id}`}
+                                                    key={`label-${pData.sectionId}`}
                                                     initial={{ opacity: 0 }}
-                                                    animate={{ opacity: 1 }}
-                                                    exit={{ opacity: 0 }}
-                                                    transition={{ duration: skipExitAnim ? 0 : 0.4, ease: 'easeOut', delay: skipExitAnim ? 0 : 1.1 }}
+                                                    animate={{ opacity: 1, transition: { duration: 0.4, ease: "easeOut", delay: 1.1 } }}
+                                                    exit={{ opacity: 0, transition: { duration: skipExitAnim ? 0 : 0.2, ease: "easeOut", delay: 0 } }}
                                                     style={{
                                                         position: 'absolute',
                                                         top: labelTop,
                                                         marginTop: labelMarginTop,
                                                         left: textLeft,
-                                                        maxWidth: availableWidth,
+                                                        width: availableWidth,
                                                         textAlign,
                                                         fontFamily: '"Outfit", sans-serif',
                                                         fontSize: '13px',
@@ -1389,11 +1612,10 @@ export default function NavigationMap({ closeMenu }) {
 
                                         {/* Back Button Overlay */}
                                         <motion.button
-                                            key={`backBtn-${pData.id}`}
+                                            key={`backBtn-${pData.sectionId}`}
                                             initial={{ opacity: 0, scale: 0 }}
-                                            animate={{ opacity: 1, scale: 1 }}
-                                            exit={{ opacity: 0, scale: 0 }}
-                                            transition={{ duration: skipExitAnim ? 0 : 0.3, ease: 'backOut', delay: skipExitAnim ? 0 : 1.2 }}
+                                            animate={{ opacity: 1, scale: 1, transition: { duration: 0.4, ease: "backOut", delay: 1.2 } }}
+                                            exit={{ opacity: 0, scale: 0, transition: { duration: skipExitAnim ? 0 : 0.2, ease: "backOut", delay: skipExitAnim ? 0 : 0.15 } }}
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 audio.playHover();
@@ -1409,7 +1631,7 @@ export default function NavigationMap({ closeMenu }) {
                                                 width: btnRadius * 2,
                                                 height: btnRadius * 2,
                                                 borderRadius: '50%',
-                                                backgroundColor: THEME.purple,
+                                                backgroundColor: pData.color,
                                                 color: '#fff',
                                                 zIndex: 25,
                                                 display: 'flex',
@@ -1417,11 +1639,22 @@ export default function NavigationMap({ closeMenu }) {
                                                 justifyContent: 'center',
                                                 border: 'none',
                                                 cursor: 'pointer',
-                                                boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+                                                boxShadow: 'none'
                                             }}
                                         >
                                             <ArrowLeft size={24} strokeWidth={2.5} />
                                         </motion.button>
+
+                                        {/* ── Indicator Strip: dots + arrow for cycling case studies ── */}
+                                        <IndicatorStrip
+                                            pData={pData}
+                                            handleCycleToChild={handleCycleToChild}
+                                            boxLeft={boxLeft}
+                                            boxWidth={boxWidth}
+                                            boxHeight={boxHeight}
+                                            boxTop={boxTop}
+                                            theTheme={THEME}
+                                        />
                                     </>
                                 );
                             })()}
@@ -1437,7 +1670,7 @@ export default function NavigationMap({ closeMenu }) {
                             zIndex={100}
                             showIcon={isLaunched} useElastic={isLaunched}
                             isResizing={isResizing}
-                            overrideOpacity={parkedPetalData ? 0 : undefined}
+                            overrideOpacity={(parkedPetalData || outgoingPetalData) ? 0 : undefined}
                         />
 
                         {layout.sections.map((sec, secIdx) => (
@@ -1453,15 +1686,15 @@ export default function NavigationMap({ closeMenu }) {
                                     showIcon={isLaunched} useElastic={isLaunched}
                                     isResizing={isResizing} initialOpacity={1}
                                     disableAnimation={sec.isBg}
-                                    overrideOpacity={(parkedPetalData && parkedPetalData.sectionId !== sec.id) ? 0 : undefined}
+                                    overrideOpacity={((parkedPetalData && parkedPetalData.sectionId !== sec.id) || (outgoingPetalData && outgoingPetalData.sectionId !== sec.id)) ? 0 : undefined}
                                     labelData={{
                                         title: sec.label + (isLandscapePhone ? '' : ' Overview'),
                                         desc: isLandscapePhone ? null : sec.desc,
                                         subDesc: isLandscapePhone ? null : 'Selected work links',
                                         isCompact: isLandscapePhone,
-                                        show: showLabels && !parkedPetalData,
+                                        show: showLabels && !parkedPetalData && !outgoingPetalData,
                                         align: isLandscapePhone ? 'center' : (viewport.w < 1280 ? (sec.isFocused ? 'right' : 'top') : (isShortDesktop && sec.quadrant.includes('b') ? 'top' : 'center')),
-                                        mobileTopOffset: viewport.w < 1280 ? '-40px' : null
+                                        mobileTopOffset: viewport.w < 1280 ? '-24px' : null
                                     }}
                                     isShortViewport={isShortDesktop}
                                     noFlyTransition={sec.isFocused && isNoFly}
@@ -1510,8 +1743,8 @@ export default function NavigationMap({ closeMenu }) {
                                                     showIcon={isSettled && (sec.isFocused || isLargeUnfocused)} useElastic={isSettled}
                                                     isResizing={isResizing} isChild={true} initialOpacity={opacityMul}
                                                     isDimmed={!sec.isFocused && !isLargeUnfocused}
-                                                    overrideOpacity={parkedPetalData ? 0 : ((viewport.w < 1280 && !focusedId) ? 0.8 : undefined)}
-                                                    labelData={isLargeUnfocused ? { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: ((isShortDesktop || (viewport.w >= 768 && viewport.w < 1280)) && sec.quadrant.includes('b')) ? 'top' : 'center', img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: showLabels && !parkedPetalData, forceSearchIcon: false } : { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: (isShortDesktop && sec.quadrant.includes('b')) ? 'top' : (viewport.w < 1280 ? sp.alignLabel : sp.alignLabel), img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: (viewport.w < 1280 && !focusedId) ? false : (showLabels && !parkedPetalData), forceSearchIcon: viewport.w < 1280 && !focusedId }}
+                                                    overrideOpacity={((parkedPetalData || outgoingPetalData) || (viewport.w < 1280 && !focusedId)) ? 0 : undefined}
+                                                    labelData={isLargeUnfocused ? { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: ((isShortDesktop || (viewport.w >= 768 && viewport.w < 1280)) && sec.quadrant.includes('b')) ? 'top' : 'center', img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: showLabels && !parkedPetalData && !outgoingPetalData, forceSearchIcon: false } : { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: (isShortDesktop && sec.quadrant.includes('b')) ? 'top' : (viewport.w < 1280 ? sp.alignLabel : sp.alignLabel), img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: (viewport.w < 1280 && !focusedId) ? false : (showLabels && !parkedPetalData && !outgoingPetalData), forceSearchIcon: viewport.w < 1280 && !focusedId }}
                                                     isShortViewport={isShortDesktop || viewport.w < 1280}
                                                     noFlyTransition={isNoFly}
                                                     alwaysShowLabel={isLargeUnfocused && !(isShortDesktop || viewport.w < 1280)}
@@ -1545,6 +1778,128 @@ export default function NavigationMap({ closeMenu }) {
                                     })}
                                 </AnimatePresence>
 
+                                {/* Mobile fan view: "Selected Work" magnifying glass entry */}
+                                <AnimatePresence>
+                                {viewport.w < 1280 && !parkedPetalData && showLabels && !focusedId && (
+                                    <motion.div
+                                        key={`mag-wrapper-${sec.id}`}
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1, transition: { duration: 0.15, delay: outgoingPetalData ? 0.45 : 0 } }}
+                                        exit={{ opacity: 0, transition: { duration: 0.15 } }}
+                                        style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 20 }}
+                                    >
+                                        {(() => {
+                                            const isMobileOnly = viewport.w < 768;
+
+                                            if (isMobileOnly) {
+                                        // Cell Phone Layout: Row-spanning with connectors
+                                        const isLeft = sec.quadrant.includes('l');
+                                        const centerX = viewport.w / 2;
+                                        const badgeY = sec.y + sec.size / 2 + 30; // Spacing below the section circle
+                                        const badgeRadius = 16; // Bumped up by ~15%
+                                        const textOffset = 60; // Doubled visual gap distance from text edge
+                                        const padding = 2; // Tighter 2px gap matching original dot spacing
+                                        const dotRadius = 4; // Half of 8px
+                                        
+                                        const lineStart = isLeft ? sec.x + badgeRadius + padding : centerX + textOffset + dotRadius + padding;
+                                        const lineEnd = isLeft ? centerX - textOffset - dotRadius - padding : sec.x - badgeRadius - padding;
+                                        
+                                        // Don't draw the line if the math overlaps (e.g. on super narrow screens)
+                                        const lineWidth = Math.max(0, lineEnd - lineStart);
+
+                                        return (
+                                            <div key={`mag-${sec.id}`} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 20 }}>
+                                                {/* Badge */}
+                                                <div
+                                                    onClick={() => {
+                                                        const firstChild = sec.children[0];
+                                                        const liveSec = layout.sections.find(s => s.id === sec.id);
+                                                        const sp = liveSec?.subPetals.find(s => s.id === firstChild.id);
+                                                        if (sp && liveSec) handleMobilePetalClick(sp, liveSec, sec.x, badgeY);
+                                                    }}
+                                                    style={{
+                                                        position: 'absolute', left: sec.x, top: badgeY, transform: 'translate(-50%, -50%)',
+                                                        width: badgeRadius * 2, height: badgeRadius * 2, borderRadius: '50%',
+                                                        backgroundColor: sec.color,
+                                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                                        cursor: 'pointer', pointerEvents: 'auto'
+                                                    }}
+                                                >
+                                                    <Search size={16} strokeWidth={2.5} color="white" />
+                                                </div>
+
+                                                {/* Connector Line */}
+                                                {lineWidth > 0 && (
+                                                    <div style={{
+                                                        position: 'absolute', top: badgeY, left: lineStart, width: lineWidth, height: 2,
+                                                        backgroundColor: sec.color, opacity: 0.3, transform: 'translateY(-50%)'
+                                                    }} />
+                                                )}
+
+                                                {/* Dot - Using 8px dot sizing (identical to Animated Prehead on mobile) */}
+                                                <div style={{
+                                                    position: 'absolute', top: badgeY, left: isLeft ? centerX - textOffset : centerX + textOffset,
+                                                    transform: 'translate(-50%, -50%)',
+                                                    width: 8, height: 8, borderRadius: '50%', backgroundColor: sec.color
+                                                }} />
+
+                                                {/* Text - Rendered once per pair (on the left nodes) */}
+                                                {isLeft && (
+                                                    <span style={{
+                                                        position: 'absolute', top: badgeY, left: centerX, transform: 'translate(-50%, -50%)',
+                                                        fontSize: '12px', fontWeight: 800, letterSpacing: '0.05em',
+                                                        color: THEME.dark, fontFamily: '"Outfit", sans-serif'
+                                                    }}>
+                                                        Selected Work
+                                                    </span>
+                                                )}
+                                            </div>
+                                        );
+                                    } else {
+                                        // Tablet Layout: Maintain previous stacked logic under each section independent of rows
+                                        return (
+                                            <div
+                                                key={`mag-tablet-${sec.id}`}
+                                                onClick={() => {
+                                                    const firstChild = sec.children[0];
+                                                    const liveSec = layout.sections.find(s => s.id === sec.id);
+                                                    const sp = liveSec?.subPetals.find(s => s.id === firstChild.id);
+                                                    if (sp && liveSec) handleMobilePetalClick(sp, liveSec, sec.x, sec.y + sec.size / 2 + 18);
+                                                }}
+                                                style={{
+                                                    position: 'absolute',
+                                                    left: sec.x,
+                                                    top: sec.y + sec.size / 2 + 18, // Splitting the difference for balanced breathing room
+                                                    transform: 'translateX(-50%)',
+                                                    zIndex: 20,
+                                                    pointerEvents: 'auto',
+                                                    cursor: 'pointer',
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    alignItems: 'center',
+                                                    gap: '5px',
+                                                }}
+                                            >
+                                                <div style={{
+                                                    width: 32, height: 32, borderRadius: '50%',
+                                                    backgroundColor: sec.color,
+                                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                                }}>
+                                                    <Search size={16} strokeWidth={2.5} color="white" />
+                                                </div>
+                                                <span style={{
+                                                    fontSize: '12px', fontWeight: 800,
+                                                    letterSpacing: '0.05em',
+                                                    color: THEME.dark, whiteSpace: 'nowrap',
+                                                    fontFamily: '"Outfit", sans-serif',
+                                                }}>Selected Work</span>
+                                            </div>
+                                        );
+                                            }
+                                        })()}
+                                    </motion.div>
+                                )}
+                                </AnimatePresence>
 
                             </React.Fragment>
                         ))}

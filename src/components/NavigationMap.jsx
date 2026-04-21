@@ -919,7 +919,7 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                     <motion.div
                         key={`petal-in-${parkedData.id}`}
                         initial={parkedData.isCycling ? {
-                            opacity: 0, scale: 0.95, x: 0, y: 0, boxShadow: `0 0 0 10px ${THEME.light}`
+                            opacity: 0, scale: 1, x: 0, y: 0, boxShadow: `0 0 0 10px ${THEME.light}`
                         } : {
                             x: parkedData.startX - x,
                             y: parkedData.startY - y,
@@ -933,7 +933,6 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                         }}
                         exit={{ 
                             opacity: 0, 
-                            scale: 0.95, 
                             transition: { duration: 0.15, ease: "easeIn" } 
                         }}
                         transition={parkedData.isCycling ? { duration: 0.25, ease: "easeOut" } : { 

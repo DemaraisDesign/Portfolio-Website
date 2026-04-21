@@ -914,13 +914,11 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
             </AnimatePresence>
 
             {/* Incoming: new petal flies to section icon center and parks */}
-            <AnimatePresence mode="wait">
+            <AnimatePresence>
                 {parkedData && (
                     <motion.div
-                        key={`petal-in-${parkedData.id}`}
-                        initial={parkedData.isCycling ? {
-                            opacity: 0, scale: 1, x: 0, y: 0, boxShadow: `0 0 0 10px ${THEME.light}`
-                        } : {
+                        key="parked-petal-container"
+                        initial={{
                             x: parkedData.startX - x,
                             y: parkedData.startY - y,
                             scale: parkedData.startSize / size,
@@ -935,10 +933,11 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                             opacity: 0, 
                             transition: { duration: 0.15, ease: "easeIn" } 
                         }}
-                        transition={parkedData.isCycling ? { duration: 0.25, ease: "easeOut" } : { 
+                        transition={{ 
                             default: { type: 'spring', stiffness: 260, damping: 16, mass: 0.9, delay: 0.15 },
                             opacity: { duration: 0.15, ease: "linear" },
-                            boxShadow: { delay: 0.6, duration: 0.15, ease: "easeOut" }
+                            boxShadow: { delay: 0.6, duration: 0.15, ease: "easeOut" },
+                            backgroundColor: { duration: 0.3 }
                         }}
                         style={{
                             position: 'absolute',
@@ -949,14 +948,33 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                             marginTop: -size / 2,
                             marginLeft: -size / 2,
                             borderRadius: '50%',
-                            backgroundImage: parkedData.img ? `url(${parkedData.img})` : 'none',
-                            backgroundSize: 'cover',
-                            backgroundPosition: 'center',
                             backgroundColor: parkedData.color,
                             zIndex: 200,
                             pointerEvents: 'none',
+                            overflow: 'hidden'
                         }}
-                    />
+                    >
+                        <AnimatePresence mode="wait">
+                            {parkedData.img && (
+                                <motion.img
+                                    key={parkedData.id}
+                                    src={parkedData.img}
+                                    alt={parkedData.title || ''}
+                                    initial={{ opacity: parkedData.isCycling ? 0 : 1, scale: parkedData.isCycling ? 1.08 : 1 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    transition={{ duration: 0.35, ease: "easeOut" }}
+                                    style={{
+                                        display: 'block',
+                                        width: '100%',
+                                        height: '100%',
+                                        objectFit: 'cover',
+                                        objectPosition: parkedData.imgPosition || 'center'
+                                    }}
+                                />
+                            )}
+                        </AnimatePresence>
+                    </motion.div>
                 )}
             </AnimatePresence>
 

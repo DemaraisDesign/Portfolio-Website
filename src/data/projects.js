@@ -94,7 +94,7 @@ export const PROJECTS = [
     discipline: "sound",
     themeColor: BRAND_COLORS.soundDeep,
     img: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1775161229/Gemini_Generated_Image_5ey5f65ey5f65ey5_1_or2k8e.png",
-    desc: "Four classic horror stories commissioned and recorded during the isolation of Covid lockdowns, when sound and voice had to conjure every world.",
+    desc: "Four classic horror stories commissioned and recorded during the isolation of COVID-19 lockdowns, when sound and voice had to conjure every world.",
     type: "single",
   },
   {
@@ -168,7 +168,7 @@ export const PROJECTS = [
     discipline: "sound",
     themeColor: BRAND_COLORS.soundDeep,
     img: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1775186682/nomad_j6cl80.png",
-    desc: "Nine different radio plays based at specific coordinates around Los Angeles, fully produced and recorded in isoloation during the Covid 19 lockdowns.",
+    desc: "Nine different radio plays based at specific coordinates around Los Angeles, fully produced and recorded in isolation during the COVID-19 lockdowns.",
     type: "single",
   },
 

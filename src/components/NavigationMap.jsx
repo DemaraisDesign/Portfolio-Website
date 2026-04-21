@@ -1308,7 +1308,7 @@ export default function NavigationMap({ closeMenu }) {
         if (!sec || !parkedPetalData) return;
         const child = sec.children[childIdx];
         if (!child || child.id === parkedPetalData.id) return;
-        setParkedPetalData(prev => ({ ...prev, id: child.id, img: child.img }));
+        setParkedPetalData(prev => ({ ...prev, id: child.id, img: child.img, title: child.label, desc: child.desc, isCycling: true }));
     };
 
     const isShortDesktop = viewport.h < 680 && viewport.w >= 1280;

@@ -143,123 +143,23 @@ if (typeof document !== 'undefined' && !document.getElementById(RING_STYLE_ID)) 
 // Phases: photo → stage → screen → sound → rings
 const CIRCLE_PHASES = ['photo', 'stage', 'screen', 'sound', 'rings'];
 
-const AboutCircle = ({ phase }) => {
-  const size = '100%';
-
-  // Shared circle container styles
-  const circleBase = {
-    position: 'absolute', inset: 0,
-    borderRadius: '50%',
-    display: 'flex', alignItems: 'center', justifyContent: 'center',
-    overflow: 'hidden',
-    transition: 'opacity 0.7s ease',
-  };
-
-  const phases = {
-    photo: (
-      <div key="photo" style={{ ...circleBase, opacity: phase === 'photo' ? 1 : 0, pointerEvents: phase === 'photo' ? 'auto' : 'none' }}>
-        <img
-          src={IMAGES.headshotPlaceholder}
-          alt="Joseph Demarais"
-          style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 20%' }}
-        />
-      </div>
-    ),
-    stage: (
-      <div key="stage" style={{ ...circleBase, backgroundColor: BRAND.stage, opacity: phase === 'stage' ? 1 : 0, pointerEvents: 'none' }}>
-        <TheatreIcon color="#ffffff" isPlaying={false} speed={0} />
-      </div>
-    ),
-    screen: (
-      <div key="screen" style={{ ...circleBase, backgroundColor: BRAND.screens, opacity: phase === 'screen' ? 1 : 0, pointerEvents: 'none' }}>
-        <UXIcon color="#ffffff" isPlaying={false} speed={0} />
-      </div>
-    ),
-    sound: (
-      <div key="sound" style={{ ...circleBase, backgroundColor: BRAND.sound, opacity: phase === 'sound' ? 1 : 0, pointerEvents: 'none' }}>
-        <Waveform color="#ffffff" isPlaying={false} speed={0} />
-      </div>
-    ),
-    rings: (
-      <div key="rings" style={{ ...circleBase, backgroundColor: '#ffffff', opacity: phase === 'rings' ? 1 : 0, pointerEvents: 'none', perspective: '400px', animation: phase === 'rings' ? 'ringFadeIn 0.8s ease forwards' : 'none' }}>
-        {/* Three concentric rings — start face-on, then gently tilt */}
-        {[
-          { color: BRAND.purple, size: '90%',  dur: '14s', anim: 'ring1Spin', delay: '0.6s' },
-          { color: BRAND.blue,   size: '65%',  dur: '18s', anim: 'ring2Spin', delay: '0.9s' },
-          { color: BRAND.teal,   size: '40%',  dur: '22s', anim: 'ring3Spin', delay: '1.2s' },
-        ].map(({ color, size: s, dur, anim, delay }) => (
-          <div key={color} style={{
-            position: 'absolute',
-            width: s, height: s,
-            borderRadius: '50%',
-            border: `20px solid ${color}`,
-            opacity: 0.45,
-            animation: phase === 'rings' ? `${anim} ${dur} linear infinite` : 'none',
-            animationDelay: delay,
-          }} />
-        ))}
-      </div>
-    ),
-  };
-
+const AboutCircle = () => {
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%', borderRadius: '50%', overflow: 'hidden', background: '#ffffff' }}>
-      {Object.values(phases)}
+      <img
+        src={IMAGES.headshotPlaceholder}
+        alt="Joseph Demarais"
+        style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 20%' }}
+      />
     </div>
   );
 };
 
 const AboutMe = () => {
-  const [phase, setPhase] = useState('photo');
-
   const containerVariants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.15, delayChildren: 0.3 } } };
   const itemVariants = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: 'easeOut' } } };
 
-  // Sentinel refs — placed just before each phase-triggering paragraph
-  const sentinelStage  = useRef(null);
-  const sentinelScreen = useRef(null);
-  const sentinelSound  = useRef(null);
-  const sentinelRings  = useRef(null);
-
-  useEffect(() => {
-    // The sticky circle sits at md:top-32 (128px) with height md:w-56 (224px).
-    // Its center is at ~240px from top. We trigger each phase as its sentinel
-    // crosses that point, and revert when scrolling back up.
-    const CIRCLE_CENTER_Y = 240;
-
-    const getSentinelTop = (ref) =>
-      ref.current ? ref.current.getBoundingClientRect().top : Infinity;
-
-    const handleScroll = () => {
-      const stageY  = getSentinelTop(sentinelStage);
-      const screenY = getSentinelTop(sentinelScreen);
-      const soundY  = getSentinelTop(sentinelSound);
-      const ringsY  = getSentinelTop(sentinelRings);
-
-      // Rings: fire when the end-of-section sentinel reaches the circle level
-      // (same threshold as others) — means you've scrolled all the way through
-      if (ringsY <= CIRCLE_CENTER_Y)       setPhase('rings');
-      else if (soundY  <= CIRCLE_CENTER_Y) setPhase('sound');
-      else if (screenY <= CIRCLE_CENTER_Y) setPhase('screen');
-      else if (stageY  <= CIRCLE_CENTER_Y) setPhase('stage');
-      else                                  setPhase('photo');
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); // run once on mount in case we're already mid-section
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  // Reset to photo when scrolling back to top of section
   const sectionRef = useRef(null);
-  useEffect(() => {
-    const resetObs = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setPhase('photo'); },
-      { rootMargin: '0px 0px -80% 0px', threshold: 0 }
-    );
-    if (sectionRef.current) resetObs.observe(sectionRef.current);
-    return () => resetObs.disconnect();
-  }, []);
 
   return (
     <section ref={sectionRef} className="bg-white relative">
@@ -282,8 +182,7 @@ const AboutMe = () => {
                   If you laid my career out on a table it might look like someone emptied three different puzzles into one pile. As it turns out, the pieces fit together quite well. Each rewards the same habits: prepare obsessively, listen deeply, and cut anything that isn't earning its place.
                 </motion.p>
 
-                {/* ── SENTINEL: stage ── */}
-                <div ref={sentinelStage} style={{ height: 0, visibility: 'hidden' }} aria-hidden="true" />
+
 
                 <motion.p variants={itemVariants}>
                   I built that discipline most profoundly at Coeurage Theatre Company, an exclusively pay-what-you-want theater I co-founded in Los Angeles. We competed for the same awards as companies with far greater resources, in one of the most expensive cities in the world, and held our own. What those years actually gave me was more durable than any accolade: the habit of identifying what's essential to the storytelling, prioritizing resources toward those elements, and cutting anything extraneous without ego. We had all the artistic ambition in the world, but on our budgets there simply was no choice in the matter. And I wouldn't have had it any other way.
@@ -295,8 +194,7 @@ const AboutMe = () => {
                   <PullQuote content="Alignment is earned through clarity, inspiration, and mutual trust, not authority." />
                 </motion.div>
 
-                {/* ── SENTINEL: screen ── */}
-                <div ref={sentinelScreen} style={{ height: 0, visibility: 'hidden' }} aria-hidden="true" />
+
 
                 <motion.p variants={itemVariants}>
                   Most of it looked, at the time, like theater-specific knowledge. It wasn't. The further I've expanded my skillsets, the more clearly I've seen the same three habits showing up everywhere. UX research is the clearest example — essentially directing with a different deliverable. Same intake, same synthesis, different output. Both require deep logistical preparation before you enter the room. Both demand rigorous analysis to determine what someone actually needs beneath the surface of what they're saying. The listening has to be disciplined enough to change course based on what participants reveal in their words and behavior. And both require synthesis across conflicting perspectives, plus the nerve to make decisions that won't satisfy everyone. The pipelines are nearly identical.
@@ -305,8 +203,7 @@ const AboutMe = () => {
                   Moving into UX gave that framework somewhere to reflect back. Backstage processes became a user experience. An audience's journey from parking lot to curtain became a user experience. The director's job of deciding what the story needs, what messages I want to convey, and ruthlessly subordinating every sonic and visual element to serve those purposes…that's information architecture. Once I learned to think in terms of friction and cognitive load, I couldn't stop applying it to everything I do.
                 </motion.p>
 
-                {/* ── SENTINEL: sound ── */}
-                <div ref={sentinelSound} style={{ height: 0, visibility: 'hidden' }} aria-hidden="true" />
+
 
                 <motion.p variants={itemVariants}>
                   Sound design is where these principles face the smallest margin for error. A half second of timing. A couple of decibels too high or too low. The wrong music at a key moment, or sound where there should be silence…these decisions can make or break an entire project. And as with directing and UX, the discipline remains the same: staying open to letting what you observe override what you planned. Watching performers in rehearsal, collaborating with fellow designers, reading the room—the work is always listening first.
@@ -316,8 +213,7 @@ const AboutMe = () => {
                   These aren't adjacent careers or siloed experiences. They're the same operating system running on different machines.
                 </motion.p>
 
-                {/* ── SENTINEL: rings — placed at very end so it fires late ── */}
-                <div ref={sentinelRings} style={{ height: 0, visibility: 'hidden' }} aria-hidden="true" />
+
               </DebugFlexCol>
             </div>
           </div>

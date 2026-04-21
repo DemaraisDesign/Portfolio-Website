@@ -136,7 +136,7 @@ export const PROJECTS = [
     discipline: "sound",
     themeColor: BRAND_COLORS.soundDeep,
     img: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1775158384/Gemini_Generated_Image_3iecg93iecg93iec_gr3usg.jpg",
-    desc: "Drawn almost entirely from nature, the landscape itself supports the emotional weight of this subtle dystopian story through touches of music and metaphor.",
+    desc: "Drawn almost entirely from nature, the landscape itself supports the emotional weight of this subtle dystopian short film through touches of music and metaphor.",
     type: "single",
   },
   {

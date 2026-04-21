@@ -602,7 +602,7 @@ const Navbar = ({ show = true, reverseColor = false }) => {
             />
 
             <div className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${navPadding} border-b border-transparent`}>
-              <div className="w-full fluid-px flex justify-between items-center">
+              <div className="w-full px-9 md:px-12 lg:px-24 flex justify-between items-center">
                 <Link to="/" onClick={() => setIsOpen(false)} className="relative block">
                   <DemaraisLogo
                     size={isMobile ? "small" : "default"}

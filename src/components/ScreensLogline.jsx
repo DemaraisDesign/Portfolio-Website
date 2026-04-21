@@ -102,12 +102,11 @@ const StatementCard = ({ statement, index, isHoverReady }) => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ duration: 1.2, delay: baseTextDelay, ease: "easeOut" }}
-                style={{ willChange: "opacity, transform" }}
             >
                 {statement.segments.map((seg, i) => (
                     <span 
                         key={i} 
-                        className={`transition-all duration-500 ease-out ${seg.highlight && isHovered ? 'font-extrabold' : (seg.highlight ? 'font-bold opacity-90' : 'opacity-100')}`}
+                        className={`transition-colors transition-opacity duration-500 ease-out ${seg.highlight && isHovered ? 'font-extrabold' : (seg.highlight ? 'font-bold opacity-90' : 'opacity-100')}`}
                         style={{ color: seg.highlight ? BRAND_COLORS.black : 'inherit' }}
                     >
                         {seg.text}

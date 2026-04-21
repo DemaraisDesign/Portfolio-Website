@@ -145,11 +145,11 @@ const CIRCLE_PHASES = ['photo', 'stage', 'screen', 'sound', 'rings'];
 
 const AboutCircle = () => {
   return (
-    <div style={{ position: 'relative', width: '100%', height: '100%', borderRadius: '50%', overflow: 'hidden', background: '#ffffff' }}>
+    <div style={{ position: 'relative', width: '100%', height: '100%', borderRadius: '50%', background: '#ffffff', WebkitTransform: 'translateZ(0)', transform: 'translateZ(0)' }}>
       <img
         src={IMAGES.headshotPlaceholder}
         alt="Joseph Demarais"
-        style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 20%' }}
+        style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 20%', borderRadius: '50%', WebkitTransform: 'translateZ(0)', transform: 'translateZ(0)' }}
       />
     </div>
   );

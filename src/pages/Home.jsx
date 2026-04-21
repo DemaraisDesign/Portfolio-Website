@@ -519,6 +519,13 @@ const Home = () => {
   const heroTextRef = useRef(null);
   const portfolioScrollRef = useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' ? window.innerWidth < 768 : false);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleScrollRight = () => {
     if (portfolioScrollRef.current) {
@@ -1001,27 +1008,7 @@ const Home = () => {
             <AnimatedDivider className="mt-8" />
           </div>
 
-          {/* Mobile Scroll Hint Arrows */}
-          <div className="lg:hidden absolute right-4 top-1/2 -translate-y-1/2 z-20 pointer-events-none">
-            <button
-              onClick={handleScrollRight}
-              className="pointer-events-auto bg-white/80 backdrop-blur-sm p-3 rounded-full shadow-lg border border-gray-100/50 hover:bg-[#050508] hover:scale-110 active:scale-95 transition-all duration-300 group"
-              aria-label="Scroll Right"
-            >
-              <ArrowRight className="w-6 h-6 text-brand-ink group-hover:text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.3)]" />
-            </button>
-          </div>
-
-          {canScrollLeft && (
-            <div className="lg:hidden absolute left-4 top-1/2 -translate-y-1/2 z-20 pointer-events-none">
-              <button
-                onClick={handleScrollLeft}
-                className="pointer-events-auto bg-white/80 backdrop-blur-sm p-3 rounded-full shadow-lg border border-gray-100/50 hover:bg-[#050508] hover:scale-110 active:scale-95 transition-all duration-300 group"
-              >
-                <ArrowLeft className="w-6 h-6 text-brand-ink group-hover:text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.3)]" />
-              </button>
-            </div>
-          )}
+          {/* Scroll arrows removed — carousel is swipeable on mobile */
 
           <motion.div
             onScroll={checkScroll}
@@ -1042,8 +1029,8 @@ const Home = () => {
               visible: {
                 opacity: 1,
                 transition: {
-                  staggerChildren: 0.2, // Stagger effect
-                  delayChildren: 0.1,
+                  staggerChildren: isMobile ? 0 : 0.2,
+                  delayChildren: isMobile ? 0 : 0.1,
                 }
               }
             }}

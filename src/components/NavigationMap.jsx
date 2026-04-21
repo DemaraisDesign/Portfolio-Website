@@ -1144,8 +1144,8 @@ const ExpansionContent = ({ pData, isTop, liveX, liveY, r, boxLeft, boxTop, boxW
                     <div style={{ marginBottom: 2 }} aria-hidden="true">
                         {isUnderConstruction ? (
                             <svg width="28" height="28" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round" role="img" aria-label="Under construction">
-                                <circle cx="12" cy="12" r="10" fill="rgba(255,255,255,0.15)" stroke="none" />
-                                <polyline points="12 6 12 12 15.5 15.5" stroke="white" strokeWidth="2.5" fill="none" />
+                                <circle cx="12" cy="12" r="10" fill="rgba(255,255,255,0.9)" stroke="none" />
+                                <polyline points="12 6 12 12 15.5 15.5" stroke={pData.deepColor || THEME.dark} strokeWidth="2.5" fill="none" />
                             </svg>
                         ) : (
                             <svg width="28" height="28" viewBox="0 0 24 24" fill="rgba(255,255,255,0.9)" stroke="rgba(255,255,255,0.9)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" role="img" aria-label="Password protected">

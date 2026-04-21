@@ -475,8 +475,8 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
                 const spacing = (w - 2 * padX) / 3;
                 targetX = padX + spacing * idx;
                 
-                // For super short desktop, anchor directly to the bottom distance (315px) so it moves 1:1 with the window frame closing
-                targetY = isSuperShortDesktop ? h - 315 : cy;
+                // Aggressive padding tracking ensures the UI explicitly escapes the bottom border even on minimal height squeezes
+                targetY = isSuperShortDesktop ? Math.min(cy - 25, h - 360) : cy;
             } else {
                 if (sec.quadrant === 'bl') { targetX = cx - dx; targetY = visualCenterY + dy + (w < 768 ? 50 : 0); }
                 if (sec.quadrant === 'br') { targetX = cx + dx; targetY = visualCenterY + dy + (w < 768 ? 50 : 0); }

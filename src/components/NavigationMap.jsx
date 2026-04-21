@@ -352,6 +352,7 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
 
     const isSmallMobile = w <= 430 || h <= 430;
     const isLandscapePhone = w > h && h < 500 && w < 1280;
+    const isSuperShortDesktop = h <= 630 && w >= 1280;
 
     const SIZES = {
         home: (focusedId || (isLaunched && w < 1280)) ? 60 : (isLaunched && w >= 1280 ? 55 : 110),
@@ -561,7 +562,7 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
                 let fanCenterAngle = dynamicLayoutAngle;
 
                 // Adjust spread and radius based on state and screen size
-                const isLargeUnfocused = (isLaunched && !focusedId && w >= 1280);
+                const isLargeUnfocused = (isLaunched && !focusedId && w >= 1280 && !isSuperShortDesktop);
 
                 if (isLargeUnfocused) {
                     const isLeft = sec.quadrant.includes('l');
@@ -1290,6 +1291,7 @@ export default function NavigationMap({ closeMenu }) {
     };
 
     const isShortDesktop = viewport.h < 680 && viewport.w >= 1280;
+    const isSuperShortDesktop = viewport.h <= 630 && viewport.w >= 1280;
     const isLandscapePhone = viewport.w > viewport.h && viewport.h < 500 && viewport.w < 1280;
 
     // Auto-close the mobile case study expansion when resizing to desktop
@@ -1693,7 +1695,7 @@ export default function NavigationMap({ closeMenu }) {
                                         subDesc: isLandscapePhone ? null : 'Selected work links',
                                         isCompact: isLandscapePhone,
                                         show: showLabels && !parkedPetalData && !outgoingPetalData,
-                                        align: isLandscapePhone ? 'center' : (viewport.w < 1280 ? (sec.isFocused ? 'right' : 'top') : (isShortDesktop && sec.quadrant.includes('b') ? 'top' : 'center')),
+                                        align: isLandscapePhone ? 'center' : (viewport.w < 1280 ? (sec.isFocused ? 'right' : 'top') : ((isShortDesktop && !isSuperShortDesktop) && sec.quadrant.includes('b') ? 'top' : 'center')),
                                         mobileTopOffset: viewport.w < 1280 ? '-24px' : null
                                     }}
                                     isShortViewport={isShortDesktop}
@@ -1711,7 +1713,7 @@ export default function NavigationMap({ closeMenu }) {
                                         const isInitialLoadDelay = !isSettled; // Only show sub-petals when in Phase 2
                                         const opacityMul = (isInitialLoadDelay || sec.isBg) ? 0 : 1;
 
-                                        const isLargeUnfocused = (viewport.w >= 1280 && !focusedId);
+                                        const isLargeUnfocused = (viewport.w >= 1280 && !focusedId && !isSuperShortDesktop);
                                         const nodeDelay = (sec.isFocused && focusedId ? 1.0 : 0.3 + (secIdx * 0.15)) + (idx * 0.08);
 
                                         const isMobileViewport = viewport.w < 1280;
@@ -1743,8 +1745,8 @@ export default function NavigationMap({ closeMenu }) {
                                                     showIcon={isSettled && (sec.isFocused || isLargeUnfocused)} useElastic={isSettled}
                                                     isResizing={isResizing} isChild={true} initialOpacity={opacityMul}
                                                     isDimmed={!sec.isFocused && !isLargeUnfocused}
-                                                    overrideOpacity={((parkedPetalData || outgoingPetalData) || (viewport.w < 1280 && !focusedId)) ? 0 : undefined}
-                                                    labelData={isLargeUnfocused ? { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: ((isShortDesktop || (viewport.w >= 768 && viewport.w < 1280)) && sec.quadrant.includes('b')) ? 'top' : 'center', img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: showLabels && !parkedPetalData && !outgoingPetalData, forceSearchIcon: false } : { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: (isShortDesktop && sec.quadrant.includes('b')) ? 'top' : (viewport.w < 1280 ? sp.alignLabel : sp.alignLabel), img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: (viewport.w < 1280 && !focusedId) ? false : (showLabels && !parkedPetalData && !outgoingPetalData), forceSearchIcon: viewport.w < 1280 && !focusedId }}
+                                                    overrideOpacity={((parkedPetalData || outgoingPetalData) || (viewport.w < 1280 && !focusedId) || (isSuperShortDesktop && !focusedId)) ? 0 : undefined}
+                                                    labelData={isLargeUnfocused ? { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: ((isShortDesktop || (viewport.w >= 768 && viewport.w < 1280)) && sec.quadrant.includes('b')) ? 'top' : 'center', img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: showLabels && !parkedPetalData && !outgoingPetalData, forceSearchIcon: false } : { title: sp.label, desc: sp.desc, projectId: sp.id, inProgress: sp.inProgress, align: (isShortDesktop && sec.quadrant.includes('b')) ? 'top' : (viewport.w < 1280 ? sp.alignLabel : sp.alignLabel), img: sp.img, Icon: sp.Icon, contain: sp.contain, screenColor: sp.screenColor, imgPosition: sp.imgPosition, imgScale: sp.imgScale, imgNudge: sp.imgNudge, show: ((viewport.w < 1280 || isSuperShortDesktop) && !focusedId) ? false : (showLabels && !parkedPetalData && !outgoingPetalData), forceSearchIcon: viewport.w < 1280 && !focusedId }}
                                                     isShortViewport={isShortDesktop || viewport.w < 1280}
                                                     noFlyTransition={isNoFly}
                                                     alwaysShowLabel={isLargeUnfocused && !(isShortDesktop || viewport.w < 1280)}

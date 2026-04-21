@@ -352,7 +352,7 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
 
     const isSmallMobile = w <= 430 || h <= 430;
     const isLandscapePhone = w > h && h < 500 && w < 1280;
-    const isSuperShortDesktop = h <= 630 && w >= 1280;
+    const isSuperShortDesktop = h <= 615 && w >= 1280;
 
     const SIZES = {
         home: (focusedId || (isLaunched && w < 1280)) ? 60 : (isLaunched && w >= 1280 ? 55 : 110),
@@ -474,7 +474,8 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
                 const padX = isSuperShortDesktop ? Math.max(150, w * 0.15) : 100;
                 const spacing = (w - 2 * padX) / 3;
                 targetX = padX + spacing * idx;
-                targetY = cy;
+                // Add bottom-padding safety constraint exclusively for super short desktop row so descriptor text never clips
+                targetY = isSuperShortDesktop ? Math.min(cy, h - 240) : cy;
             } else {
                 if (sec.quadrant === 'bl') { targetX = cx - dx; targetY = visualCenterY + dy + (w < 768 ? 50 : 0); }
                 if (sec.quadrant === 'br') { targetX = cx + dx; targetY = visualCenterY + dy + (w < 768 ? 50 : 0); }
@@ -1291,7 +1292,7 @@ export default function NavigationMap({ closeMenu }) {
     };
 
     const isShortDesktop = viewport.h < 680 && viewport.w >= 1280;
-    const isSuperShortDesktop = viewport.h <= 630 && viewport.w >= 1280;
+    const isSuperShortDesktop = viewport.h <= 615 && viewport.w >= 1280;
     const isLandscapePhone = viewport.w > viewport.h && viewport.h < 500 && viewport.w < 1280;
 
     // Auto-close the mobile case study expansion when resizing to desktop

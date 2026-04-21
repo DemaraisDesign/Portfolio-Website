@@ -1437,11 +1437,15 @@ const IndicatorStrip = ({ pData, handleCycleToChild, boxLeft, boxWidth, boxHeigh
                     cursor: dragging ? 'grabbing' : 'grab',
                     pointerEvents: 'auto',
                     touchAction: 'none',
-                    display: 'flex', alignItems: 'center',
+                    display: 'flex', 
+                    alignItems: 'center',
+                    justifyContent: isLeftCol ? 'flex-start' : 'flex-end',
+                    width: '48px',
+                    height: '64px',
                     userSelect: 'none',
                 }}
             >
-                <svg width="16" height="22" viewBox="0 0 16 22" overflow="visible">
+                <svg width="16" height="22" viewBox="0 0 16 22" overflow="visible" style={{ flexShrink: 0 }}>
                     <polygon
                         points={isLeftCol ? "14,2 14,20 2,11" : "2,2 2,20 14,11"}
                         fill={theTheme.light}

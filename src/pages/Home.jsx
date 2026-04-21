@@ -450,7 +450,7 @@ const ListProjectCard = ({ project, index }) => {
 
 const Works = () => {
   const projects = [
-    { ...getProject('morgan-stanley'), img: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1774454742/DDWebsite_Home_UX_Desktop_rzqa9y_1_lgwlm7.png" },
+    { ...getProject('morgan-stanley'), img: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1774454742/DDWebsite_Home_UX_Desktop_rzqa9y_1_lgwlm7.png", imgScale: 1.25 },
     { ...getProject('coeurage'), img: getProject('coeurage')?.heroImg },
     { ...getProject('take-with-water'), img: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1774487994/Screenshot_2026-03-25_at_11.29.15_AM_sg7iye.png" }
   ];

@@ -1108,7 +1108,7 @@ const ExpansionContent = ({ pData, isTop, liveX, liveY, r, boxLeft, boxTop, boxW
 
     const inputStyle = {
         width: '100%', padding: '10px 14px', fontSize: 14,
-        fontFamily: '"Outfit", sans-serif', border: '1.5px solid rgba(255,255,255,0.25)',
+        fontFamily: '"Outfit", sans-serif', border: `1.5px solid ${pData.color}80`,
         borderRadius: 8, outline: 'none', backgroundColor: 'rgba(255,255,255,0.08)',
         color: '#fff', boxSizing: 'border-box', transition: 'border-color 0.2s',
     };
@@ -1130,6 +1130,8 @@ const ExpansionContent = ({ pData, isTop, liveX, liveY, r, boxLeft, boxTop, boxW
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1, transition: { duration: 0.3, delay: 0.15 } }}
                 exit={{ opacity: 0, transition: { duration: 0.15 } }}
+                role="region"
+                aria-label={`Case study: ${title}`}
                 style={{
                     position: 'absolute', top: contentTop, left: contentPadding, right: contentPadding,
                     height: contentHeight, display: 'flex', flexDirection: 'column',
@@ -1139,14 +1141,14 @@ const ExpansionContent = ({ pData, isTop, liveX, liveY, r, boxLeft, boxTop, boxW
             >
                 {/* Status Icon */}
                 {(isUnderConstruction || isLocked) && !pwSuccess && (
-                    <div style={{ marginBottom: 2 }}>
+                    <div style={{ marginBottom: 2 }} aria-hidden="true">
                         {isUnderConstruction ? (
-                            <svg width="28" height="28" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
+                            <svg width="28" height="28" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round" role="img" aria-label="Under construction">
                                 <circle cx="12" cy="12" r="10" fill="rgba(255,255,255,0.15)" stroke="none" />
                                 <polyline points="12 6 12 12 15.5 15.5" stroke="white" strokeWidth="2.5" fill="none" />
                             </svg>
                         ) : (
-                            <svg width="28" height="28" viewBox="0 0 24 24" fill="rgba(255,255,255,0.9)" stroke="rgba(255,255,255,0.9)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="rgba(255,255,255,0.9)" stroke="rgba(255,255,255,0.9)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" role="img" aria-label="Password protected">
                                 <path d="M7 10V7a5 5 0 0 1 10 0v3" fill="none" />
                                 <rect x="3" y="10" width="18" height="12" rx="2" fill="rgba(255,255,255,0.9)" stroke="none" />
                                 <circle cx="12" cy="16" r="1.5" fill={pData.deepColor || THEME.dark} stroke={pData.deepColor || THEME.dark} strokeWidth="3" />
@@ -1155,10 +1157,11 @@ const ExpansionContent = ({ pData, isTop, liveX, liveY, r, boxLeft, boxTop, boxW
                     </div>
                 )}
 
-                {/* Success Icon (replaces lock/construction on success) */}
+                {/* Success Icon */}
                 {(pwSuccess || cStatus === 'success') && (
-                    <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 400, damping: 15 }}>
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="#22c55e" stroke="#22c55e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 400, damping: 15 }}
+                        role="status" aria-label="Success">
+                        <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true">
                             <circle cx="12" cy="12" r="10" fill="#22c55e" stroke="none" />
                             <polyline points="9 12 11.5 14.5 16 9.5" stroke="white" strokeWidth="2.5" fill="none" />
                         </svg>
@@ -1205,6 +1208,7 @@ const ExpansionContent = ({ pData, isTop, liveX, liveY, r, boxLeft, boxTop, boxW
                         /* ── VIEW CASE STUDY ── */
                         <button
                             onClick={(e) => { e.stopPropagation(); closeMenu(); navigate(`/work/${pData.id}`); }}
+                            aria-label={`View case study: ${title}`}
                             style={{
                                 width: '100%', padding: '11px 20px', fontSize: 12, fontWeight: 700,
                                 fontFamily: '"Outfit", sans-serif', textTransform: 'uppercase', letterSpacing: '0.08em',
@@ -1217,38 +1221,52 @@ const ExpansionContent = ({ pData, isTop, liveX, liveY, r, boxLeft, boxTop, boxW
                             onMouseUp={e => e.currentTarget.style.transform = 'scale(1)'}
                         >
                             View Case Study
-                            <ArrowRight size={14} strokeWidth={2.5} />
+                            <ArrowRight size={14} strokeWidth={2.5} aria-hidden="true" />
                         </button>
 
                     ) : isUnderConstruction ? (
                         /* ── CONSTRUCTION: INLINE EMAIL FORM ── */
                         cStatus === 'success' ? (
-                            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)', lineHeight: 1.5, margin: 0 }}>
+                            <p role="status" style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)', lineHeight: 1.5, margin: 0 }}>
                                 I'll notify you when it's published.
                             </p>
                         ) : (
-                            <form onSubmit={handleConstructionSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                            <form onSubmit={handleConstructionSubmit} aria-label="Get notified when this case study is published" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                                <label htmlFor={`name-${pData.id}`} className="sr-only">Name</label>
                                 <input
+                                    id={`name-${pData.id}`}
                                     type="text" value={cName} placeholder="Name"
+                                    autoComplete="name"
+                                    aria-required="true"
+                                    aria-invalid={cStatus === 'error' && !cName ? 'true' : undefined}
                                     onChange={e => { setCName(e.target.value); if (cStatus === 'error') setCStatus('idle'); }}
                                     style={cStatus === 'error' && !cName ? inputErrorStyle : inputStyle}
-                                    onFocus={e => e.target.style.borderColor = 'rgba(255,255,255,0.5)'}
-                                    onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.25)'}
+                                    onFocus={e => e.target.style.borderColor = pData.color}
+                                    onBlur={e => e.target.style.borderColor = `${pData.color}80`}
                                 />
+                                <label htmlFor={`email-${pData.id}`} className="sr-only">Email</label>
                                 <input
+                                    id={`email-${pData.id}`}
                                     type="email" value={cEmail} placeholder="Email"
+                                    autoComplete="email"
+                                    aria-required="true"
+                                    aria-invalid={cStatus === 'error' && !cEmail ? 'true' : undefined}
                                     onChange={e => { setCEmail(e.target.value); if (cStatus === 'error') setCStatus('idle'); }}
                                     style={cStatus === 'error' && !cEmail ? inputErrorStyle : inputStyle}
-                                    onFocus={e => e.target.style.borderColor = 'rgba(255,255,255,0.5)'}
-                                    onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.25)'}
+                                    onFocus={e => e.target.style.borderColor = pData.color}
+                                    onBlur={e => e.target.style.borderColor = `${pData.color}80`}
                                 />
-                                <button type="submit" disabled={cStatus === 'sending'} style={{
-                                    ...brandBtnStyle,
-                                    opacity: cStatus === 'sending' ? 0.6 : 1,
-                                    cursor: cStatus === 'sending' ? 'not-allowed' : 'pointer',
-                                }}>
+                                <button type="submit" disabled={cStatus === 'sending'}
+                                    aria-label="Submit notification request"
+                                    aria-busy={cStatus === 'sending' ? 'true' : undefined}
+                                    style={{
+                                        ...brandBtnStyle,
+                                        opacity: cStatus === 'sending' ? 0.6 : 1,
+                                        cursor: cStatus === 'sending' ? 'not-allowed' : 'pointer',
+                                    }}>
                                     {cStatus === 'sending' ? (
                                         <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
+                                            aria-hidden="true"
                                             style={{ width: 14, height: 14, border: '2px solid rgba(255,255,255,0.3)', borderTopColor: 'white', borderRadius: '50%' }} />
                                     ) : 'Notify Me'}
                                 </button>
@@ -1258,25 +1276,31 @@ const ExpansionContent = ({ pData, isTop, liveX, liveY, r, boxLeft, boxTop, boxW
                     ) : isLocked ? (
                         /* ── LOCKED: INLINE PASSWORD FORM ── */
                         pwSuccess ? (
-                            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)', lineHeight: 1.5, margin: 0 }}>Redirecting you now...</p>
+                            <p role="status" style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)', lineHeight: 1.5, margin: 0 }}>Redirecting you now...</p>
                         ) : (
-                            <form onSubmit={handlePwSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                            <form onSubmit={handlePwSubmit} aria-label={`Unlock ${title}`} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                                <label htmlFor={`pw-${pData.id}`} className="sr-only">Password</label>
                                 <input
+                                    id={`pw-${pData.id}`}
                                     ref={pwRef}
                                     type="password" value={password} placeholder="Password"
+                                    autoComplete="off"
+                                    aria-required="true"
+                                    aria-invalid={pwError ? 'true' : undefined}
+                                    aria-describedby={pwError ? `pw-err-${pData.id}` : undefined}
                                     onChange={e => { setPassword(e.target.value); setPwError(false); }}
                                     style={pwError ? inputErrorStyle : inputStyle}
-                                    onFocus={e => e.target.style.borderColor = 'rgba(255,255,255,0.5)'}
-                                    onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.25)'}
+                                    onFocus={e => e.target.style.borderColor = pData.color}
+                                    onBlur={e => e.target.style.borderColor = `${pData.color}80`}
                                 />
                                 {pwError && (
-                                    <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                                    <motion.p id={`pw-err-${pData.id}`} role="alert" initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                                         style={{ color: '#ef4444', fontSize: 11, margin: 0, textAlign: 'left' }}>
                                         Incorrect password.
                                     </motion.p>
                                 )}
-                                <button type="submit" style={brandBtnStyle}>
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <button type="submit" aria-label="Submit password" style={brandBtnStyle}>
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                                         <path d="M7 10V7a5 5 0 0 1 10 0v3" fill="none" />
                                         <rect x="3" y="10" width="18" height="12" rx="2" fill="currentColor" stroke="none" />
                                         <circle cx="12" cy="16" r="1.5" fill={pData.deepColor || THEME.dark} stroke={pData.deepColor || THEME.dark} strokeWidth="3" />

@@ -474,8 +474,9 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
                 const padX = isSuperShortDesktop ? Math.max(150, w * 0.15) : 100;
                 const spacing = (w - 2 * padX) / 3;
                 targetX = padX + spacing * idx;
-                // Add bottom-padding safety constraint exclusively for super short desktop row so descriptor text never clips
-                targetY = isSuperShortDesktop ? Math.min(cy - 30, h - 260) : cy;
+                
+                // For super short desktop, anchor directly to the bottom distance (315px) so it moves 1:1 with the window frame closing
+                targetY = isSuperShortDesktop ? h - 315 : cy;
             } else {
                 if (sec.quadrant === 'bl') { targetX = cx - dx; targetY = visualCenterY + dy + (w < 768 ? 50 : 0); }
                 if (sec.quadrant === 'br') { targetX = cx + dx; targetY = visualCenterY + dy + (w < 768 ? 50 : 0); }

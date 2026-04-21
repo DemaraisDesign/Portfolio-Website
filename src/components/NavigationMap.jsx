@@ -954,18 +954,20 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                             overflow: 'hidden'
                         }}
                     >
-                        <AnimatePresence mode="wait">
+                        <AnimatePresence>
                             {parkedData.img && (
                                 <motion.img
                                     key={parkedData.id}
                                     src={parkedData.img}
                                     alt={parkedData.title || ''}
-                                    initial={{ opacity: parkedData.isCycling ? 0 : 1, scale: parkedData.isCycling ? 1.08 : 1 }}
-                                    animate={{ opacity: 1, scale: 1 }}
+                                    initial={{ opacity: parkedData.isCycling ? 0 : 1 }}
+                                    animate={{ opacity: 1 }}
                                     exit={{ opacity: 0 }}
-                                    transition={{ duration: 0.35, ease: "easeOut" }}
+                                    transition={{ duration: 0.35, ease: "easeInOut" }}
                                     style={{
-                                        display: 'block',
+                                        position: 'absolute',
+                                        top: 0,
+                                        left: 0,
                                         width: '100%',
                                         height: '100%',
                                         objectFit: 'cover',

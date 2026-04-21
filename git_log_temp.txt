@@ -1,0 +1,183 @@
+commit 1781f0c92c30e6a61a17fb24bcd474ff8830fe75
+Author: Joe Calarco <joecalarco@Joes-MacBook-Pro.local>
+Date:   Mon Apr 20 08:30:23 2026 -0500
+
+    isRightCol: use liveSection.quadrant.includes('r') — same reliable source as secTL/secTR lookups — instead of flaky liveX > layout.cx geometric check
+
+diff --git a/src/components/NavigationMap.jsx b/src/components/NavigationMap.jsx
+index 39088c7..e471089 100644
+--- a/src/components/NavigationMap.jsx
++++ b/src/components/NavigationMap.jsx
+@@ -1329,8 +1329,8 @@ export default function NavigationMap({ closeMenu }) {
+ 
+                                         {/* Context Label — 18px from active circle outline; right-col is right-aligned */}
+                                         {(() => {
+-                                            // Geometric check: right col if live section X is right of center
+-                                            const isRightCol = liveX > layout.cx;
++                                            // Use the live section's own quadrant — same source as secTL/secTR lookups above
++                                            const isRightCol = liveSection ? liveSection.quadrant.includes('r') : false;
+ 
+                                             // Both cols: flush against circle outline (10px = white ring width, no additional gap)
+                                             // Left col → text grows rightward from circle; Right col → text grows leftward from circle
+
+commit 6ac1256f8460349b34cec35bf83c2a110bfda4c8
+Author: Joe Calarco <joecalarco@Joes-MacBook-Pro.local>
+Date:   Mon Apr 20 08:23:04 2026 -0500
+
+    Label flush against circle outline: gap reduced to 10px (white ring width only, no extra padding)
+
+diff --git a/src/components/NavigationMap.jsx b/src/components/NavigationMap.jsx
+index 2d1123c..39088c7 100644
+--- a/src/components/NavigationMap.jsx
++++ b/src/components/NavigationMap.jsx
+@@ -1332,10 +1332,10 @@ export default function NavigationMap({ closeMenu }) {
+                                             // Geometric check: right col if live section X is right of center
+                                             const isRightCol = liveX > layout.cx;
+ 
+-                                            // Both cols: 18px from the active image circle outline
++                                            // Both cols: flush against circle outline (10px = white ring width, no additional gap)
+                                             // Left col → text grows rightward from circle; Right col → text grows leftward from circle
+-                                            const textLeft = isRightCol ? boxLeft + 8 : liveX + r + 18;
+-                                            const textRight = isRightCol ? liveX - r - 18 : boxLeft + boxWidth - 8;
++                                            const textLeft = isRightCol ? boxLeft + 8 : liveX + r + 10;
++                                            const textRight = isRightCol ? liveX - r - 10 : boxLeft + boxWidth - 8;
+                                             const availableWidth = textRight - textLeft;
+                                             const textAlign = isRightCol ? 'right' : 'left';
+ 
+
+commit 78e79ee6073382f17a28491cf136d61dcb59ebc4
+Author: Joe Calarco <joecalarco@Joes-MacBook-Pro.local>
+Date:   Mon Apr 20 08:18:53 2026 -0500
+
+    Align back button left edge with Stages circle left edge (btnLeft = secTL.x - r + btnRadius)
+
+diff --git a/src/components/NavigationMap.jsx b/src/components/NavigationMap.jsx
+index a41394a..2d1123c 100644
+--- a/src/components/NavigationMap.jsx
++++ b/src/components/NavigationMap.jsx
+@@ -1298,9 +1298,12 @@ export default function NavigationMap({ closeMenu }) {
+ 
+                                 // Back button: permanently anchored 30px above the TL (Stages) icon
+                                 // — design intent: always lives above Stages, regardless of which sub-menu is open
++                                // Left edge of button aligns with left edge of Stages circle (secTL.x - r)
+                                 const btnRadius = 22;
+-                                const btnLeft = secTL ? secTL.x : liveX;
+-                                const btnTop  = (secTL ? secTL.y : liveY) - r - 30 - btnRadius;
++                                const btnTLx = secTL ? secTL.x : liveX;
++                                const btnTLy = secTL ? secTL.y : liveY;
++                                const btnLeft = btnTLx - r + btnRadius;   // left-edge aligned with circle left-edge
++                                const btnTop  = btnTLy - r - 30 - btnRadius;
+ 
+                                 return (
+                                     <>
+
+commit 7ebf720ab49a751c33a3d43b6242774a1ff454b4
+Author: Joe Calarco <joecalarco@Joes-MacBook-Pro.local>
+Date:   Sun Apr 19 22:58:48 2026 -0500
+
+    Replace fragile quadrant string check with geometric liveX > layout.cx — immune to any undefined/stale pData.quadrant value
+
+diff --git a/src/components/NavigationMap.jsx b/src/components/NavigationMap.jsx
+index 0d7f5f2..a41394a 100644
+--- a/src/components/NavigationMap.jsx
++++ b/src/components/NavigationMap.jsx
+@@ -1326,7 +1326,8 @@ export default function NavigationMap({ closeMenu }) {
+ 
+                                         {/* Context Label — 18px from active circle outline; right-col is right-aligned */}
+                                         {(() => {
+-                                            const isRightCol = pData.quadrant && pData.quadrant.includes('r');
++                                            // Geometric check: right col if live section X is right of center
++                                            const isRightCol = liveX > layout.cx;
+ 
+                                             // Both cols: 18px from the active image circle outline
+                                             // Left col → text grows rightward from circle; Right col → text grows leftward from circle
+
+commit d288f70f55720ee809d4e0dc90c9bf9d2922f1df
+Author: Joe Calarco <joecalarco@Joes-MacBook-Pro.local>
+Date:   Sun Apr 19 22:56:27 2026 -0500
+
+    Back button: always anchored above TL (Stages) icon by design. Label: right-align text + flex-end for right-col sections so it grows leftward from circle outline at same 18px gap.
+
+diff --git a/src/components/NavigationMap.jsx b/src/components/NavigationMap.jsx
+index 89c512e..0d7f5f2 100644
+--- a/src/components/NavigationMap.jsx
++++ b/src/components/NavigationMap.jsx
+@@ -1296,12 +1296,11 @@ export default function NavigationMap({ closeMenu }) {
+                                     boxHeight = liveY - boxTop;
+                                 }
+ 
+-                                // Back button: 12 o'clock of active section image, 30px clear gap
++                                // Back button: permanently anchored 30px above the TL (Stages) icon
++                                // — design intent: always lives above Stages, regardless of which sub-menu is open
+                                 const btnRadius = 22;
+-                                const btnLeft = liveX;
+-                                // For top sections: button sits 30px above image top (in light zone above box)
+-                                // For bottom sections: button sits 30px above image top (inside dark box, above image)
+-                                const btnTop  = liveY - r - 30 - btnRadius;
++                                const btnLeft = secTL ? secTL.x : liveX;
++                                const btnTop  = (secTL ? secTL.y : liveY) - r - 30 - btnRadius;
+ 
+                                 return (
+                                     <>
+@@ -1325,36 +1324,23 @@ export default function NavigationMap({ closeMenu }) {
+                                             }}
+                                         />
+ 
+-                                        {/* Context Label — quadrant-aware positioning */}
++                                        {/* Context Label — 18px from active circle outline; right-col is right-aligned */}
+                                         {(() => {
+                                             const isRightCol = pData.quadrant && pData.quadrant.includes('r');
+ 
+-                                            // LEFT col: label sits to the right of the image circle
+-                                            // RIGHT col: label sits to the left of the image circle
+-                                            const textLeft = isRightCol
+-                                                ? boxLeft + 8
+-                                                : liveX + r + 18;
+-                                            const textRight = isRightCol
+-                                                ? liveX - r - 18
+-                                                : boxLeft + boxWidth - 8;
++                                            // Both cols: 18px from the active image circle outline
++                                            // Left col → text grows rightward from circle; Right col → text grows leftward from circle
++                                            const textLeft = isRightCol ? boxLeft + 8 : liveX + r + 18;
++                                            const textRight = isRightCol ? liveX - r - 18 : boxLeft + boxWidth - 8;
+                                             const availableWidth = textRight - textLeft;
++                                            const textAlign = isRightCol ? 'right' : 'left';
+ 
+-                                            // TOP sections: label is ABOVE the box (light zone above boxTop)
+-                                            // BOTTOM sections: label is BELOW the image (light zone below liveY)
+-                                            const labelTop = isTop
+-                                                ? boxTop
+-                                                : liveY;
+-
+-                                            // Estimate: ~9px per uppercase char at 13px + 0.08em tracking
++                                            // TOP sections: label ABOVE the box (light zone); BOTTOM: BELOW the image (light zone)
++                                            const labelTop = isTop ? boxTop : liveY;
+                                             const singleLine = `${pData.sectionLabel}: Selected Work`;
+                                             const fitsOnOneLine = singleLine.length * 9 <= availableWidth;
+                                             const blockHeight = fitsOnOneLine ? 16 : 36;
+-
+-                                            // For top sections, shift label UP so its bottom sits 10px above the box
+-                                            // For bottom sections, shift label DOWN so its top sits 10px below the image bottom
+-                                            const labelMarginTop = isTop
+-                                                ? -(blockHeight + 10)
+-                                                : r + 10;
++                                            const labelMarginTop = isTop ? -(blockHeight + 10) : r + 10;
+ 
+                                             return (
+                                                 <motion.div
+@@ -1369,6 +1355,7 @@ export default function NavigationMap({ closeMenu }) {
+                                                         marginTop: labelMarginTop,
+                                                         left: textLeft,
+                                                         maxWidth: availableWidth,
++                                                        textAlign,
+                                                         fontFamily: '"Outfit", sans-serif',
+                                                         fontSize: '13px',
+                                                         fontWeight: 700,
+@@ -1380,6 +1367,7 @@ export default function NavigationMap({ closeMenu }) {
+                                                         zIndex: 20,
+                                                         display: 'flex',
+                                                         flexDirection: 'column',
++                                                        alignItems: isRightCol ? 'flex-end' : 'flex-start',
+                                                         gap: '4px',
+                                                     }}
+                                                 >

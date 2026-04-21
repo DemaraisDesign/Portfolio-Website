@@ -1780,7 +1780,7 @@ export default function NavigationMap({ closeMenu }) {
 
                                 {/* Mobile fan view: "Selected Work" magnifying glass entry */}
                                 <AnimatePresence>
-                                {viewport.w < 1280 && !parkedPetalData && showLabels && !focusedId && (
+                                {viewport.w < 1280 && !isLandscapePhone && !parkedPetalData && showLabels && !focusedId && (
                                     <motion.div
                                         key={`mag-wrapper-${sec.id}`}
                                         initial={{ opacity: 0 }}

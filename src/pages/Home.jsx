@@ -48,16 +48,16 @@ const DisciplineModule = ({ title, img, color, darkColor, Icon, speed = 0.78, li
 
   return (
     <motion.div
-      className="cursor-pointer group snap-center shrink-0 w-[70vw] md:w-[45vw] lg:w-full [@media(max-height:500px)]:w-[65vw] flex flex-col [@media(max-height:500px)]:flex-row gap-6 [@media(max-height:500px)]:gap-4 items-center"
+      className="cursor-pointer group snap-center shrink-0 w-[70vw] md:w-[45vw] lg:w-full [@media(max-height:500px)_and_(max-width:900px)]:w-[65vw] flex flex-col [@media(max-height:500px)_and_(max-width:900px)]:flex-row gap-6 [@media(max-height:500px)_and_(max-width:900px)]:gap-4 items-center"
       style={{ containerType: 'inline-size' }}
       onMouseEnter={handleInteractionStart}
       onMouseLeave={handleInteractionEnd}
       onClick={handleClick}
       {...props}
     >
-      <div className="relative aspect-[3/4] [@media(max-height:500px)]:aspect-square w-full [@media(max-height:500px)]:w-[160px] [@media(max-height:500px)]:shrink-0">
+      <div className="relative aspect-[3/4] [@media(max-height:500px)_and_(max-width:900px)]:aspect-square w-full [@media(max-height:500px)_and_(max-width:900px)]:w-[160px] [@media(max-height:500px)_and_(max-width:900px)]:shrink-0">
         <div
-          className={`absolute z-30 transition-transform duration-500 ease-in-out flex items-center justify-center rounded-full ${isPlaying ? 'scale-110' : 'scale-100'} [@media(max-height:500px)]:scale-[0.8] [@media(max-height:500px)]:top-[-5%] [@media(max-height:500px)]:left-[-5%]`}
+          className={`absolute z-30 transition-transform duration-500 ease-in-out flex items-center justify-center rounded-full ${isPlaying ? 'scale-110' : 'scale-100'} [@media(max-height:500px)_and_(max-width:900px)]:scale-[0.8] [@media(max-height:500px)_and_(max-width:900px)]:top-[-5%] [@media(max-height:500px)_and_(max-width:900px)]:left-[-5%]`}
           style={{
             backgroundColor: color,
             width: '20cqw',
@@ -93,7 +93,7 @@ const DisciplineModule = ({ title, img, color, darkColor, Icon, speed = 0.78, li
           />
           <div className={`absolute inset-0 flex items-center justify-center z-20 transition-opacity duration-500 ease-in-out pointer-events-none ${isPlaying ? 'opacity-100' : 'opacity-0'}`}>
             <span
-              className="text-white tracking-normal text-center px-4 font-outfit [@media(max-height:500px)]:text-xs"
+              className="text-white tracking-normal text-center px-4 font-outfit [@media(max-height:500px)_and_(max-width:900px)]:text-xs"
               style={{
                 fontWeight: 500,
                 fontSize: '8cqw',
@@ -105,7 +105,7 @@ const DisciplineModule = ({ title, img, color, darkColor, Icon, speed = 0.78, li
           </div>
         </div>
       </div>
-      <div className="w-full text-center [@media(max-height:500px)]:text-left items-center group-hover:text-brand-ink transition-colors duration-300">
+      <div className="w-full text-center [@media(max-height:500px)_and_(max-width:900px)]:text-left items-center group-hover:text-brand-ink transition-colors duration-300">
         <h3 className={`text-2xl lg:text-3xl font-outfit font-extrabold uppercase tracking-wide text-brand-ink ${isPlaying ? 'text-brand-ink' : 'text-brand-ink/75'} transition-colors duration-500`}>
           {title.endsWith('s') ? title : `${title}s`}
         </h3>

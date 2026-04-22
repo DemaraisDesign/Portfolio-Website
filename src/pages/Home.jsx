@@ -1008,7 +1008,7 @@ const Home = () => {
             <AnimatedDivider className="mt-8" />
           </div>
 
-          {/* Scroll arrows removed — carousel is swipeable on mobile */
+          {/* Scroll arrows removed — carousel is swipeable on mobile */}
 
           <motion.div
             onScroll={checkScroll}

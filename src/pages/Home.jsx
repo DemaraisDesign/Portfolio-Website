@@ -48,7 +48,7 @@ const DisciplineModule = ({ title, img, color, darkColor, Icon, speed = 0.78, li
 
   return (
     <motion.div
-      className="cursor-pointer group snap-center shrink-0 w-[70vw] md:w-[45vw] lg:w-full [@media(max-height:500px)_and_(max-width:900px)]:w-[40vw] flex flex-col gap-6 items-center"
+      className="cursor-pointer group snap-center shrink-0 w-[70vw] md:w-full [@media(max-height:500px)_and_(max-width:900px)]:w-[40vw] flex flex-col gap-6 items-center"
       style={{ containerType: 'inline-size' }}
       onMouseEnter={handleInteractionStart}
       onMouseLeave={handleInteractionEnd}
@@ -992,7 +992,7 @@ const Home = () => {
             w-full
             flex gap-6 px-9
             overflow-x-auto pb-0 pt-12
-            lg:grid lg:grid-cols-3 lg:gap-8 lg:overflow-visible lg:px-24 lg:pb-0 lg:pt-12
+            md:grid md:grid-cols-3 md:gap-6 md:overflow-visible md:px-12 md:pb-0 md:pt-12 lg:gap-8 lg:px-24
             scrollbar-hide
             perspective-[1200px]
           "

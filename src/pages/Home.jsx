@@ -286,8 +286,9 @@ const ListProjectCard = ({ project, index }) => {
       }}
       onMouseEnter={() => audio.playDeepHover()}
     >
-      <div className="grid grid-cols-1 [@media(max-height:500px)]:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-12 items-start lg:items-center">
-        <div className={`relative lg:col-span-7 [@media(max-height:500px)]:col-span-1 ${index % 2 === 1 ? 'lg:order-2' : ''}`} style={{ clipPath: "inset(0 round 7px)", WebkitClipPath: "inset(0 round 7px)" }}>
+      {/* Standard (portrait) and desktop layout */}
+      <div className="[@media(max-height:500px)]:hidden grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start lg:items-center">
+        <div className={`relative lg:col-span-7 ${index % 2 === 1 ? 'lg:order-2' : ''}`} style={{ clipPath: "inset(0 round 7px)", WebkitClipPath: "inset(0 round 7px)" }}>
           <div className="relative bg-[#16161D] overflow-hidden rounded-theme-sm aspect-video w-full">
             <motion.div 
               className="absolute inset-0 w-full h-full" 
@@ -302,42 +303,51 @@ const ListProjectCard = ({ project, index }) => {
             </motion.div>
           </div>
         </div>
-        <div className={`flex flex-col w-full text-left lg:col-span-5 [@media(max-height:500px)]:col-span-1 ${index % 2 === 0 ? 'lg:order-1 items-start' : 'lg:order-1 lg:items-end items-start'}`}>
-          <SectionPreheader
-            text={project.cat}
-            color={getBrandColor(project.discipline)}
-            textColor="#FFFFFF"
-            align={index % 2 === 0 ? "left" : "right"}
-            mobileAlign="left"
-          />
+        <div className={`flex flex-col w-full text-left lg:col-span-5 ${index % 2 === 0 ? 'lg:order-1 items-start' : 'lg:order-1 lg:items-end items-start'}`}>
+          <SectionPreheader text={project.cat} color={getBrandColor(project.discipline)} textColor="#FFFFFF" align={index % 2 === 0 ? "left" : "right"} mobileAlign="left" />
           <h3 className={`text-4xl md:text-5xl font-outfit font-bold mb-6 ${index % 2 === 0 ? 'text-left' : 'lg:text-right text-left'}`}>
-            <Link to={`/work/${project.id}`} className="cursor-pointer hover:text-gray-300 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal rounded">
-              {project.title}
-            </Link>
+            <Link to={`/work/${project.id}`} className="cursor-pointer hover:text-gray-300 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal rounded">{project.title}</Link>
           </h3>
-          <p className={`text-gray-400 font-light text-lg max-w-md ${index % 2 === 0 ? 'text-left' : 'lg:text-right text-left'}`}>
-            {project.desc}
-          </p>
+          <p className={`text-gray-400 font-light text-lg max-w-md ${index % 2 === 0 ? 'text-left' : 'lg:text-right text-left'}`}>{project.desc}</p>
           <div className="mt-8 flex">
-            <motion.div
-              onClick={(e) => { e.stopPropagation(); handleNavigate(); }}
-              className="group inline-flex items-center gap-2 text-[#f1f1f1] text-xs font-bold uppercase tracking-widest cursor-pointer transition-all duration-300 hover:gap-4 hover:opacity-80"
-            >
-              {isConstruction ? (
-                <>
-                  <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
-                      <circle cx="12" cy="12" r="10" fill="currentColor" stroke="none" />
-                      <polyline points="12 6 12 12 15.5 15.5" stroke={getBrandColor(project.discipline)} strokeWidth="3" fill="none" />
-                  </svg>
-                  View Case Study
-                </>
-              ) : unlocked ? (
-                <>View Case Study <ArrowRight size={16} /></>
-              ) : (
-                <><svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 10V7a5 5 0 0 1 10 0v3" fill="none" /><rect x="3" y="10" width="18" height="12" rx="2" fill="currentColor" stroke="none" /><circle cx="12" cy="16" r="1.5" fill="currentColor" stroke="currentColor" strokeWidth="3" style={{ color: '#0B1A21' }} /></svg> View Case Study</>
-              )}
+            <motion.div onClick={(e) => { e.stopPropagation(); handleNavigate(); }} className="group inline-flex items-center gap-2 text-[#f1f1f1] text-xs font-bold uppercase tracking-widest cursor-pointer transition-all duration-300 hover:gap-4 hover:opacity-80">
+              {isConstruction ? (<><svg className="w-3.5 h-3.5" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" fill="currentColor" stroke="none" /><polyline points="12 6 12 12 15.5 15.5" stroke={getBrandColor(project.discipline)} strokeWidth="3" fill="none" /></svg>View Case Study</>) : unlocked ? (<>View Case Study <ArrowRight size={16} /></>) : (<><svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 10V7a5 5 0 0 1 10 0v3" fill="none" /><rect x="3" y="10" width="18" height="12" rx="2" fill="currentColor" stroke="none" /><circle cx="12" cy="16" r="1.5" fill="currentColor" stroke="currentColor" strokeWidth="3" style={{ color: '#0B1A21' }} /></svg> View Case Study</>)}
             </motion.div>
           </div>
+        </div>
+      </div>
+
+      {/* Landscape phone layout — image left, text right, compact */}
+      <div className="hidden [@media(max-height:500px)]:flex flex-row gap-4 items-center h-full">
+        {/* Image column — square-ish, fills vertical space */}
+        <div
+          className={`relative shrink-0 h-[200px] w-[280px] rounded-theme-sm overflow-hidden ${index % 2 === 1 ? 'order-2' : 'order-1'}`}
+          style={{ clipPath: "inset(0 round 7px)", WebkitClipPath: "inset(0 round 7px)" }}
+        >
+          <div className="absolute inset-0 bg-[#16161D]">
+            <motion.img
+              src={project.img}
+              alt={`${project.title} Project Image`}
+              className="absolute inset-0 w-full h-full object-cover"
+              style={{ objectPosition: project.imgPosition || 'center center' }}
+              loading="lazy"
+            />
+          </div>
+        </div>
+
+        {/* Text column */}
+        <div className={`flex flex-col justify-center flex-1 min-w-0 ${index % 2 === 1 ? 'order-1 items-end text-right' : 'order-2 items-start text-left'}`}>
+          <SectionPreheader text={project.cat} color={getBrandColor(project.discipline)} textColor="#FFFFFF" align={index % 2 === 1 ? "right" : "left"} mobileAlign={index % 2 === 1 ? "right" : "left"} />
+          <h3 className="text-2xl font-outfit font-bold mb-2 leading-tight">
+            <Link to={`/work/${project.id}`} className="cursor-pointer hover:text-gray-300 transition-colors">{project.title}</Link>
+          </h3>
+          <p className="text-gray-400 font-light text-sm leading-snug line-clamp-3 mb-3">{project.desc}</p>
+          <motion.div
+            onClick={(e) => { e.stopPropagation(); handleNavigate(); }}
+            className="group inline-flex items-center gap-1.5 text-[#f1f1f1] text-[10px] font-bold uppercase tracking-widest cursor-pointer transition-all duration-300 hover:gap-3 hover:opacity-80"
+          >
+            {isConstruction ? (<><svg className="w-3 h-3" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" fill="currentColor" stroke="none" /><polyline points="12 6 12 12 15.5 15.5" stroke={getBrandColor(project.discipline)} strokeWidth="3" fill="none" /></svg>View Case Study</>) : unlocked ? (<>View Case Study <ArrowRight size={12} /></>) : (<><svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 10V7a5 5 0 0 1 10 0v3" fill="none" /><rect x="3" y="10" width="18" height="12" rx="2" fill="currentColor" stroke="none" /><circle cx="12" cy="16" r="1.5" fill="currentColor" stroke="currentColor" strokeWidth="3" style={{ color: '#0B1A21' }} /></svg> View Case Study</>)}
+          </motion.div>
         </div>
       </div>
     </div >

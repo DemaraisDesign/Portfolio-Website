@@ -50,7 +50,7 @@ const SectionPreheader = ({ text, color = "#171717", textColor, customTrigger, a
     // Measure text width and update targetPos — runs whenever text or dimensions change
     useLayoutEffect(() => {
         if (!textRef.current) return;
-        const width = textRef.current.offsetWidth;
+        const width = textRef.current.getBoundingClientRect().width;
         const travelDistance = (width / 2) + d.gap;
         targetPos.current = { left: -travelDistance, right: travelDistance };
         if (!isMeasured) setIsMeasured(true);
@@ -149,6 +149,10 @@ const SectionPreheader = ({ text, color = "#171717", textColor, customTrigger, a
                             borderRadius: "50%",
                             backgroundColor: color,
                             position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            marginTop: -(d.circleWidth / 2),
+                            marginLeft: -(d.circleWidth / 2),
                         }}
                     />
                 )}
@@ -179,6 +183,10 @@ const SectionPreheader = ({ text, color = "#171717", textColor, customTrigger, a
                             borderRadius: "50%",
                             backgroundColor: color,
                             position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            marginTop: -(d.circleWidth / 2),
+                            marginLeft: -(d.circleWidth / 2),
                         }}
                     />
                 )}

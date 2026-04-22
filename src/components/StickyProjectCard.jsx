@@ -88,6 +88,22 @@ const StickyProjectCard = ({
     // Layout: Even = Text Left / Image Right
     const isEven = index % 2 === 0;
 
+    const gridLayout = isEven 
+        ? 'lg:grid-cols-[40%_60%] [@media(max-height:500px)]:grid-cols-[40%_60%]' 
+        : 'lg:grid-cols-[60%_40%] [@media(max-height:500px)]:grid-cols-[60%_40%]';
+
+    const textOrder = isEven 
+        ? 'lg:order-1 [@media(max-height:500px)]:order-1' 
+        : 'lg:order-2 [@media(max-height:500px)]:order-2';
+
+    const imageOrder = isEven 
+        ? 'lg:order-2 [@media(max-height:500px)]:order-2' 
+        : 'lg:order-1 [@media(max-height:500px)]:order-1';
+
+    const imageRounded = isEven 
+        ? 'lg:rounded-tl-3xl [@media(max-height:500px)]:rounded-tl-3xl' 
+        : 'lg:rounded-tr-3xl [@media(max-height:500px)]:rounded-tr-3xl';
+
     const handleNavigate = () => {
         const target = project.id ? `/work/${project.id}` : '/case-study-template';
         if (isConstruction) {
@@ -98,20 +114,26 @@ const StickyProjectCard = ({
     };
 
     return (
-        // Grid always enforced: Fixed 60/40 Split
-        <div ref={cardRef} className={`w-full h-full ${mainBgClass} relative overflow-hidden flex flex-col lg:grid ${isEven ? 'lg:grid-cols-[40%_60%]' : 'lg:grid-cols-[60%_40%]'}`} style={containerStyle}>
+        // Grid always enforced: Fixed 60/40 Split on Desktop and Landscape Mobile
+        <div ref={cardRef} className={`w-full h-full ${mainBgClass} relative overflow-hidden flex flex-col lg:grid [@media(max-height:500px)]:grid ${gridLayout}`} style={containerStyle}>
 
             {/* TEXT COLUMN */}
-            <div className={`relative flex flex-col items-start justify-center px-9 py-12 lg:px-24 lg:py-16 pt-12 lg:pt-[96px] z-30 order-2 ${isEven ? 'lg:order-1' : 'lg:order-2'}`}>
+            <div className={`relative flex flex-col items-start justify-center px-9 py-12 lg:px-24 lg:py-16 pt-12 lg:pt-[96px] [@media(max-height:500px)]:px-8 [@media(max-height:500px)]:py-6 z-30 order-2 ${textOrder}`}>
                 <div className={`max-w-xl ${primaryText} w-full`}>
-                    <SectionPreheader
-                        text={project.cat || "Project Category"}
-                        color="#FFFFFF"
-                        textColor="#FFFFFF"
-                        customTrigger={isRevealed}
-                    />
-                    <h2 className="mb-6"><button onClick={handleNavigate} className={`text-left text-4xl md:text-5xl lg:text-6xl font-extrabold font-outfit leading-tight cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-purple rounded-md ${hoverTextClass} transition-colors duration-300`}>{project.title}</button></h2>
-                    <p className={`text-base md:text-lg ${secondaryText} leading-relaxed mb-8`}>
+                    <div className="[@media(max-height:500px)]:hidden">
+                        <SectionPreheader
+                            text={project.cat || "Project Category"}
+                            color="#FFFFFF"
+                            textColor="#FFFFFF"
+                            customTrigger={isRevealed}
+                        />
+                    </div>
+                    <div className="hidden [@media(max-height:500px)]:block mb-2">
+                         <span className="text-xs font-bold uppercase tracking-widest text-[#FFFFFF]">{project.cat || "Category"}</span>
+                    </div>
+
+                    <h2 className="mb-4 lg:mb-6"><button onClick={handleNavigate} className={`text-left text-4xl md:text-5xl lg:text-6xl [@media(max-height:500px)]:text-2xl font-extrabold font-outfit leading-tight cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-purple rounded-md ${hoverTextClass} transition-colors duration-300`}>{project.title}</button></h2>
+                    <p className={`text-base md:text-lg [@media(max-height:500px)]:text-xs [@media(max-height:500px)]:leading-snug [@media(max-height:500px)]:line-clamp-3 ${secondaryText} leading-relaxed mb-6 lg:mb-8`}>
                         {project.desc}
                     </p>
 
@@ -156,11 +178,11 @@ const StickyProjectCard = ({
             </div>
 
             {/* IMAGE COLUMN */}
-            <div className={`relative h-full overflow-hidden pt-0 order-1 ${isEven ? 'lg:order-2' : 'lg:order-1'}`} style={{ perspective: "1200px" }}>
+            <div className={`relative h-full overflow-hidden pt-0 order-1 ${imageOrder}`} style={{ perspective: "1200px" }}>
 
                 {/* Visual "Curtain" - Now just the permanent image container */}
                 <motion.div
-                    className={`absolute bottom-0 left-0 right-0 top-0 lg:top-[96px] z-10 ${curtainBgClass} overflow-hidden cursor-pointer group/image focus:outline-none focus-visible:ring-4 focus-visible:ring-inset focus-visible:ring-brand-purple ${isEven ? 'lg:rounded-tl-3xl' : 'lg:rounded-tr-3xl'}`}
+                    className={`absolute bottom-0 left-0 right-0 top-0 lg:top-[96px] [@media(max-height:500px)]:top-0 z-10 ${curtainBgClass} overflow-hidden cursor-pointer group/image focus:outline-none focus-visible:ring-4 focus-visible:ring-inset focus-visible:ring-brand-purple ${imageRounded}`}
                     style={containerStyle}
                     onClick={handleNavigate}
                     role="presentation"

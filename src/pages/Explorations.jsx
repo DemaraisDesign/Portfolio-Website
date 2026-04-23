@@ -117,7 +117,7 @@ const Explorations = () => {
                 <div className="w-full max-w-3xl mx-auto">
                     <div className="text-lg text-gray-700 leading-relaxed font-sans min-w-0">
                         <React.Fragment>
-                            <SectionPreheader text="Philosophies & Ethics" color={BRAND_COLORS.experiments} align="left" />
+                            <SectionPreheader text="Ethics" color={BRAND_COLORS.experiments} align="left" />
                             <DebugSpacer id="Explorations_Story_PreHeaderGap" defaultMobile={2} defaultDesktop={2} />
                         </React.Fragment>
 

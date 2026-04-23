@@ -132,14 +132,9 @@ const Explorations = () => {
                         <DebugSpacer id="Explorations_Story_Paragraph_1" defaultMobile={20} defaultDesktop={30} />
 
                         <p className="m-0">
-                            AI is genuinely disruptive and it's evolving quickly. My honest suspicion is that the people sounding the loudest alarms about job security are going to turn out closer to right than the people waving it off. Work will be lost. Industries will shift in ways that are hard to predict and harder to navigate.
+                            AI is genuinely disruptive and it's evolving quickly. My honest suspicion is that the people sounding the loudest alarms about job security are going to turn out closer to right than the people waving it off. Despite all this, I personally don't believe this is the end. I think it's the beginning of something profoundly new.
                         </p>
                         <DebugSpacer id="Explorations_Story_Paragraph_2" defaultMobile={20} defaultDesktop={30} />
-
-                        <p className="m-0">
-                            Despite all this, I personally don't believe this is the end. I think it's the beginning of something profoundly new.
-                        </p>
-                        <DebugSpacer id="Explorations_Story_Paragraph_3" defaultMobile={20} defaultDesktop={30} />
 
                         <p className="m-0">
                             Humanity's story is inseparable from its ability to build new tools and adapt to them. Disruptive technologies, even when they threaten the status quo, have a way of opening doors that weren't visible before. Photography looked like it might make painting obsolete. Instead it freed painting from the obligation of pure representation and gave us cinema as a byproduct.

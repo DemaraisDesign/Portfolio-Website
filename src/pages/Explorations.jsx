@@ -139,13 +139,7 @@ const Explorations = () => {
                         <p className="m-0">
                             Humanity's story is inseparable from its ability to build new tools and adapt to them. Disruptive technologies, even when they threaten the status quo, have a way of opening doors that weren't visible before. Photography looked like it might make painting obsolete. Instead it freed painting from the obligation of pure representation and gave us cinema as a byproduct.
                         </p>
-                        <DebugSpacer id="Explorations_Story_Quote_Top" defaultMobile={20} defaultDesktop={30} />
-
-                        <PullQuote 
-                            content="Disruptive technologies, even when they threaten the status quo, have a way of opening doors that weren't visible before."
-                            color={BRAND_COLORS.experiments}
-                        />
-                        <DebugSpacer id="Explorations_Story_Quote_Bottom" defaultMobile={20} defaultDesktop={30} />
+                        <DebugSpacer id="Explorations_Story_Paragraph_4" defaultMobile={20} defaultDesktop={30} />
 
                         <p className="m-0">
                             Other times the disruption runs deeper than any trade. The printing press didn't threaten a craft so much as a monopoly. For centuries, the written word had been the exclusive property of the Church and the court — controlled, copied, and interpreted by the few. Gutenberg didn't just mechanize a process. He democratized access to knowledge itself, and what eventually poured through that opening were mass literacy, the Reformation, and the Enlightenment.

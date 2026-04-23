@@ -33,10 +33,10 @@ const Footer = () => {
             </div>
           )}
 
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 block font-outfit">Let's Collaborate.</h2>
+          <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 block font-outfit">Drop me a line.</h2>
           {/* Horizontal divider removed */}
           <p className="text-brand-ink-body text-xl mb-12 mt-0">
-            Reach out today and let's start building something remarkable.
+            Let's build something fun.
           </p>
 
           <div className="space-y-8">

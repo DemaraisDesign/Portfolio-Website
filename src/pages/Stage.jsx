@@ -85,7 +85,7 @@ const Stage = () => {
     
     // Locally override thumbnail images just for the Stage list view
     const DATA = RAW_DATA.map(p => {
-        if (p.id === 'coeurage') return { ...p, img: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1774550544/Gemini_Generated_Image_vykcwyvykcwyvykc_kgw1r5.jpg", imgPosition: "75% center" };
+        if (p.id === 'coeurage') return { ...p, img: "https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1774550544/Gemini_Generated_Image_vykcwyvykcwyvykc_kgw1r5.jpg", imgPosition: "75% center" };
         return p;
     });
 
@@ -114,7 +114,7 @@ const Stage = () => {
                 {/* Desktop Background Image (Right Side) - Hidden on Mobile */}
                 <div className="absolute inset-0 z-0 hidden lg:block">
                     <motion.img
-                        src="https://res.cloudinary.com/dqabyzuzf/image/upload/v1772168615/Sparrow1COMP_b23kfu.jpg"
+                        src="https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1772168615/Sparrow1COMP_b23kfu.jpg"
                         alt="The Sparrow - Stage Design"
                         className="w-full h-full object-cover"
                         style={{
@@ -181,7 +181,7 @@ const Stage = () => {
                         transition={{ duration: 0.8, delay: 0.2 }}
                     >
                         <img
-                            src="https://res.cloudinary.com/dqabyzuzf/image/upload/v1772168615/Sparrow1COMP_b23kfu.jpg"
+                            src="https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1772168615/Sparrow1COMP_b23kfu.jpg"
                             alt="The Sparrow - Stage Design"
                             className="w-full h-full object-cover"
                             style={{ objectPosition: "50% 35%" }}

@@ -19,10 +19,10 @@ import PullQuote from '../components/PullQuote';
 
 // --- ASSETS ---
 const IMAGES = {
-  team1: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1774547046/Still_bananna_rzjxm0.png",
-  team2: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1766616800/DDWebsite_Home_Sound_Desktop_ql27cj.jpg",
-  team3: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1765815845/DDWebsite_Home_Direction_Desktop_icc3g9.jpg",
-  headshotPlaceholder: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1774662349/CalarcoHeadshotUpdate_1_pcxlnh.png",
+  team1: "https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1774547046/Still_bananna_rzjxm0.png",
+  team2: "https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1766616800/DDWebsite_Home_Sound_Desktop_ql27cj.jpg",
+  team3: "https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1765815845/DDWebsite_Home_Direction_Desktop_icc3g9.jpg",
+  headshotPlaceholder: "https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1774662349/CalarcoHeadshotUpdate_1_pcxlnh.png",
 };
 
 // --- COMPONENT DEFINITIONS ---
@@ -292,9 +292,9 @@ const ListProjectCard = ({ project, index }) => {
 
 const Works = () => {
   const projects = [
-    { ...getProject('morgan-stanley'), img: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1774454742/DDWebsite_Home_UX_Desktop_rzqa9y_1_lgwlm7.png" },
-    { ...getProject('the-yellow-boat'), img: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1774401846/YB_Stages_ymktne.jpg" },
-    { ...getProject('take-with-water'), img: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1774487994/Screenshot_2026-03-25_at_11.29.15_AM_sg7iye.png" }
+    { ...getProject('morgan-stanley'), img: "https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1774454742/DDWebsite_Home_UX_Desktop_rzqa9y_1_lgwlm7.png" },
+    { ...getProject('the-yellow-boat'), img: "https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1774401846/YB_Stages_ymktne.jpg" },
+    { ...getProject('take-with-water'), img: "https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1774487994/Screenshot_2026-03-25_at_11.29.15_AM_sg7iye.png" }
   ];
 
   const ref = useRef(null);
@@ -322,7 +322,7 @@ const Explorations = () => {
   // Get first 3 experiments
   const experiments = [
     { ...getProject('redesigns'), subhead: "Showcasing applied sound design through speculative reimaginings and original prototypes." },
-    { ...getProject('ui-prototypes'), img: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1775591695/markus-spiske-hbb6GkG6p9M-unsplash_ycfhze.jpg", subhead: "Custom UI and other explorations using AI-assisted coding methods." },
+    { ...getProject('ui-prototypes'), img: "https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1775591695/markus-spiske-hbb6GkG6p9M-unsplash_ycfhze.jpg", subhead: "Custom UI and other explorations using AI-assisted coding methods." },
     { ...getProject('ai-media'), subhead: "Experiments with various media forms. Some created with standard workflows and some with AI assistance." }
   ];
 

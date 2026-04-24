@@ -1949,7 +1949,7 @@ const InteractiveUserFlow = ({ color = '#00CAE3' }) => {
                             transition={{ type: "spring", stiffness: 300, damping: 30 }}
                         >
                             <img
-                                src="https://res.cloudinary.com/dqabyzuzf/image/upload/v1773589831/Display_Now_As_Is_pkaen8.png"
+                                src="https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1773589831/Display_Now_As_Is_pkaen8.png"
                                 alt="Full Flow Artifact flowchart"
                                 className="max-w-full max-h-[calc(100vh-170px)] md:max-h-[calc(100vh-160px)] object-contain rounded-xl shadow-2xl pointer-events-auto"
                             />

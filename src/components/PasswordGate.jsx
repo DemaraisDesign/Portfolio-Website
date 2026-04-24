@@ -178,7 +178,7 @@ const PasswordModal = () => {
                         >
                             {hasFailed ? (
                                 <img 
-                                    src="https://res.cloudinary.com/dqabyzuzf/image/upload/v1775231156/vaad8ujchxu3sugjrwjn.gif" 
+                                    src="https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1775231156/vaad8ujchxu3sugjrwjn.gif" 
                                     alt="Ah ah ah!" 
                                     style={{ width: '100%', maxWidth: 180, height: 'auto', borderRadius: 12, objectFit: 'contain' }} 
                                 />

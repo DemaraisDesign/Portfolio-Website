@@ -839,7 +839,7 @@ export const CASE_STUDIES = {
       ],
       visualAid: {
         type: 'Image',
-        src: 'https://res.cloudinary.com/dqabyzuzf/image/upload/v1773162323/Display_List_copy_og9ehw.png',
+        src: 'https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1773162323/Display_List_copy_og9ehw.png',
         alt: 'Groups feature buried in the navigation'
       }
     },
@@ -862,7 +862,7 @@ export const CASE_STUDIES = {
         "**Decision 5: Create an in-browser preview function**",
         "We also added a preview function directly within the platform. In the original product, there was no way to see what your sign would look like without connecting a second device, such as another computer or a physical screen. For users who were just trying the product out for the first time, that was a dealbreaker. They had no visual feedback loop, no confirmation that what they were building was actually working. The preview function let users see their sign in practice, right in the browser. This was one of the biggest factors in the validation testing showing 100% task completion."
       ],
-      img: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1773782230/Screen_Shot_2021-06-29_at_5.54.50_PM_sx0r9x.png",
+      img: "https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1773782230/Screen_Shot_2021-06-29_at_5.54.50_PM_sx0r9x.png",
     },
     section6: {
       visualAid: {

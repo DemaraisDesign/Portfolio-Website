@@ -6,25 +6,25 @@ import { AnimatePresence, motion } from "framer-motion";
 const emails = [
     {
         id: 1,
-        image: 'https://res.cloudinary.com/dqabyzuzf/image/upload/v1770223347/MorganEmail1_kug2zj.jpg',
+        image: 'https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1770223347/MorganEmail1_kug2zj.jpg',
         title: 'Finance University Launch',
         description: 'Platform launch for “Finance University” which operates under distinct visual guidelines. Designed the hero graphic as well.',
     },
     {
         id: 2,
-        image: 'https://res.cloudinary.com/dqabyzuzf/image/upload/v1770223347/MorganEmail2_nreuyp.jpg',
+        image: 'https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1770223347/MorganEmail2_nreuyp.jpg',
         title: 'Saving vs. Investing (Part 1)',
         description: 'Educational email for Wealth Management. Side-by-side format comparing saving and investing. The goal: distill dense financial concepts into something scannable without losing accuracy.',
     },
     {
         id: 3,
-        image: 'https://res.cloudinary.com/dqabyzuzf/image/upload/v1770223347/MorganEmail3_abi8qn.jpg',
+        image: 'https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1770223347/MorganEmail3_abi8qn.jpg',
         title: 'Saving vs. Investing (Part 2)',
         description: 'Second in the series. This one shows what $4,000/year becomes over 30 years: $120K under a mattress, $128K in savings, $338K invested.',
     },
     {
         id: 4,
-        image: 'https://res.cloudinary.com/dqabyzuzf/image/upload/v1770223347/MorganEmail4_cbfspl.jpg',
+        image: 'https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1770223347/MorganEmail4_cbfspl.jpg',
         title: 'Modular Template System',
         description: 'This is a sample of the numerous templates I created for various departments: hero, intro blocks, two-column cards, three-column icons, event listings. Other teams could build emails without starting from scratch or breaking brand.',
     },

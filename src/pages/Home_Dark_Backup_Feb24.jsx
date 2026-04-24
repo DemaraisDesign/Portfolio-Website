@@ -14,11 +14,11 @@ import { BRAND_COLORS as BRAND } from '../utils/theme';
 
 // --- ASSETS ---
 const IMAGES = {
-  heroVideo: "https://res.cloudinary.com/dqabyzuzf/video/upload/v1763496355/WebsiteVidOptimized_o21ksu.mp4",
-  fallbackHero: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1763525405/FallbackHeroImg_zkrces.png",
-  team1: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1766176237/DDWebsite_Home_UX_Desktop_rzqa9y.jpg",
-  team2: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1766616800/DDWebsite_Home_Sound_Desktop_ql27cj.jpg",
-  team3: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1765815845/DDWebsite_Home_Direction_Desktop_icc3g9.jpg",
+  heroVideo: "https://res.cloudinary.com/dqabyzuzf/video/upload/f_auto,q_auto/v1763496355/WebsiteVidOptimized_o21ksu.mp4",
+  fallbackHero: "https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1763525405/FallbackHeroImg_zkrces.png",
+  team1: "https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1766176237/DDWebsite_Home_UX_Desktop_rzqa9y.jpg",
+  team2: "https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1766616800/DDWebsite_Home_Sound_Desktop_ql27cj.jpg",
+  team3: "https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1765815845/DDWebsite_Home_Direction_Desktop_icc3g9.jpg",
   project1: "https://images.unsplash.com/photo-1600607686527-6fb886090705?q=80&w=2700&auto=format&fit=crop",
   project2: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=2000&auto=format&fit=crop",
   project3: "https://images.unsplash.com/photo-1558655146-9f40138edfeb?q=80&w=2000&auto=format&fit=crop",

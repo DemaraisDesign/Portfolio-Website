@@ -44,7 +44,7 @@ const Sounds = () => {
                 {/* Desktop Background Image (Right Side) - Hidden on Mobile */}
                 <div className="absolute inset-0 z-0 hidden lg:block">
                     <motion.img
-                        src="https://res.cloudinary.com/dqabyzuzf/image/upload/v1775157768/Group_203_ugn9ph.png"
+                        src="https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1775157768/Group_203_ugn9ph.png"
                         alt="Sound Design Feature"
                         className="w-full h-full object-cover"
                         style={{
@@ -111,7 +111,7 @@ const Sounds = () => {
                         transition={{ duration: 0.8, delay: 0.2 }}
                     >
                         <img
-                            src="https://res.cloudinary.com/dqabyzuzf/image/upload/v1775157768/Group_203_ugn9ph.png"
+                            src="https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1775157768/Group_203_ugn9ph.png"
                             alt="Sound Design Feature"
                             className="w-full h-full object-cover"
                             style={{ objectPosition: "50% 50%" }}

@@ -7,7 +7,7 @@ const PERSONAS = [
     {
         name: "Jenny Bovell",
         tagline: "Los Angeles Artisan Small Business Owner",
-        photo: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1774372194/smallbiz_lxskav.png",
+        photo: "https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1774372194/smallbiz_lxskav.png",
         story: {
             text: "Jenny scraped her way to opening a small shop in Highland Park. She was not a business major, and taught herself how to run it as she went. While she's proud of her accomplishments, being an entrepreneur has been more difficult than she could have ever imagined. And she opened her doors two months before Covid lockdowns.",
             bullets: [

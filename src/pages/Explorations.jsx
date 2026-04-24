@@ -40,7 +40,7 @@ const Explorations = () => {
                 {/* Desktop Background Image (Right Side) - Hidden on Mobile */}
                 <div className="absolute inset-0 z-0 hidden lg:block">
                     <motion.img
-                        src="https://res.cloudinary.com/dqabyzuzf/image/upload/v1775484952/Gemini_Generated_Image_jsk16kjsk16kjsk1_od52gy.jpg"
+                        src="https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1775484952/Gemini_Generated_Image_jsk16kjsk16kjsk1_od52gy.jpg"
                         alt="Creative Technology Exploration"
                         className="w-full h-full object-cover"
                         style={{
@@ -100,7 +100,7 @@ const Explorations = () => {
                         transition={{ duration: 0.8, delay: 0.2 }}
                     >
                         <img
-                            src="https://res.cloudinary.com/dqabyzuzf/image/upload/v1775484952/Gemini_Generated_Image_jsk16kjsk16kjsk1_od52gy.jpg"
+                            src="https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1775484952/Gemini_Generated_Image_jsk16kjsk16kjsk1_od52gy.jpg"
                             alt="Creative Technology Exploration"
                             className="w-full h-full object-cover"
                             style={{ objectPosition: "50% 50%" }}

@@ -42,7 +42,7 @@ const Screens = () => {
                 {/* Desktop Background Image (Right Side) - Hidden on Mobile */}
                 <div className="absolute inset-0 z-0 hidden lg:block">
                     <motion.img
-                        src="https://res.cloudinary.com/dqabyzuzf/image/upload/v1775078293/hugo-rocha-qFpnvZ_j9HU-unsplash_zwechd.jpg"
+                        src="https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1775078293/hugo-rocha-qFpnvZ_j9HU-unsplash_zwechd.jpg"
                         alt="UX UI Design Feature"
                         className="w-full h-full object-cover"
                         style={{
@@ -109,7 +109,7 @@ const Screens = () => {
                         transition={{ duration: 0.8, delay: 0.2 }}
                     >
                         <img
-                            src="https://res.cloudinary.com/dqabyzuzf/image/upload/v1775078293/hugo-rocha-qFpnvZ_j9HU-unsplash_zwechd.jpg"
+                            src="https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1775078293/hugo-rocha-qFpnvZ_j9HU-unsplash_zwechd.jpg"
                             alt="UX UI Design Feature"
                             className="w-full h-full object-cover"
                             style={{ objectPosition: "50% 50%" }}
@@ -196,12 +196,12 @@ const Screens = () => {
                 <div id="case-studies" className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 max-w-[1400px] mx-auto scroll-mt-24 md:scroll-mt-[100px]">
                     {DATA.map((project, i) => {
                         let p = project;
-                        if (project.id === 'display-now') p = { ...project, img: 'https://res.cloudinary.com/dqabyzuzf/image/upload/v1774880743/Group_148_jszprn.png' };
-                        if (project.id === 'morgan-stanley') p = { ...project, img: 'https://res.cloudinary.com/dqabyzuzf/image/upload/v1774880880/ms_yyikni.png' };
-                        if (project.id === 'still') p = { ...project, img: 'https://res.cloudinary.com/dqabyzuzf/image/upload/v1775071962/Haiba_1_tweys9.png' };
-                        if (project.id === 'solve-24') p = { ...project, img: 'https://res.cloudinary.com/dqabyzuzf/image/upload/v1774881660/Gemini_Generated_Image_ij89q1ij89q1ij89_1_k19alh.png' };
-                        if (project.id === 'still-app') p = { ...project, img: 'https://res.cloudinary.com/dqabyzuzf/image/upload/v1774887121/Group_149_muakoe.png' };
-                        if (project.id === 'my-portfolio') p = { ...project, img: 'https://res.cloudinary.com/dqabyzuzf/image/upload/v1775590354/Gemini_Generated_Image_tft4jetft4jetft4_nunes5.jpg' };
+                        if (project.id === 'display-now') p = { ...project, img: 'https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1774880743/Group_148_jszprn.png' };
+                        if (project.id === 'morgan-stanley') p = { ...project, img: 'https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1774880880/ms_yyikni.png' };
+                        if (project.id === 'still') p = { ...project, img: 'https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1775071962/Haiba_1_tweys9.png' };
+                        if (project.id === 'solve-24') p = { ...project, img: 'https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1774881660/Gemini_Generated_Image_ij89q1ij89q1ij89_1_k19alh.png' };
+                        if (project.id === 'still-app') p = { ...project, img: 'https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1774887121/Group_149_muakoe.png' };
+                        if (project.id === 'my-portfolio') p = { ...project, img: 'https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1775590354/Gemini_Generated_Image_tft4jetft4jetft4_nunes5.jpg' };
                         const isLastOdd = i === DATA.length - 1 && DATA.length % 2 === 1;
                         return (
                             <div key={i} className={isLastOdd ? 'md:col-span-2 flex justify-center' : ''}>

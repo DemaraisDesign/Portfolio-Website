@@ -1470,7 +1470,7 @@ const InteractiveUserFlowToBe = ({ color = '#56C6FF' }) => {
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
             >
               <img
-                src="https://res.cloudinary.com/dqabyzuzf/image/upload/v1773677095/Display_Now_To_Be_Flow_gcvrgr.jpg"
+                src="https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1773677095/Display_Now_To_Be_Flow_gcvrgr.jpg"
                 alt="Full Flow Artifact flowchart"
                 className="max-w-full max-h-[calc(100vh-170px)] md:max-h-[calc(100vh-160px)] object-contain rounded-xl shadow-2xl pointer-events-auto"
               />

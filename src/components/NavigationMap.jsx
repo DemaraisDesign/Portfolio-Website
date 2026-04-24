@@ -1209,10 +1209,10 @@ const ExpansionContent = ({ pData, isTop, liveX, liveY, r, boxLeft, boxTop, boxW
 
                     {/* Forms / Buttons */}
                     {isAvailable ? (
-                        /* ── VIEW CASE STUDY ── */
+                        /* ── VIEW WORK ── */
                         <button
                             onClick={(e) => { e.stopPropagation(); closeMenu(); navigate(`/work/${pData.id}`); }}
-                            aria-label={`View case study: ${title}`}
+                            aria-label={`View work: ${title}`}
                             style={{
                                 width: '100%', padding: '11px 20px', fontSize: 12, fontWeight: 700,
                                 fontFamily: '"Outfit", sans-serif', textTransform: 'uppercase', letterSpacing: '0.08em',
@@ -1224,7 +1224,7 @@ const ExpansionContent = ({ pData, isTop, liveX, liveY, r, boxLeft, boxTop, boxW
                             onMouseDown={e => e.currentTarget.style.transform = 'scale(0.96)'}
                             onMouseUp={e => e.currentTarget.style.transform = 'scale(1)'}
                         >
-                            View Case Study
+                            View work
                             <ArrowRight size={14} strokeWidth={2.5} aria-hidden="true" />
                         </button>
 

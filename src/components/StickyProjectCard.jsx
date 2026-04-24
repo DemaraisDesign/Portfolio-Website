@@ -139,7 +139,7 @@ const StickyProjectCard = ({
 
                     <button
                         type="button"
-                        aria-label={`View Case Study for ${project.title}`}
+                        aria-label={`View work for ${project.title}`}
                         onClick={handleNavigate}
                         className={`group/cta inline-flex items-center gap-2 text-[#f1f1f1] text-xs font-bold uppercase tracking-widest cursor-pointer transition-all duration-300 hover:gap-4 ${hoverTextClass}`}
                     >
@@ -153,7 +153,7 @@ const StickyProjectCard = ({
                             </>
                         ) : unlocked ? (
                             <>
-                                View Case Study
+                                View work
                                 <ArrowRight className="w-5 h-5" />
                             </>
                         ) : (
@@ -163,7 +163,7 @@ const StickyProjectCard = ({
                                     <rect x="3" y="10" width="18" height="12" rx="2" fill="currentColor" stroke="none" />
                                     <circle cx="12" cy="16" r="1.5" fill="currentColor" stroke="currentColor" strokeWidth="3" style={{ color: customBgColor || BRAND_COLORS.dark }} />
                                 </svg>
-                                View Case Study
+                                View work
                             </>
                         )}
                     </button>

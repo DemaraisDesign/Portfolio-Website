@@ -33,7 +33,7 @@ const ProjectCard = ({ project, theme = 'blue', customBgColor }) => {
     const { requestAccess, isProjectUnlocked } = usePasswordGate();
     const { requestConstructionAccess } = useConstructionGate();
     const isCollection = project.type === 'collection';
-    const ctaText = isCollection ? 'Explore Collection' : 'View Case Study';
+    const ctaText = isCollection ? 'Explore Collection' : 'View work';
     const unlocked = isProjectUnlocked(project.id);
     const isConstruction = project.isConstruction;
 

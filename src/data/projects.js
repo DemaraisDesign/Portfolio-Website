@@ -21,6 +21,7 @@ export const PROJECTS = [
   {
     id: "secret",
     title: "The Secret in the Wings",
+    isConstruction: true,
     cat: "Show Direction",
     discipline: "stage",
     themeColor: BRAND_COLORS.stageDeep, // stage-bg-card
@@ -33,6 +34,7 @@ export const PROJECTS = [
   {
     id: "the-sparrow",
     title: "The Sparrow",
+    isConstruction: true,
     cat: "Show Direction",
     discipline: "stage",
     themeColor: BRAND_COLORS.stageDeep,

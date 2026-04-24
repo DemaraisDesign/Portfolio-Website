@@ -202,7 +202,8 @@ const StickyProjectCard = ({
                         <motion.img
                             src={project.img}
                             alt={project.title}
-                            className="w-full h-full object-cover"
+                            onLoad={(e) => e.target.classList.remove('opacity-0')}
+                            className="opacity-0 transition-opacity duration-700 ease-out w-full h-full object-cover"
                             style={{ objectPosition: project.imgPosition || 'center' }}
                             loading="lazy"
                             decoding="async"

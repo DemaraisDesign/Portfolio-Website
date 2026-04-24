@@ -76,7 +76,8 @@ const DisciplineModule = ({ title, img, color, darkColor, Icon, speed = 0.78, li
           <img
             src={img}
             alt={title}
-            className={`${imgClass} w-full h-full rounded-theme-sm`}
+            onLoad={(e) => e.target.classList.remove('opacity-0')}
+            className={`opacity-0 transition-opacity duration-700 ease-out ${imgClass} w-full h-full rounded-theme-sm`}
           />
           <div
             className={`absolute inset-0 transition-opacity duration-500 ease-in-out rounded-theme-sm ${isPlaying ? 'opacity-100' : 'opacity-0'}`}
@@ -432,7 +433,8 @@ const Explorations = () => {
                 <img
                   src={item.img}
                   alt={item.title}
-                  className={`w-full h-full ${item.contain ? 'object-contain' : 'object-cover'}`}
+                  onLoad={(e) => e.target.classList.remove('opacity-0')}
+                  className={`opacity-0 transition-opacity duration-700 ease-out w-full h-full ${item.contain ? 'object-contain' : 'object-cover'}`}
                   style={{
                     objectPosition: item.imgPosition || 'center',
                     transform: item.imgScale ? `scale(${item.imgScale})` : 'none'

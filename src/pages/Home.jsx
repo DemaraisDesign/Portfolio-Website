@@ -35,6 +35,13 @@ const DisciplineModule = ({ title, img, color, darkColor, Icon, speed = 0.78, li
   const navigate = useNavigate();
   const BG_COLOR = BRAND.light;
 
+  const subtitleMap = {
+    'Screen': 'UX Research • Product Design • Web Design',
+    'Sound': 'Film Audio • Live Sound • Audio Dramas',
+    'Stage': 'Show Direction • Artistic Leadership • Education',
+  };
+  const subtitle = subtitleMap[title] || '';
+
   const handleInteractionStart = () => setIsPlaying(true);
   const handleInteractionEnd = () => setIsPlaying(false);
 
@@ -110,6 +117,11 @@ const DisciplineModule = ({ title, img, color, darkColor, Icon, speed = 0.78, li
         <h3 className={`text-2xl lg:text-3xl font-outfit font-extrabold uppercase tracking-wide text-brand-ink ${isPlaying ? 'text-brand-ink' : 'text-brand-ink/75'} transition-colors duration-500`}>
           {title.endsWith('s') ? title : `${title}s`}
         </h3>
+        {subtitle && (
+          <p className={`text-sm mx-auto md:text-base font-sans tracking-tight max-w-[80%] lg:max-w-none ${isPlaying ? 'text-brand-ink-body' : 'text-brand-ink-muted'} transition-colors duration-500 mt-1 lg:mt-2`}>
+            {subtitle}
+          </p>
+        )}
       </div>
     </motion.div>
   );

@@ -36,9 +36,9 @@ const DisciplineModule = ({ title, img, color, darkColor, Icon, speed = 0.78, li
   const BG_COLOR = BRAND.light;
 
   const subtitleMap = {
-    'Screen': 'UX Research • Product Design • Web Design',
-    'Sound': 'Film Audio • Live Sound • Audio Dramas',
-    'Stage': 'Show Direction • Artistic Leadership • Education',
+    'Screen': 'UX Research • Product Design • Web Design • Email Design',
+    'Sound': 'Audio Dramas • Broadcast Sound • Interactive Audio • Live Sound • Film Audio',
+    'Stage': 'Show Direction • Artistic Leadership • Education • Performance',
   };
   const subtitle = subtitleMap[title] || '';
 

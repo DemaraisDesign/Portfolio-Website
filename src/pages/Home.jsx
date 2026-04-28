@@ -961,7 +961,7 @@ const Home = () => {
               </h1>
 
               <p className="font-outfit font-light text-brand-ink-body m-0 text-[clamp(1.5rem,3vmin,2.5rem)] max-w-2xl">
-                I design things you can <span className="font-semibold text-brand-ink">see</span>, <span className="font-semibold text-brand-ink">hear</span> and <span className="font-semibold text-brand-ink">touch</span>.
+                I make things you can <span className="font-semibold text-brand-ink">see</span>, <span className="font-semibold text-brand-ink">hear</span> and <span className="font-semibold text-brand-ink">touch</span>.
               </p>
 
               <motion.a

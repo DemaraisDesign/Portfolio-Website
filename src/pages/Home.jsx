@@ -182,38 +182,23 @@ const AboutMe = () => {
               <motion.div initial={{ width: 0 }} whileInView={{ width: 96 }} viewport={{ once: true }} transition={{ duration: 1, ease: "circOut" }} className="h-1 bg-gradient-to-r from-brand-blue via-brand-teal to-brand-purple rounded-full mt-8" />
               <DebugFlexCol as={motion.div} idPrefix="Home_About" defaultMobile={20} defaultDesktop={30} className="flex flex-col text-brand-ink-body text-lg leading-relaxed mt-[30px] md:mt-[50px]" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-10%" }}>
                 <motion.p variants={itemVariants}>
-                  If you laid my career out on a table it might look like someone emptied three different puzzles into one pile. As it turns out, the pieces fit together quite well. Each rewards the same habits: prepare obsessively, listen deeply, and cut anything that isn't earning its place.
-                </motion.p>
-
-
-
-                <motion.p variants={itemVariants}>
-                  I built that discipline most profoundly at Coeurage Theatre Company, an exclusively pay-what-you-want theater I co-founded in Los Angeles. We competed for the same awards as companies with far greater resources, in one of the most expensive cities in the world, and held our own. What those years actually gave me was more durable than any accolade: the habit of identifying what's essential to the storytelling, prioritizing resources toward those elements, and cutting anything extraneous without ego. We had all the artistic ambition in the world, but on our budgets there simply was no choice in the matter. And I wouldn't have had it any other way.
-                </motion.p>
-                <motion.p variants={itemVariants}>
-                  Running a company for a decade taught me something beyond the creative: Tracking dependencies across set, lights, sound, costumes, and stage management simultaneously. Building systems for casting and production from scratch. Leading rooms full of artists with strong instincts and stronger convictions. Managing logistical and creative conflicts between departments while keeping a larger vision intact. And doing all of it while working to inspire world-class artists who had other options and chose to collaborate with us for less than they were accustomed to. Alignment is earned through clarity, inspiration, and mutual trust, not authority.
-                </motion.p>
-                <motion.div variants={itemVariants} className="w-full">
-                  <PullQuote content="Alignment is earned through clarity, inspiration, and mutual trust, not authority." />
-                </motion.div>
-
-
-
-                <motion.p variants={itemVariants}>
-                  Most of it looked, at the time, like theater-specific knowledge. It wasn't. The further I've expanded my skillsets, the more clearly I've seen the same three habits showing up everywhere. UX research is the clearest example — essentially directing with a different deliverable. Same intake, same synthesis, different output. Both require deep logistical preparation before you enter the room. Both demand rigorous analysis to determine what someone actually needs beneath the surface of what they're saying. The listening has to be disciplined enough to change course based on what participants reveal in their words and behavior. And both require synthesis across conflicting perspectives, plus the nerve to make decisions that won't satisfy everyone. The pipelines are nearly identical.
-                </motion.p>
-                <motion.p variants={itemVariants}>
-                  Moving into UX gave that framework somewhere to reflect back. Backstage processes became a user experience. An audience's journey from parking lot to curtain became a user experience. The director's job of deciding what the story needs, what messages I want to convey, and ruthlessly subordinating every sonic and visual element to serve those purposes…that's information architecture. Once I learned to think in terms of friction and cognitive load, I couldn't stop applying it to everything I do.
-                </motion.p>
-
-
-
-                <motion.p variants={itemVariants}>
-                  Sound design is where these principles face the smallest margin for error. A half second of timing. A couple of decibels too high or too low. The wrong music at a key moment, or sound where there should be silence…these decisions can make or break an entire project. And as with directing and UX, the discipline remains the same: staying open to letting what you observe override what you planned. Watching performers in rehearsal, collaborating with fellow designers, reading the room—the work is always listening first.
+                  If you laid my career out on a table, it might look like someone emptied three puzzles into one pile. The pieces fit. Each rewards the same habits: prepare obsessively, then prioritize ruthlessly...cutting anything that isn't earning its place.
                 </motion.p>
 
                 <motion.p variants={itemVariants}>
-                  These aren't adjacent careers or siloed experiences. They're the same operating system running on different machines.
+                  I learned those habits first in the theatre. I co-founded Coeurage Theatre Company, a pay-what-you-want ensemble in Los Angeles, and helped run it for a decade. We made nationally recognized work on budgets that didn't allow for anything inessential…the best training I could have asked for. Directing taught me to handle complex logistics across every department, and to lead rooms full of artists with strong instincts and stronger convictions, holding a larger vision intact while absorbing ideas and feedback. And to inspire brilliant collaborators who had other options and chose us anyway, for less than they were used to — earning their alignment through clarity and mutual trust rather than authority. Underneath all of it, every production began the same way: prepare until you know the material in your bones, then prioritize what's essential to the storytelling and cut everything that doesn't serve it.
+                </motion.p>
+
+                <motion.p variants={itemVariants}>
+                  Sound design is where those habits face the smallest margin for error. A half-second of timing. A few decibels in either direction. The wrong cue at a key moment, or sound where there should be silence. The work begins with listening…to the script, to the director, to the work itself…and ends with deciding what every cue is doing for the moment so it lands. Sometimes the choice that lands hardest is silence.
+                </motion.p>
+
+                <motion.p variants={itemVariants}>
+                  UX brings the same operating principles into a different room. Research and discovery is where preparation lives: handling the same kind of complex logistics that directing demanded, then tuning in to what someone can't quite articulate yet, watching for the small details that shape their perspective, staying disciplined enough to be changed by what you observe. Information architecture and interface work is where the prioritizing and cutting happen—stripping clutter, untangling complex IA problems, pulling cognitive load off the user wherever it isn't serving them, then finding the moments within those constraints that make an experience feel satisfying and intuitive rather than just functional. Clarity first. Delight second.
+                </motion.p>
+
+                <motion.p variants={itemVariants}>
+                  These aren't adjacent skills. They're the same operating system running on different machines.
                 </motion.p>
 
 

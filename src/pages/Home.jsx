@@ -50,7 +50,7 @@ const DisciplineModule = ({ title, img, color, darkColor, Icon, speed = 0.78, li
 
   return (
     <motion.div
-      className="cursor-pointer group snap-center shrink-0 w-[70vw] [@media(orientation:landscape)]:w-full md:w-full flex flex-col gap-6 items-center"
+      className="cursor-pointer group snap-center shrink-0 w-[70vw] md:w-full flex flex-col gap-6 items-center"
       style={{ containerType: 'inline-size' }}
       onMouseEnter={handleInteractionStart}
       onMouseLeave={handleInteractionEnd}
@@ -981,8 +981,7 @@ const Home = () => {
             w-full max-w-[1400px] mx-auto
             flex gap-6 px-9
             overflow-x-auto pb-0 pt-12
-            [@media(orientation:landscape)]:grid [@media(orientation:landscape)]:grid-cols-3 [@media(orientation:landscape)]:gap-4 [@media(orientation:landscape)]:overflow-visible [@media(orientation:landscape)]:px-6
-            md:grid md:grid-cols-3 md:gap-6 md:overflow-visible md:px-12 md:pb-0 md:pt-12 lg:gap-8 lg:px-24
+            md:grid md:grid-cols-3 md:gap-10 md:overflow-visible md:px-12 md:pb-0 md:pt-12 lg:gap-16 lg:px-24
             scrollbar-hide
             perspective-[1200px]
           "

@@ -978,7 +978,7 @@ const Home = () => {
             onScroll={checkScroll}
             ref={portfolioScrollRef}
             className="
-            w-full
+            w-full max-w-[1400px] mx-auto
             flex gap-6 px-9
             overflow-x-auto pb-0 pt-12
             [@media(orientation:landscape)]:grid [@media(orientation:landscape)]:grid-cols-3 [@media(orientation:landscape)]:gap-4 [@media(orientation:landscape)]:overflow-visible [@media(orientation:landscape)]:px-6

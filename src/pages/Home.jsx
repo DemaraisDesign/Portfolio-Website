@@ -50,7 +50,7 @@ const DisciplineModule = ({ title, img, color, darkColor, Icon, speed = 0.78, li
 
   return (
     <motion.div
-      className="cursor-pointer group snap-center shrink-0 w-[70vw] md:w-full flex flex-col gap-6 items-center"
+      className="cursor-pointer group snap-center shrink-0 w-[55vw] sm:w-[45vw] md:w-full flex flex-col gap-6 items-center"
       style={{ containerType: 'inline-size' }}
       onMouseEnter={handleInteractionStart}
       onMouseLeave={handleInteractionEnd}

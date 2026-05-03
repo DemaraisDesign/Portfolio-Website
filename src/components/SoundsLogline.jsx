@@ -6,9 +6,9 @@ import { audio } from '../utils/AudioEngine';
 const STATEMENT_DATA = [
     {
         segments: [
-            { text: "I believe in dramaturgy before " },
-            { text: "design", highlight: true },
-            { text: "." }
+            { text: "I believe in " },
+            { text: "dramaturgy", highlight: true },
+            { text: " before design." }
         ]
     },
     {

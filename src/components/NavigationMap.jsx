@@ -960,10 +960,25 @@ const Node = ({ x, y, size, color, ringColor, iconColor, icon: Icon, onClick, cl
                                     key={parkedData.id}
                                     src={parkedData.img}
                                     alt={parkedData.title || ''}
-                                    initial={{ opacity: parkedData.isCycling ? 0 : 1 }}
-                                    animate={{ opacity: 1 }}
-                                    exit={{ opacity: 0 }}
-                                    transition={{ duration: 0.35, ease: "easeInOut" }}
+                                    initial={{ 
+                                        opacity: parkedData.isCycling ? 0 : 1, 
+                                        scale: parkedData.isCycling ? 1.08 : 1,
+                                        filter: parkedData.isCycling ? 'blur(12px)' : 'blur(0px)',
+                                        zIndex: 10
+                                    }}
+                                    animate={{ 
+                                        opacity: 1, 
+                                        scale: 1,
+                                        filter: 'blur(0px)',
+                                        zIndex: 10
+                                    }}
+                                    exit={{ 
+                                        opacity: 1, 
+                                        scale: 1.08,
+                                        filter: 'blur(12px)',
+                                        zIndex: 5
+                                    }}
+                                    transition={{ duration: 0.6, ease: [0.33, 1, 0.68, 1] }}
                                     style={{
                                         position: 'absolute',
                                         top: 0,
@@ -1107,7 +1122,7 @@ const ExpansionContent = ({ pData, isTop, liveX, liveY, r, boxLeft, boxTop, boxW
     }, [pwSuccess]);
 
     const inputStyle = {
-        width: '100%', padding: '10px 14px', fontSize: 14,
+        width: '100%', padding: '10px 12px', fontSize: 14,
         fontFamily: '"Outfit", sans-serif', border: `1.5px solid ${pData.color}80`,
         borderRadius: 8, outline: 'none', backgroundColor: 'rgba(255,255,255,0.08)',
         color: '#fff', boxSizing: 'border-box', transition: 'border-color 0.2s',
@@ -1124,12 +1139,29 @@ const ExpansionContent = ({ pData, isTop, liveX, liveY, r, boxLeft, boxTop, boxW
     };
 
     return (
-        <AnimatePresence mode="wait">
+        <AnimatePresence>
             <motion.div
                 key={pData.id}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1, transition: { duration: 0.3, delay: 0.15 } }}
-                exit={{ opacity: 0, transition: { duration: 0.15 } }}
+                initial={{ 
+                    opacity: 0, 
+                    scale: pData.isCycling ? 1.08 : 1,
+                    filter: pData.isCycling ? 'blur(12px)' : 'blur(0px)',
+                    zIndex: 10
+                }}
+                animate={{ 
+                    opacity: 1, 
+                    scale: 1,
+                    filter: 'blur(0px)',
+                    zIndex: 10,
+                    transition: { duration: 0.6, ease: [0.33, 1, 0.68, 1], delay: pData.isCycling ? 0 : 0.15 }
+                }}
+                exit={{ 
+                    opacity: 0, 
+                    scale: 1.08,
+                    filter: 'blur(12px)',
+                    zIndex: 5,
+                    transition: { duration: 0.6, ease: [0.33, 1, 0.68, 1] }
+                }}
                 role="region"
                 aria-label={`Case study: ${title}`}
                 style={{
@@ -1187,7 +1219,7 @@ const ExpansionContent = ({ pData, isTop, liveX, liveY, r, boxLeft, boxTop, boxW
                 </h3>
 
                 {/* Interactive Actions & Blurbs */}
-                <div style={{ marginTop: 4, width: '100%', maxWidth: 240, display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <div style={{ marginTop: 4, width: '100%', maxWidth: 260, display: 'flex', flexDirection: 'column', gap: 12 }}>
                     
                     {/* Context blurb for gated states */}
                     {isUnderConstruction && cStatus !== 'success' && (
@@ -1235,7 +1267,7 @@ const ExpansionContent = ({ pData, isTop, liveX, liveY, r, boxLeft, boxTop, boxW
                                 I'll notify you when it's published.
                             </p>
                         ) : (
-                            <form onSubmit={handleConstructionSubmit} aria-label="Get notified when this case study is published" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                            <form onSubmit={handleConstructionSubmit} aria-label="Get notified when this case study is published" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                                 <label htmlFor={`name-${pData.id}`} className="sr-only">Name</label>
                                 <input
                                     id={`name-${pData.id}`}
@@ -1260,20 +1292,27 @@ const ExpansionContent = ({ pData, isTop, liveX, liveY, r, boxLeft, boxTop, boxW
                                     onFocus={e => e.target.style.borderColor = pData.color}
                                     onBlur={e => e.target.style.borderColor = `${pData.color}80`}
                                 />
-                                <button type="submit" disabled={cStatus === 'sending'}
-                                    aria-label="Submit notification request"
-                                    aria-busy={cStatus === 'sending' ? 'true' : undefined}
-                                    style={{
-                                        ...brandBtnStyle,
-                                        opacity: cStatus === 'sending' ? 0.6 : 1,
-                                        cursor: cStatus === 'sending' ? 'not-allowed' : 'pointer',
-                                    }}>
-                                    {cStatus === 'sending' ? (
-                                        <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
-                                            aria-hidden="true"
-                                            style={{ width: 14, height: 14, border: '2px solid rgba(255,255,255,0.3)', borderTopColor: 'white', borderRadius: '50%' }} />
-                                    ) : 'Notify Me'}
-                                </button>
+                                <div style={{ 
+                                    display: 'flex', 
+                                    width: '100%', 
+                                    justifyContent: !isTop ? (pData.quadrant?.includes('l') ? 'flex-end' : 'flex-start') : 'center' 
+                                }}>
+                                    <button type="submit" disabled={cStatus === 'sending'}
+                                        aria-label="Submit notification request"
+                                        aria-busy={cStatus === 'sending' ? 'true' : undefined}
+                                        style={{
+                                            ...brandBtnStyle,
+                                            width: !isTop ? '60%' : '100%',
+                                            opacity: cStatus === 'sending' ? 0.6 : 1,
+                                            cursor: cStatus === 'sending' ? 'not-allowed' : 'pointer',
+                                        }}>
+                                        {cStatus === 'sending' ? (
+                                            <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
+                                                aria-hidden="true"
+                                                style={{ width: 14, height: 14, border: '2px solid rgba(255,255,255,0.3)', borderTopColor: 'white', borderRadius: '50%' }} />
+                                        ) : 'Notify Me'}
+                                    </button>
+                                </div>
                             </form>
                         )
 
@@ -1330,136 +1369,98 @@ const IndicatorStrip = ({ pData, handleCycleToChild, boxLeft, boxWidth, boxHeigh
 
     const children = sec.children;
     const currentIdx = children.findIndex(c => c.id === pData.id);
-    const isLeftCol  = pData.quadrant.includes('l');
+    
+    // Invert the left/right placement for ALL quadrants. 
+    // This forces the dots to the opposite vertical edge, causing them to 
+    // wrap around the corner diagonally opposite to the parked case study image.
+    const isLeft = !pData.quadrant.includes('l');
+    const isTop = pData.quadrant.includes('t');
 
-    const dotD = 14;
-    const safeUsableHeight = boxHeight - 96;
-    const dotStep = Math.max(20, Math.floor((safeUsableHeight - dotD) / 8));
-    const stripH  = (children.length - 1) * dotStep + dotD;
-    const firstDotY = boxTop + boxHeight / 2 - stripH / 2 + dotD / 2;
+    const dotD = 30; // Reduced by 30%
+    const dotStep = 72; // Split the difference
+    const totalL = (children.length - 1) * dotStep;
 
-    const arrowX = isLeftCol ? boxLeft : boxLeft + boxWidth;
-    const dotX   = isLeftCol ? boxLeft - 26 : boxLeft + boxWidth + 26;
+    const D = 32; 
+    const rBox = 24;
+    const R = rBox + D; // Perfectly hugs the box border
 
-    // Local visual state for smooth magnetic dragging 
-    const [dragging, setDragging] = useState(false);
-    const [dragY, setDragY] = useState(firstDotY + currentIdx * dotStep);
-    const dragStartY  = useRef(null);
-    const hasDragged  = useRef(false);
+    const X_vert = isLeft ? boxLeft - D : boxLeft + boxWidth + D;
+    const Y_horiz = isTop ? boxTop + boxHeight + D : boxTop - D;
 
-    // Provide a magnetic pull radius
-    const magnetRadius = 14;
+    const centerX = isLeft ? X_vert + R : X_vert - R;
+    const centerY = isTop ? Y_horiz - R : Y_horiz + R;
 
-    // Follow parent state when not dragging
-    useEffect(() => {
-        if (!dragging) setDragY(firstDotY + currentIdx * dotStep);
-    }, [currentIdx, dragging, firstDotY, dotStep]);
+    const startY = isTop ? boxTop + 80 : boxTop + boxHeight - 80;
+    const L_straight = Math.max(0, Math.abs(startY - centerY));
+    const L_corner = Math.PI / 2 * R;
+    const corner_mid = L_straight + L_corner / 2;
 
-    const handlePointerDown = (e) => {
-        hasDragged.current = false;
-        setDragging(true);
-        // Start tracking relative offset to prevent jumps if the mouse didn't land exactly on the arrow 
-        dragStartY.current = e.clientY - dragY;
-        e.currentTarget.setPointerCapture(e.pointerId);
-        e.stopPropagation();
-    };
-
-    const handlePointerMove = (e) => {
-        if (!dragging || dragStartY.current === null) return;
+    let start_s = Math.max(0, L_straight / 2 - totalL / 2);
+    
+    // If dots wrap around the corner, align them so a single dot lands perfectly on the corner midpoint
+    if (start_s + totalL > L_straight) {
+        let k = Math.round((totalL / 2) / dotStep);
+        start_s = corner_mid - k * dotStep;
         
-        let targetY = e.clientY - dragStartY.current;
-        if (Math.abs(e.clientY - (dragStartY.current + dragY)) > 4) hasDragged.current = true;
-
-        // Strip constraints
-        const minTop = firstDotY;
-        const maxBottom = firstDotY + (children.length - 1) * dotStep;
-        targetY = Math.max(minTop, Math.min(maxBottom, targetY));
-
-        // Magnetic physics: gently warp cursor coordinates towards the nearest dot
-        const closestIdx = Math.max(0, Math.min(children.length - 1, Math.round((targetY - firstDotY) / dotStep)));
-        const closestDotY = firstDotY + closestIdx * dotStep;
-        
-        const dist = targetY - closestDotY;
-        let RenderedY = targetY;
-        let isWithinMagnet = false;
-
-        // If very close to a dot, dynamically magnetize towards it. It's a continuous, smooth stickiness.
-        if (Math.abs(dist) < magnetRadius) {
-            RenderedY = closestDotY + (dist * 0.4); 
-            isWithinMagnet = true;
+        // Ensure start_s doesn't go backwards into the parked circle area
+        while (start_s < 0) {
+            start_s += dotStep;
         }
+    }
 
-        setDragY(RenderedY);
+    const getPos = (s) => {
+        let x, y;
 
-        // ONLY update case study when physically "landing" or sticking to a new dot
-        // NOT when the arrow is floating in between circles
-        if (isWithinMagnet && closestIdx !== currentIdx) {
-            handleCycleToChild(pData.sectionId, closestIdx);
+        if (s <= L_straight) {
+            x = X_vert;
+            y = isTop ? startY + s : startY - s;
+        } else if (s <= L_straight + L_corner) {
+            const theta = (s - L_straight) / R; // 0 to PI/2
+            if (isTop) {
+                if (isLeft) {
+                    x = centerX + R * Math.cos(Math.PI - theta);
+                    y = centerY + R * Math.sin(Math.PI - theta);
+                } else {
+                    x = centerX + R * Math.cos(theta);
+                    y = centerY + R * Math.sin(theta);
+                }
+            } else {
+                if (isLeft) {
+                    x = centerX + R * Math.cos(Math.PI + theta);
+                    y = centerY + R * Math.sin(Math.PI + theta);
+                } else {
+                    x = centerX + R * Math.cos(-theta);
+                    y = centerY + R * Math.sin(-theta);
+                }
+            }
+        } else {
+            const s_horiz = s - L_straight - L_corner;
+            y = Y_horiz;
+            x = isLeft ? centerX + s_horiz : centerX - s_horiz;
         }
+        return { x, y };
     };
 
-    const handlePointerUp = (e) => {
-        if (!dragging) return;
-        e.currentTarget.releasePointerCapture(e.pointerId);
-        setDragging(false);
-        dragStartY.current = null;
-        // On release, useEffect will automatically spring the arrow exactly to the active dot. 
-    };
-
-    const handleArrowClick = (e) => {
+    const handlePrev = (e) => {
         e.stopPropagation();
-        if (hasDragged.current) { hasDragged.current = false; return; }
+        const nextIdx = (currentIdx - 1 + children.length) % children.length;
+        handleCycleToChild(pData.sectionId, nextIdx);
+    };
+
+    const handleNext = (e) => {
+        e.stopPropagation();
         const nextIdx = (currentIdx + 1) % children.length;
         handleCycleToChild(pData.sectionId, nextIdx);
     };
 
     return (
         <>
-            {/* Arrow — position driven by local activeVisualIdx */}
-            <motion.div
-                key={`arr-${pData.sectionId}`}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ opacity: { delay: 1.15, duration: 0.3 } }}
-                onPointerDown={handlePointerDown}
-                onPointerMove={handlePointerMove}
-                onPointerUp={handlePointerUp}
-                onClick={handleArrowClick}
-                style={{
-                    position: 'absolute',
-                    left: arrowX,
-                    top: dragY,
-                    // Reduced spring bounce (from 1.56 to 1.15) for a slightly tighter, slightly faster snap.
-                    transition: dragging ? 'none' : 'top 0.35s cubic-bezier(0.34, 1.15, 0.64, 1)',
-                    transform: isLeftCol ? 'translate(0%, -50%)' : 'translate(-100%, -50%)',
-                    zIndex: 27,
-                    cursor: dragging ? 'grabbing' : 'grab',
-                    pointerEvents: 'auto',
-                    touchAction: 'none',
-                    display: 'flex', 
-                    alignItems: 'center',
-                    justifyContent: isLeftCol ? 'flex-start' : 'flex-end',
-                    width: '48px',
-                    height: '64px',
-                    userSelect: 'none',
-                }}
-            >
-                <svg width="16" height="22" viewBox="0 0 16 22" overflow="visible" style={{ flexShrink: 0 }}>
-                    <polygon
-                        points={isLeftCol ? "14,2 14,20 2,11" : "2,2 2,20 14,11"}
-                        fill={theTheme.light}
-                        stroke={theTheme.light}
-                        strokeWidth="4"
-                        strokeLinejoin="round"
-                        strokeLinecap="round"
-                    />
-                </svg>
-            </motion.div>
 
-            {/* Dot indicators — color tied to REAL currentIdx, not visual */}
+
+            {/* Dot indicators — color tied to currentIdx */}
             {children.map((child, idx) => {
                 const isActive = idx === currentIdx;
+                const pos = getPos(start_s + idx * dotStep);
                 return (
                     <motion.div
                         key={`iDot-${child.id}`}
@@ -1467,11 +1468,11 @@ const IndicatorStrip = ({ pData, handleCycleToChild, boxLeft, boxWidth, boxHeigh
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0 }}
                         transition={{ opacity: { delay: 1.1 + idx * 0.05, duration: 0.3 }, scale: { duration: 0.2 } }}
-                        onClick={() => { if (!dragging) handleCycleToChild(pData.sectionId, idx); }}
+                        onClick={(e) => { e.stopPropagation(); handleCycleToChild(pData.sectionId, idx); }}
                         style={{
                             position: 'absolute',
-                            left: dotX,
-                            top: firstDotY + idx * dotStep,
+                            left: pos.x,
+                            top: pos.y,
                             marginLeft: -dotD / 2,
                             marginTop:  -dotD / 2,
                             width: dotD, height: dotD,
@@ -1486,6 +1487,8 @@ const IndicatorStrip = ({ pData, handleCycleToChild, boxLeft, boxWidth, boxHeigh
                     />
                 );
             })}
+
+
         </>
     );
 };

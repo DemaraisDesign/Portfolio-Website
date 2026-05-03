@@ -301,6 +301,7 @@ const SECTIONS = [
             { id: "rcc", label: "Teaching Statement", desc: "Education", img: "https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1775591224/Gemini_Generated_Image_l207s0l207s0l207_cveupt.jpg" },
             { id: "the-yellow-boat", label: "The Yellow Boat", desc: "Show Direction", img: "https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1774795598/YB1COMP_haxo8w.png" },
             { id: "4th-graders", label: "4th Graders...", desc: "Show Direction", img: getProject('4th-graders')?.img },
+            { id: "performance", label: "Reel/Resume", desc: "Performance", img: getProject('performance')?.img },
         ],
     },
     {
@@ -325,7 +326,6 @@ const SECTIONS = [
             { id: "ui-prototypes", label: "Prototypes", desc: '"Vibe" Coding', img: "https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1775591695/markus-spiske-hbb6GkG6p9M-unsplash_ycfhze.jpg", imgScale: 1.1 },
             { id: "surrija", label: "Project Surrija", desc: "XR Concept", img: "https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1775585447/Gemini_Generated_Image_90up1q90up1q90up_mqrrl4.jpg" },
             { id: "ai-media", label: "Images, Video & Music", desc: "Media Experiments", img: "https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1776473055/tj2_fkyibp.png" },
-            { id: "performance", label: "Reel/Resume", desc: "Performance", img: getProject('performance')?.img },
         ],
     },
     {
@@ -642,24 +642,12 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
                             gridCol = col;
                         }
 
-                        let totalRowsInGrid = Math.ceil(sec.children.length / maxCols);
-                        let visualGridRow = gridRow;
-                        
-                        // For the 'stage' section, if it has 2 rows, we want to visually separate them 
-                        // so they align with the top and bottom rows of a 3-row layout like 'sound'.
-                        if (sec.id === 'stage' && totalRowsInGrid === 2) {
-                            totalRowsInGrid = 3;
-                            if (gridRow === 1) visualGridRow = 2;
-                        }
-
+                        const totalRowsInGrid = Math.ceil(sec.children.length / maxCols);
                         const gridTotalHeight = (totalRowsInGrid - 1) * rowSpacing;
                         const startY = sy - (gridTotalHeight / 2);
 
                         cxChild = fullGridStartX + (dirX * gridCol * colSpacing);
-                        cyChild = startY + (visualGridRow * rowSpacing);
-                        
-                        // Update gridRow to visualGridRow so SVG connectors group them correctly
-                        gridRow = visualGridRow;
+                        cyChild = startY + (gridRow * rowSpacing);
                     }
 
                 } else {

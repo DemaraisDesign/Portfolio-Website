@@ -277,15 +277,7 @@ const ListProjectCard = ({ project, index }) => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start lg:items-center">
         <div className={`relative lg:col-span-7 ${index % 2 === 1 ? 'lg:order-2' : ''}`} style={{ clipPath: "inset(0 round 7px)", WebkitClipPath: "inset(0 round 7px)" }}>
           <div className="relative bg-[#16161D] overflow-hidden rounded-theme-sm aspect-video w-full">
-            <motion.div 
-              className="absolute inset-0 w-full h-full" 
-              initial={false}
-              animate={{ 
-                clipPath: (isMobile || isInView) ? "circle(150% at 50% 50%)" : "circle(0% at 50% 50%)", 
-                WebkitClipPath: (isMobile || isInView) ? "circle(150% at 50% 50%)" : "circle(0% at 50% 50%)" 
-              }} 
-              transition={{ duration: 1.8, ease: [0.65, 0, 0.35, 1], delay: 0.1 }}
-            >
+            <motion.div className="absolute inset-0 w-full h-full">
               <motion.img src={project.img} alt={`${project.title} Project Image`} className="absolute inset-0 w-full h-full object-cover" style={{ objectPosition: project.imgPosition || 'center center', top: project.imgNudge?.y || 0, left: project.imgNudge?.x || 0, y, scale: project.imgScale || 1.15 }} loading="lazy" />
             </motion.div>
           </div>

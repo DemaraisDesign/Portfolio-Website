@@ -182,7 +182,7 @@ const AboutMe = () => {
               <motion.div initial={{ width: 0 }} whileInView={{ width: 96 }} viewport={{ once: true }} transition={{ duration: 1, ease: "circOut" }} className="h-1 bg-gradient-to-r from-brand-blue via-brand-teal to-brand-purple rounded-full mt-8" />
               <DebugFlexCol as={motion.div} idPrefix="Home_About" defaultMobile={20} defaultDesktop={30} className="flex flex-col text-brand-ink-body text-lg leading-relaxed mt-[30px] md:mt-[50px]" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-10%" }}>
                 <motion.p variants={itemVariants}>
-                  If you laid my career out on a table, it might look like someone emptied three puzzles into one pile. But the pieces fit. Each rewards the same habits: prepare obsessively, then prioritize resources with care...cutting anything that isn't earning its place.
+                  If you laid my career out on a table, it might look like someone emptied three puzzles into one pile. Strangely enough, the pieces fit. Each rewards the same habits: prepare obsessively, then prioritize resources with care...cutting anything that isn't earning its place.
                 </motion.p>
 
                 <motion.p variants={itemVariants}>

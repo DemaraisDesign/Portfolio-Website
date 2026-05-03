@@ -301,7 +301,6 @@ const SECTIONS = [
             { id: "rcc", label: "Teaching Statement", desc: "Education", img: "https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1775591224/Gemini_Generated_Image_l207s0l207s0l207_cveupt.jpg" },
             { id: "the-yellow-boat", label: "The Yellow Boat", desc: "Show Direction", img: "https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1774795598/YB1COMP_haxo8w.png" },
             { id: "4th-graders", label: "4th Graders...", desc: "Show Direction", img: getProject('4th-graders')?.img },
-            { id: "performance", label: "Reel/Resume", desc: "Performance", img: getProject('performance')?.img },
         ],
     },
     {
@@ -326,6 +325,7 @@ const SECTIONS = [
             { id: "ui-prototypes", label: "Prototypes", desc: '"Vibe" Coding', img: "https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1775591695/markus-spiske-hbb6GkG6p9M-unsplash_ycfhze.jpg", imgScale: 1.1 },
             { id: "surrija", label: "Project Surrija", desc: "XR Concept", img: "https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1775585447/Gemini_Generated_Image_90up1q90up1q90up_mqrrl4.jpg" },
             { id: "ai-media", label: "Images, Video & Music", desc: "Media Experiments", img: "https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1776473055/tj2_fkyibp.png" },
+            { id: "performance", label: "Reel/Resume", desc: "Performance", img: getProject('performance')?.img },
         ],
     },
     {
@@ -1370,10 +1370,10 @@ const IndicatorStrip = ({ pData, handleCycleToChild, boxLeft, boxWidth, boxHeigh
     const children = sec.children;
     const currentIdx = children.findIndex(c => c.id === pData.id);
     
-    // Invert the left/right placement for ALL quadrants. 
-    // This forces the dots to the opposite vertical edge, causing them to 
-    // wrap around the corner diagonally opposite to the parked case study image.
-    const isLeft = !pData.quadrant.includes('l');
+    // By default, invert the left/right placement to wrap around the diagonally opposite corner.
+    // However, for Explorations ('lab'), the opposite corner is Top-Left, which collides with the Back UI.
+    // So for Explorations, we force the dots back to the Right side (isLeft = false).
+    const isLeft = pData.sectionId === 'lab' ? false : !pData.quadrant.includes('l');
     const isTop = pData.quadrant.includes('t');
 
     const dotD = 30; // Reduced by 30%

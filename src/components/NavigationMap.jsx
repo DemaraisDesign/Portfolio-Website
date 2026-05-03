@@ -642,12 +642,24 @@ const computeLayout = (w, h, focusedId, isLaunched) => {
                             gridCol = col;
                         }
 
-                        const totalRowsInGrid = Math.ceil(sec.children.length / maxCols);
+                        let totalRowsInGrid = Math.ceil(sec.children.length / maxCols);
+                        let visualGridRow = gridRow;
+                        
+                        // For the 'stage' section, if it has 2 rows, we want to visually separate them 
+                        // so they align with the top and bottom rows of a 3-row layout like 'sound'.
+                        if (sec.id === 'stage' && totalRowsInGrid === 2) {
+                            totalRowsInGrid = 3;
+                            if (gridRow === 1) visualGridRow = 2;
+                        }
+
                         const gridTotalHeight = (totalRowsInGrid - 1) * rowSpacing;
                         const startY = sy - (gridTotalHeight / 2);
 
                         cxChild = fullGridStartX + (dirX * gridCol * colSpacing);
-                        cyChild = startY + (gridRow * rowSpacing);
+                        cyChild = startY + (visualGridRow * rowSpacing);
+                        
+                        // Update gridRow to visualGridRow so SVG connectors group them correctly
+                        gridRow = visualGridRow;
                     }
 
                 } else {

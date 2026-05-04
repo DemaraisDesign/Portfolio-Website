@@ -80,6 +80,16 @@ const StickyProjectCard = ({
     };
     const hoverTextClass = getHoverTextClass(project.discipline);
 
+    const getLightBrandColor = (d) => {
+        switch (d) {
+            case 'stage': return '#D6CAFF';
+            case 'screen': return '#94DAFF';
+            case 'sound': return '#66E0C8';
+            case 'experiment': return '#FF9A85';
+            default: return '#D6CAFF';
+        }
+    };
+
     // Use inline styles for custom hex colors
     const containerStyle = customBgColor ? { backgroundColor: customBgColor } : {};
     const mainBgClass = customBgColor ? '' : 'bg-brand-black';
@@ -123,7 +133,7 @@ const StickyProjectCard = ({
                     <div className="[@media(max-height:500px)]:hidden">
                         <SectionPreheader
                             text={project.cat || "Project Category"}
-                            color="#FFFFFF"
+                            color={getLightBrandColor(project.discipline)}
                             textColor="#FFFFFF"
                             customTrigger={isRevealed}
                         />

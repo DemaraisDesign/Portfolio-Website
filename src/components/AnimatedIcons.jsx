@@ -87,8 +87,9 @@ export const UXIcon = ({ color = '#FFFFFF', speed = 1, isPlaying = false }) => {
             if (timeInCycle > (cycleDuration - 600)) { morphT = easeInOut((timeInCycle - (cycleDuration - 600)) / 600); }
             const currentLayout = layouts[layoutIndex]; const nextLayout = layouts[nextLayoutIndex];
             for (let b = 0; b < 3; b++) {
-                const start = currentLayout[b]; const end = nextLayout[b]; const activeT = isPlaying ? morphT : 0; const activeStart = isPlaying ? start : layouts[0][b]; const activeEnd = isPlaying ? end : layouts[0][b];
-                const xPct = lerp(activeStart.x, activeEnd.x, activeT); const yPct = lerp(activeStart.y, activeEnd.y, activeT); const wPct = lerp(activeStart.w, activeEnd.w, activeT); const hPct = lerp(activeStart.h, activeEnd.h, activeT);
+                const start = currentLayout[b]; const end = nextLayout[b];
+                const currentX = lerp(start.x, end.x, morphT); const currentY = lerp(start.y, end.y, morphT); const currentW = lerp(start.w, end.w, morphT); const currentH = lerp(start.h, end.h, morphT);
+                const xPct = lerp(layouts[0][b].x, currentX, intensityRef.current); const yPct = lerp(layouts[0][b].y, currentY, intensityRef.current); const wPct = lerp(layouts[0][b].w, currentW, intensityRef.current); const hPct = lerp(layouts[0][b].h, currentH, intensityRef.current);
                 const finalX = screenX + (xPct * screenW); const finalY = screenY + (yPct * screenH); const finalW = wPct * screenW; const finalH = hPct * screenH;
                 if (b === 2) {
                     const fixedLineHeight = 3; const fixedGap = 4; const stride = fixedLineHeight + fixedGap; ctx.save(); ctx.beginPath(); ctx.rect(finalX, finalY, finalW, finalH); ctx.clip(); const maxLines = Math.ceil(screenH / stride);
@@ -96,7 +97,7 @@ export const UXIcon = ({ color = '#FFFFFF', speed = 1, isPlaying = false }) => {
                 } else { ctx.fillRect(finalX, finalY, finalW, finalH); }
             }
             ctx.restore(); ctx.restore();
-            if (isPlaying) {
+            if (isPlaying || intensityRef.current > 0) {
                 animationFrameId = requestAnimationFrame(animate);
             }
         };
@@ -111,6 +112,7 @@ export const UXIcon = ({ color = '#FFFFFF', speed = 1, isPlaying = false }) => {
 // ==========================================
 export const TheatreIcon = ({ color = '#FFFFFF', speed = 1, isPlaying = false }) => {
     const canvasRef = useRef(null);
+    const intensityRef = useRef(0);
     const timeOffset = useRef(0);
     const lastPlayState = useRef(isPlaying);
 
@@ -133,9 +135,16 @@ export const TheatreIcon = ({ color = '#FFFFFF', speed = 1, isPlaying = false })
 
             const t = (Date.now() * speed) - timeOffset.current;
 
+            const targetIntensity = isPlaying ? 1 : 0; const transitionSpeed = 0.05;
+            if (intensityRef.current < targetIntensity) { intensityRef.current = Math.min(intensityRef.current + transitionSpeed, 1); }
+            else if (intensityRef.current > targetIntensity) { intensityRef.current = Math.max(intensityRef.current - transitionSpeed, 0); }
+            
             ctx.clearRect(0, 0, REF_SIZE, REF_SIZE); ctx.save(); const contentScale = 0.75; ctx.translate(REF_SIZE / 2, REF_SIZE / 2); ctx.scale(contentScale, contentScale); ctx.translate(-REF_SIZE / 2, -REF_SIZE / 2);
-            const totalStages = 7; const totalCycleTime = stageDuration * totalStages; const loopProgress = isPlaying ? (t % totalCycleTime) / stageDuration : 4;
-            const [i1, i2, i3] = getLightIntensities(loopProgress); const intensities = [i1, i2, i3]; const maxIntensity = Math.max(i1, i2, i3);
+            const totalStages = 7; const totalCycleTime = stageDuration * totalStages; const loopProgress = (t % totalCycleTime) / stageDuration;
+            const [anim1, anim2, anim3] = getLightIntensities(loopProgress);
+            const [idle1, idle2, idle3] = getLightIntensities(4); // Resting state: all on
+            const i1 = lerp(idle1, anim1, intensityRef.current); const i2 = lerp(idle2, anim2, intensityRef.current); const i3 = lerp(idle3, anim3, intensityRef.current);
+            const intensities = [i1, i2, i3]; const maxIntensity = Math.max(i1, i2, i3);
             const centerX = REF_SIZE / 2; const floorY = REF_SIZE - 18; const lightSourceY_Center = 0; const lightSourceY_Side = 20; const lightOffsetX = 40;
             const lightSources = [{ x: centerX, y: lightSourceY_Center }, { x: centerX + lightOffsetX, y: lightSourceY_Side }, { x: centerX - lightOffsetX, y: lightSourceY_Side }];
             const figScale = 0.85; const headR = 11 * figScale; const headCenterY = floorY - 52 * figScale; const bodyTopY = floorY - 38 * figScale; const bodyBottomY = floorY; const shoulderW = 36 * figScale; const waistW = 20 * figScale;
@@ -172,7 +181,7 @@ export const TheatreIcon = ({ color = '#FFFFFF', speed = 1, isPlaying = false })
             ctx.save(); ctx.fillStyle = color; ctx.globalAlpha = 1; drawHead(); ctx.fill(); drawBody(); ctx.fill(); ctx.restore();
             intensities.forEach((intensity, index) => { if (intensity <= 0.01) return; const source = lightSources[index]; const minBeamW = 0; const maxBeamW = 30; const currentBeamW = lerp(minBeamW, maxBeamW, intensity); const lightOpacity = intensity; ctx.save(); ctx.beginPath(); ctx.moveTo(centerX - currentBeamW, floorY + 5); ctx.arcTo(source.x, source.y, centerX + currentBeamW, floorY + 5, 2); ctx.lineTo(centerX + currentBeamW, floorY + 5); ctx.bezierCurveTo(centerX + currentBeamW, floorY + 12, centerX - currentBeamW, floorY + 12, centerX - currentBeamW, floorY + 5); ctx.closePath(); ctx.clip(); ctx.globalAlpha = lightOpacity; ctx.fillStyle = 'black'; drawHead(); ctx.fill(); drawBody(); ctx.fill(); ctx.restore(); });
             ctx.restore();
-            if (isPlaying) {
+            if (isPlaying || intensityRef.current > 0) {
                 animationFrameId = requestAnimationFrame(animate);
             }
         };
@@ -186,6 +195,7 @@ export const TheatreIcon = ({ color = '#FFFFFF', speed = 1, isPlaying = false })
 // ==========================================
 export const ExperimentsIcon = ({ color = '#FFFFFF', speed = 1, isPlaying = false }) => {
     const canvasRef = useRef(null);
+    const intensityRef = useRef(0);
 
     useEffect(() => {
         const canvas = canvasRef.current; if (!canvas) return; const ctx = canvas.getContext('2d'); let animationFrameId;
@@ -271,7 +281,7 @@ export const ExperimentsIcon = ({ color = '#FFFFFF', speed = 1, isPlaying = fals
             ctx.restore();
         };
 
-        const drawLiquids = (t) => {
+        const drawLiquids = (t, intensity) => {
             // LEFT FLASK LIQUID (Boiling)
             ctx.save();
             ctx.beginPath();
@@ -299,7 +309,7 @@ export const ExperimentsIcon = ({ color = '#FFFFFF', speed = 1, isPlaying = fals
 
             // Bubbles (Slower: 0.005 -> 0.003)
             const bubT = t * 0.003;
-            ctx.globalAlpha = 1.0;
+            ctx.globalAlpha = intensity;
             for (let i = 0; i < 5; i++) {
                 const offset = i * 2;
                 const bx = lCenter + Math.sin(bubT + offset) * 7;
@@ -327,7 +337,7 @@ export const ExperimentsIcon = ({ color = '#FFFFFF', speed = 1, isPlaying = fals
             ctx.clip();
 
             // Slower fill oscillation (0.002 -> 0.0012)
-            const rFill = 10 + Math.sin(t * 0.0012) * 2;
+            const rFill = 10 + Math.sin(t * 0.0012) * 2 * intensity;
             const rSurfaceY = (rCenterY + rightR) - rFill;
 
             // White liquid @ 20% opacity
@@ -336,7 +346,7 @@ export const ExperimentsIcon = ({ color = '#FFFFFF', speed = 1, isPlaying = fals
             ctx.fillRect(rightX - 20, rSurfaceY, 40, rFill + 5);
 
             // Bubbles
-            ctx.globalAlpha = 1.0;
+            ctx.globalAlpha = intensity;
             for (let i = 0; i < 3; i++) {
                 const offset = i * 4;
                 const bx = rCenter + Math.sin(bubT + offset) * 6;
@@ -348,7 +358,8 @@ export const ExperimentsIcon = ({ color = '#FFFFFF', speed = 1, isPlaying = fals
             }
 
             // Drip
-            if (isPlaying && (t % 2000 < 500)) {
+            if (intensity > 0 && (t % 2000 < 500)) {
+                ctx.globalAlpha = intensity;
                 const dropY = (rNeckTopY + 5) + (t % 500) / 500 * (rSurfaceY - (rNeckTopY + 5));
                 if (dropY < rSurfaceY) {
                     ctx.beginPath(); ctx.arc(rightX, dropY, 2.0, 0, Math.PI * 2); ctx.fillStyle = color; ctx.fill();
@@ -357,8 +368,9 @@ export const ExperimentsIcon = ({ color = '#FFFFFF', speed = 1, isPlaying = fals
             ctx.restore();
         };
 
-        const drawParticles = (t) => {
-            if (!isPlaying) return;
+        const drawParticles = (t, intensity) => {
+            if (intensity <= 0) return;
+            ctx.globalAlpha = intensity;
             const pathTime = 3500; // Slower particles
             const numP = 2;
 
@@ -394,6 +406,10 @@ export const ExperimentsIcon = ({ color = '#FFFFFF', speed = 1, isPlaying = fals
 
         const animate = () => {
             const t = Date.now() * speed;
+            const targetIntensity = isPlaying ? 1 : 0; const transitionSpeed = 0.05;
+            if (intensityRef.current < targetIntensity) { intensityRef.current = Math.min(intensityRef.current + transitionSpeed, 1); }
+            else if (intensityRef.current > targetIntensity) { intensityRef.current = Math.max(intensityRef.current - transitionSpeed, 0); }
+            const intensity = intensityRef.current;
 
             ctx.clearRect(0, 0, REF_SIZE, REF_SIZE);
             ctx.save();
@@ -409,12 +425,12 @@ export const ExperimentsIcon = ({ color = '#FFFFFF', speed = 1, isPlaying = fals
             ctx.lineJoin = "round";
 
             // DRAW ORDER CHANGED: Liquid first, then Outline, then Particles
-            drawLiquids(t);
+            drawLiquids(t, intensity);
             drawApparatus();
-            drawParticles(t);
+            drawParticles(t, intensity);
 
             ctx.restore();
-            if (isPlaying) {
+            if (isPlaying || intensityRef.current > 0) {
                 animationFrameId = requestAnimationFrame(animate);
             }
         };

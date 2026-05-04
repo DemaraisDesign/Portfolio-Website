@@ -117,6 +117,30 @@ const Screens = () => {
                     </motion.div>
                 </div>
             </section>
+            {/* NEW GRID LAYOUT SECTION */}
+            <section className="w-full px-9 md:px-12 lg:px-24 py-16 lg:py-32 relative z-10">
+                {/* Scaled down by 15%: max width reduced from 1600px to 1360px, width kept proportional to 85% on desktop */}
+                <div id="case-studies" className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 max-w-[1400px] mx-auto scroll-mt-24 md:scroll-mt-[100px]">
+                    {DATA.map((project, i) => {
+                        let p = project;
+                        if (project.id === 'display-now') p = { ...project, img: 'https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1774880743/Group_148_jszprn.png' };
+                        if (project.id === 'morgan-stanley') p = { ...project, img: 'https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1774880880/ms_yyikni.png' };
+                        if (project.id === 'still') p = { ...project, img: 'https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1775071962/Haiba_1_tweys9.png' };
+                        if (project.id === 'solve-24') p = { ...project, img: 'https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1774881660/Gemini_Generated_Image_ij89q1ij89q1ij89_1_k19alh.png' };
+                        if (project.id === 'still-app') p = { ...project, img: 'https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1774887121/Group_149_muakoe.png' };
+                        if (project.id === 'my-portfolio') p = { ...project, img: 'https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1775590354/Gemini_Generated_Image_tft4jetft4jetft4_nunes5.jpg' };
+                        const isLastOdd = i === DATA.length - 1 && DATA.length % 2 === 1;
+                        return (
+                            <div key={i} className={isLastOdd ? 'md:col-span-2 flex justify-center' : ''}>
+                                <div className={isLastOdd ? 'w-full md:max-w-[calc(50%-12px)] lg:max-w-[calc(50%-24px)]' : 'w-full'}>
+                                    <ProjectCard project={p} theme="blue" customBgColor={BRAND_COLORS.screensDeep} />
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+            </section>
+
             {/* ARTIST STATEMENT LOGLINE */}
             <ScreensLogline />
 
@@ -188,30 +212,6 @@ const Screens = () => {
                 />
 
                 <DebugSpacer id="Main_Section_Gap_2" defaultMobile={0} defaultDesktop={0} />
-            </section>
-
-            {/* NEW GRID LAYOUT SECTION */}
-            <section className="w-full px-9 md:px-12 lg:px-24 py-16 lg:py-32 relative z-10">
-                {/* Scaled down by 15%: max width reduced from 1600px to 1360px, width kept proportional to 85% on desktop */}
-                <div id="case-studies" className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 max-w-[1400px] mx-auto scroll-mt-24 md:scroll-mt-[100px]">
-                    {DATA.map((project, i) => {
-                        let p = project;
-                        if (project.id === 'display-now') p = { ...project, img: 'https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1774880743/Group_148_jszprn.png' };
-                        if (project.id === 'morgan-stanley') p = { ...project, img: 'https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1774880880/ms_yyikni.png' };
-                        if (project.id === 'still') p = { ...project, img: 'https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1775071962/Haiba_1_tweys9.png' };
-                        if (project.id === 'solve-24') p = { ...project, img: 'https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1774881660/Gemini_Generated_Image_ij89q1ij89q1ij89_1_k19alh.png' };
-                        if (project.id === 'still-app') p = { ...project, img: 'https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1774887121/Group_149_muakoe.png' };
-                        if (project.id === 'my-portfolio') p = { ...project, img: 'https://res.cloudinary.com/dqabyzuzf/image/upload/f_auto,q_auto/v1775590354/Gemini_Generated_Image_tft4jetft4jetft4_nunes5.jpg' };
-                        const isLastOdd = i === DATA.length - 1 && DATA.length % 2 === 1;
-                        return (
-                            <div key={i} className={isLastOdd ? 'md:col-span-2 flex justify-center' : ''}>
-                                <div className={isLastOdd ? 'w-full md:max-w-[calc(50%-12px)] lg:max-w-[calc(50%-24px)]' : 'w-full'}>
-                                    <ProjectCard project={p} theme="blue" customBgColor={BRAND_COLORS.screensDeep} />
-                                </div>
-                            </div>
-                        );
-                    })}
-                </div>
             </section>
 
         </motion.div>

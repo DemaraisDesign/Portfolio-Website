@@ -1390,11 +1390,14 @@ const IndicatorStrip = ({ pData, handleCycleToChild, boxLeft, boxWidth, boxHeigh
     const isLeft = pData.sectionId === 'lab' ? false : !pData.quadrant.includes('l');
     const isTop = pData.quadrant.includes('t');
 
-    const dotD = 30; // Reduced by 30%
-    const dotStep = 72; // Split the difference
+    const dotD = 30;
+    const dotStep = 72;
     const totalL = (children.length - 1) * dotStep;
 
-    const D = 32; 
+    // On mobile portrait, dots sit flush against the box (just touching).
+    // On tablet+, keep the current gap so the curved rail has breathing room.
+    const isMobilePortrait = typeof window !== 'undefined' && window.innerWidth < 768;
+    const D = isMobilePortrait ? dotD / 2 : 32;
     const rBox = 24;
     const R = rBox + D; // Perfectly hugs the box border
 

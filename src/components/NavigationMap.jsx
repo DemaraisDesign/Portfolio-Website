@@ -1521,30 +1521,24 @@ export default function NavigationMap({ closeMenu }) {
 
     useEffect(() => {
         const handleResize = () => {
-            // Use window dimensions directly — more reliable than container on mobile orientation change
-            const w = window.innerWidth;
-            const h = window.innerHeight;
-            if (containerRef.current) setIsResizing(true);
-            setViewport({ w, h });
-            if (resizeTimer.current) clearTimeout(resizeTimer.current);
-            resizeTimer.current = setTimeout(() => setIsResizing(false), 200);
+            if (containerRef.current) {
+                setIsResizing(true);
+                setViewport({ w: containerRef.current.clientWidth, h: containerRef.current.clientHeight });
+                if (resizeTimer.current) clearTimeout(resizeTimer.current);
+                resizeTimer.current = setTimeout(() => setIsResizing(false), 200);
+            }
         };
         handleResize();
         window.addEventListener('resize', handleResize);
-        window.addEventListener('orientationchange', () => {
-            // Delay slightly to let the browser finish updating dimensions after rotation
-            setTimeout(handleResize, 100);
-        });
 
         const isMobileDevice = window.innerWidth < 768;
-        const t1 = setTimeout(() => setAnimPhase(1), 950); // same for mobile and desktop
+        const t1 = setTimeout(() => setAnimPhase(1), 950);
         const t2 = setTimeout(() => setAnimPhase(2), isMobileDevice ? 1100 : 1950);
         const t3 = setTimeout(() => setAnimPhase(3), isMobileDevice ? 1200 : 2350);
         const t4 = setTimeout(() => setAnimPhase(4), isMobileDevice ? 1300 : 2650);
 
         return () => {
             window.removeEventListener('resize', handleResize);
-            window.removeEventListener('orientationchange', handleResize);
             clearTimeout(t1);
             clearTimeout(t2);
             clearTimeout(t3);
@@ -1552,14 +1546,29 @@ export default function NavigationMap({ closeMenu }) {
         };
     }, []);
 
-    // Automatically exit focus view if the screen is resized to desktop widths OR mobile landscape
+    // Dedicated effect: close expanded case study when phone rotates to landscape
     useEffect(() => {
-        const isDesktop = viewport.w >= 768;
-        const isMobileLandscape = viewport.w < 768 && viewport.w > viewport.h;
-        if ((isDesktop || isMobileLandscape) && focusedId !== null) {
+        const checkAndClose = () => {
+            setTimeout(() => {
+                const w = window.innerWidth;
+                const h = window.innerHeight;
+                // Landscape on a mobile device: width > height and narrower than tablet
+                if (w > h && w < 1024) {
+                    setFocusedId(null);
+                }
+            }, 150); // brief delay so browser finishes updating dimensions
+        };
+
+        window.addEventListener('orientationchange', checkAndClose);
+        return () => window.removeEventListener('orientationchange', checkAndClose);
+    }, []);
+
+    // Automatically exit focus view if resized to desktop widths
+    useEffect(() => {
+        if (viewport.w >= 768 && focusedId !== null) {
             setTimeout(() => setFocusedId(null), 0);
         }
-    }, [viewport.w, viewport.h, focusedId]);
+    }, [viewport.w, focusedId]);
 
     const layout = useMemo(() =>
         computeLayout(viewport.w, viewport.h, focusedId, isLaunched),

@@ -242,6 +242,7 @@ const MENU_ITEMS = [
 
 const Navbar = ({ show = true, reverseColor = false }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [collapseSignal, setCollapseSignal] = useState(0);
   const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth < 768 : false);
   const [isLocked, setIsLocked] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -316,14 +317,14 @@ const Navbar = ({ show = true, reverseColor = false }) => {
     };
   }, [isOpen]);
 
-  // Close the entire menu when the phone rotates to landscape
+  // Collapse case study expansion when phone rotates to landscape
   useEffect(() => {
     if (!isOpen) return; // Only listen while menu is open
 
-    const closeIfLandscape = () => {
+    const collapse = () => {
       setTimeout(() => {
         if (window.innerWidth > window.innerHeight && window.innerWidth < 1024) {
-          setIsOpen(false);
+          setCollapseSignal(s => s + 1);
         }
       }, 150);
     };
@@ -331,15 +332,15 @@ const Navbar = ({ show = true, reverseColor = false }) => {
     // matchMedia is the most reliable cross-browser method for orientation change
     const mq = window.matchMedia('(orientation: landscape)');
     const onMqChange = (e) => {
-      if (e.matches && window.innerWidth < 1024) setIsOpen(false);
+      if (e.matches && window.innerWidth < 1024) setCollapseSignal(s => s + 1);
     };
 
     mq.addEventListener('change', onMqChange);
-    window.addEventListener('orientationchange', closeIfLandscape); // iOS Safari fallback
+    window.addEventListener('orientationchange', collapse); // iOS Safari fallback
 
     return () => {
       mq.removeEventListener('change', onMqChange);
-      window.removeEventListener('orientationchange', closeIfLandscape);
+      window.removeEventListener('orientationchange', collapse);
     };
   }, [isOpen]);
 
@@ -646,7 +647,7 @@ const Navbar = ({ show = true, reverseColor = false }) => {
               className="relative z-10 w-full flex-shrink-0 flex items-center justify-center pt-20 md:pt-24 pb-8"
               style={{ height: isMobile ? '100dvh' : 'max(100vh, 750px)' }}
             >
-              <NavigationMap closeMenu={() => setIsOpen(false)} />
+              <NavigationMap closeMenu={() => setIsOpen(false)} collapseSignal={collapseSignal} />
             </div>
           </motion.div>
         )}

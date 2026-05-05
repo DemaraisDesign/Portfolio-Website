@@ -1497,7 +1497,7 @@ const IndicatorStrip = ({ pData, handleCycleToChild, boxLeft, boxWidth, boxHeigh
 // ═══════════════════════════════════════════════════
 //  MAIN COMPONENT
 // ═══════════════════════════════════════════════════
-export default function NavigationMap({ closeMenu }) {
+export default function NavigationMap({ closeMenu, collapseSignal = 0 }) {
     const navigate = useNavigate();
     const { requestAccess, isProjectUnlocked } = usePasswordGate();
     const { requestConstructionAccess } = useConstructionGate();
@@ -1506,6 +1506,15 @@ export default function NavigationMap({ closeMenu }) {
     const [parkedPetalData, setParkedPetalData] = useState(null);   // petal currently parked over section icon
     const [outgoingPetalData, setOutgoingPetalData] = useState(null); // petal springing back to fan
     const [skipExitAnim, setSkipExitAnim] = useState(false);
+
+    // Close case study expansion when Navbar signals a landscape rotation
+    useEffect(() => {
+        if (collapseSignal > 0) {
+            setFocusedId(null);
+            setParkedPetalData(null);
+            setOutgoingPetalData(null);
+        }
+    }, [collapseSignal]);
     const indicatorDragStartY   = useRef(null);
     const indicatorDragStartIdx = useRef(null);
 

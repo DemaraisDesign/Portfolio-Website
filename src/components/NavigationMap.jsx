@@ -1099,10 +1099,13 @@ const ExpansionContent = ({ pData, isTop, liveX, liveY, r, boxLeft, boxTop, boxW
     const title = currentChild?.label || project?.title || '';
 
     // Content positioning: avoid the parked circle
+    // On tablet+, the circle cuts into the box so we offset content away from it.
+    // On mobile portrait, the circle is outside the box so we use the full box height.
+    const circleIsInside = boxWidth > 400; // tablet+ boxes are wider; mobile portrait boxes are narrower
     const circleRelY = liveY - boxTop;
     const contentPadding = 24;
-    const contentTop = isTop ? circleRelY + r + 20 : contentPadding;
-    const contentHeight = isTop ? (boxHeight - contentTop - contentPadding) : (circleRelY - r - 20 - contentPadding);
+    const contentTop = (circleIsInside && isTop) ? circleRelY + r + 20 : contentPadding;
+    const contentHeight = (circleIsInside && !isTop) ? circleRelY - r - 20 - contentPadding : boxHeight - contentTop - contentPadding;
 
     const handlePwSubmit = (e) => {
         e.preventDefault();
@@ -1886,15 +1889,19 @@ export default function NavigationMap({ closeMenu, collapseSignal = 0 }) {
                                 const boxLeft  = leftX - r;
 
                                 // Box Height & Top
+                                // On mobile portrait (< 768px), push the box edge so the parked circle
+                                // sits fully OUTSIDE touching the border, freeing up the full box for content.
+                                // On tablet/desktop the circle cuts into the box as before.
+                                const circleOutside = viewport.w < 768;
                                 let boxTop, boxHeight;
                                 if (isTop) {
-                                    // Top case study: cut-in at liveY (image center), extend to bottom outer edge of bottom icons
-                                    boxTop    = liveY;
+                                    // Top case study: box starts below the circle bottom edge (mobile) or at circle center (tablet+)
+                                    boxTop    = circleOutside ? liveY + r : liveY;
                                     boxHeight = (botY + r) - boxTop;
                                 } else {
-                                    // Bottom case study: cut-in at liveY (image center), extend to top outer edge of top icons
+                                    // Bottom case study: box ends above the circle top edge (mobile) or at circle center (tablet+)
                                     boxTop    = topY - r;
-                                    boxHeight = liveY - boxTop;
+                                    boxHeight = circleOutside ? (liveY - r) - boxTop : liveY - boxTop;
                                 }
 
                                 // Back button: permanently anchored 30px above the TL (Stages) icon

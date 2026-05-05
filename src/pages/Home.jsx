@@ -331,15 +331,7 @@ const Explorations = () => {
     { ...getProject('ai-media'), subhead: "Experiments with various media forms. Some created with standard workflows and some with AI assistance." }
   ];
 
-  const [isMobile, setIsMobile] = useState(() => {
-    return typeof window !== 'undefined' ? window.innerWidth < 768 : false;
-  });
-
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
   const handleCardClick = (id) => {
     const path = `/work/${id}`;
@@ -498,9 +490,12 @@ const Home = () => {
   };
 
   // Scroll handling for animations
+  const isTouchDevice = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
   const { scrollY } = useScroll();
-  const heroOpacity = useTransform(scrollY, [0, 500], [1, 0]);
-  const heroY = useTransform(scrollY, [0, 500], [0, 100]);
+  // Disable scroll-driven hero transforms on touch/mobile — the hero fills the viewport
+  // so the fade is imperceptible, and useTransform runs on every scroll tick.
+  const heroOpacity = useTransform(scrollY, [0, 500], isTouchDevice ? [1, 1] : [1, 0]);
+  const heroY = useTransform(scrollY, [0, 500], isTouchDevice ? [0, 0] : [0, 100]);
 
   // --- THREE.JS HERO IMPLEMENTATION ---
   useEffect(() => {
@@ -877,22 +872,22 @@ const Home = () => {
       animationFrameId = requestAnimationFrame(animate);
     }
 
-    // Use IntersectionObserver to fully stop the rAF loop when hero is off-screen.
-    // This is far cheaper than a scroll listener — zero JS cost when not visible.
+    // Use IntersectionObserver to fully stop the rAF loop when the hero is completely off-screen.
+    // threshold:0 means it fires only when the element goes from any visibility to none (or vice versa).
+    // rootMargin adds a 200px buffer below the viewport so we only stop when well past the fold,
+    // preventing the micro-toggling stutter that occurs when scrolling near the 1% boundary.
     let isVisible = true;
     const observer = new IntersectionObserver(
       ([entry]) => {
         const wasVisible = isVisible;
         isVisible = entry.isIntersecting;
         if (isVisible && !wasVisible) {
-          // Restarting — resume the loop
           animate();
         } else if (!isVisible && wasVisible) {
-          // Leaving — cancel the loop entirely
           cancelAnimationFrame(animationFrameId);
         }
       },
-      { threshold: 0.01 }
+      { threshold: 0, rootMargin: '0px 0px 200px 0px' }
     );
     observer.observe(canvasRef.current);
     animate();

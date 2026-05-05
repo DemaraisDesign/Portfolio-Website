@@ -1521,15 +1521,20 @@ export default function NavigationMap({ closeMenu }) {
 
     useEffect(() => {
         const handleResize = () => {
-            if (containerRef.current) {
-                setIsResizing(true);
-                setViewport({ w: containerRef.current.clientWidth, h: containerRef.current.clientHeight });
-                if (resizeTimer.current) clearTimeout(resizeTimer.current);
-                resizeTimer.current = setTimeout(() => setIsResizing(false), 200);
-            }
+            // Use window dimensions directly — more reliable than container on mobile orientation change
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            if (containerRef.current) setIsResizing(true);
+            setViewport({ w, h });
+            if (resizeTimer.current) clearTimeout(resizeTimer.current);
+            resizeTimer.current = setTimeout(() => setIsResizing(false), 200);
         };
         handleResize();
         window.addEventListener('resize', handleResize);
+        window.addEventListener('orientationchange', () => {
+            // Delay slightly to let the browser finish updating dimensions after rotation
+            setTimeout(handleResize, 100);
+        });
 
         const isMobileDevice = window.innerWidth < 768;
         const t1 = setTimeout(() => setAnimPhase(1), 950); // same for mobile and desktop
@@ -1539,6 +1544,7 @@ export default function NavigationMap({ closeMenu }) {
 
         return () => {
             window.removeEventListener('resize', handleResize);
+            window.removeEventListener('orientationchange', handleResize);
             clearTimeout(t1);
             clearTimeout(t2);
             clearTimeout(t3);

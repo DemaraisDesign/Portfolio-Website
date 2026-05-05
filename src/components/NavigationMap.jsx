@@ -1397,7 +1397,7 @@ const IndicatorStrip = ({ pData, handleCycleToChild, boxLeft, boxWidth, boxHeigh
     // On mobile portrait, dots sit flush against the box (just touching).
     // On tablet+, keep the current gap so the curved rail has breathing room.
     const isMobilePortrait = typeof window !== 'undefined' && window.innerWidth < 768;
-    const D = isMobilePortrait ? dotD / 2 : 32;
+    const D = isMobilePortrait ? dotD / 2 + 5 : 32; // 5px gap between dot edge and box edge on mobile
     const rBox = 24;
     const R = rBox + D; // Perfectly hugs the box border
 

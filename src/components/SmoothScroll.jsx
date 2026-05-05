@@ -22,11 +22,6 @@ const SmoothScroll = () => {
 
     // Lenis Smooth Scroll Initialization
     useEffect(() => {
-        // On touch devices, native scroll is hardware-accelerated and always faster
-        // than a JS interpolation loop. Skip Lenis entirely on mobile/touch.
-        const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
-        if (isTouchDevice) return;
-
         const lenis = new Lenis({
             duration: 1.2,
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -40,16 +35,14 @@ const SmoothScroll = () => {
 
         lenisRef.current = lenis;
 
-        let rafId;
         function raf(time) {
             lenis.raf(time);
-            rafId = requestAnimationFrame(raf);
+            requestAnimationFrame(raf);
         }
 
-        rafId = requestAnimationFrame(raf);
+        requestAnimationFrame(raf);
 
         return () => {
-            cancelAnimationFrame(rafId); // was missing — loop ran forever after unmount
             lenis.destroy();
             lenisRef.current = null;
         };

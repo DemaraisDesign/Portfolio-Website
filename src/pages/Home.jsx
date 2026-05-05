@@ -239,10 +239,15 @@ const ListProjectCard = ({ project, index }) => {
   const unlocked = isProjectUnlocked(project.id);
   const isConstruction = project.isConstruction;
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  // Disable parallax on mobile — useTransform on every scroll tick causes jank on small devices
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-  const y = useTransform(scrollYProgress, [0, 1], isMobile ? ["0%", "0%"] : ["-10%", "10%"]);
+  const y = useTransform(scrollYProgress, [0, 1], ["-10%", "10%"]);
   const isInView = useInView(ref, { once: true, margin: "0px 0px -25% 0px" });
+
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleNavigate = () => {
     const path = `/work/${project.id}`;
@@ -273,7 +278,7 @@ const ListProjectCard = ({ project, index }) => {
         <div className={`relative lg:col-span-7 ${index % 2 === 1 ? 'lg:order-2' : ''}`}>
           <div className="relative bg-[#16161D] overflow-hidden rounded-theme-sm aspect-video w-full">
             <motion.div className="absolute inset-0 w-full h-full">
-              <motion.img src={project.img} alt={`${project.title} Project Image`} className="absolute inset-0 w-full h-full object-cover" style={{ objectPosition: project.imgPosition || 'center center', top: project.imgNudge?.y || 0, left: project.imgNudge?.x || 0, y: isMobile ? 0 : y, scale: isMobile ? 1 : (project.imgScale || 1.15) }} loading="lazy" />
+              <motion.img src={project.img} alt={`${project.title} Project Image`} className="absolute inset-0 w-full h-full object-cover" style={{ objectPosition: project.imgPosition || 'center center', top: project.imgNudge?.y || 0, left: project.imgNudge?.x || 0, y, scale: project.imgScale || 1.15 }} loading="lazy" />
             </motion.div>
           </div>
         </div>
@@ -331,7 +336,15 @@ const Explorations = () => {
     { ...getProject('ai-media'), subhead: "Experiments with various media forms. Some created with standard workflows and some with AI assistance." }
   ];
 
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  const [isMobile, setIsMobile] = useState(() => {
+    return typeof window !== 'undefined' ? window.innerWidth < 768 : false;
+  });
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleCardClick = (id) => {
     const path = `/work/${id}`;
@@ -371,7 +384,7 @@ const Explorations = () => {
           to="/explorations"
           className="w-20 h-20 bg-brand-orange rounded-full flex items-center justify-center p-0 shrink-0 cursor-pointer transition-transform duration-300 hover:scale-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
         >
-          <ExperimentsIcon color="#ffffff" isPlaying={false} speed={0.5} />
+          <ExperimentsIcon color="#ffffff" isPlaying={true} speed={0.5} />
         </Link>
       </div>
 
@@ -490,12 +503,9 @@ const Home = () => {
   };
 
   // Scroll handling for animations
-  const isTouchDevice = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
   const { scrollY } = useScroll();
-  // Disable scroll-driven hero transforms on touch/mobile — the hero fills the viewport
-  // so the fade is imperceptible, and useTransform runs on every scroll tick.
-  const heroOpacity = useTransform(scrollY, [0, 500], isTouchDevice ? [1, 1] : [1, 0]);
-  const heroY = useTransform(scrollY, [0, 500], isTouchDevice ? [0, 0] : [0, 100]);
+  const heroOpacity = useTransform(scrollY, [0, 500], [1, 0]);
+  const heroY = useTransform(scrollY, [0, 500], [0, 100]);
 
   // --- THREE.JS HERO IMPLEMENTATION ---
   useEffect(() => {
@@ -542,9 +552,7 @@ const Home = () => {
       canvas: canvasRef.current
     });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    // Cap pixel ratio — on mobile (iPhone) raw devicePixelRatio is 3, meaning 9× more pixels to render.
-    // Capping at 1.5 cuts GPU load roughly in half with no visible quality difference at phone sizes.
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+    renderer.setPixelRatio(window.devicePixelRatio);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
 
     const hemiLight = new THREE.HemisphereLight(0xffffff, 0x9EADB8, 1.8);
@@ -729,6 +737,10 @@ const Home = () => {
     let animationFrameId;
 
     function animate() {
+      animationFrameId = requestAnimationFrame(animate);
+
+      // Don't animate if scrolled out of view to save performance
+      if (window.scrollY > window.innerHeight) return;
 
       // START OFFSET: Add 15 seconds so we start in the middle of the "chaos" phase
       // instead of the initial "hold/reset" phase.
@@ -869,27 +881,8 @@ const Home = () => {
       });
 
       renderer.render(scene, camera);
-      animationFrameId = requestAnimationFrame(animate);
     }
 
-    // Use IntersectionObserver to fully stop the rAF loop when the hero is completely off-screen.
-    // threshold:0 means it fires only when the element goes from any visibility to none (or vice versa).
-    // rootMargin adds a 200px buffer below the viewport so we only stop when well past the fold,
-    // preventing the micro-toggling stutter that occurs when scrolling near the 1% boundary.
-    let isVisible = true;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        const wasVisible = isVisible;
-        isVisible = entry.isIntersecting;
-        if (isVisible && !wasVisible) {
-          animate();
-        } else if (!isVisible && wasVisible) {
-          cancelAnimationFrame(animationFrameId);
-        }
-      },
-      { threshold: 0, rootMargin: '0px 0px 200px 0px' }
-    );
-    observer.observe(canvasRef.current);
     animate();
 
     // Handle Resize
@@ -904,7 +897,6 @@ const Home = () => {
     return () => {
       window.removeEventListener('resize', handleResize);
       cancelAnimationFrame(animationFrameId);
-      observer.disconnect();
 
       // Dispose Three.js resources
       rings.forEach(ring => {

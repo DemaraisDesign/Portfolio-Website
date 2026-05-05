@@ -421,12 +421,9 @@ const Navbar = ({ show = true, reverseColor = false }) => {
       backdropStyle = 'none';
     } else {
       bgStyle = currentTheme ? currentTheme.bg : 'bg-white/[0.96]';
-      borderStyle = currentTheme ? 'border-white/5' : 'border-gray-100';
+      borderStyle = currentTheme ? 'border-white/5' : 'border-gray-100'; // Subtle border for dark mode
       shadowStyle = 'shadow-lg';
-      // backdrop-filter blur is very expensive on mobile Safari (forces full GPU recomposite on every scroll frame).
-      // Only apply on non-touch devices; use a solid bg fallback on touch.
-      const isTouch = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
-      backdropStyle = isTouch ? 'none' : 'blur(24px)';
+      backdropStyle = 'blur(24px)';
     }
   }
 
@@ -543,6 +540,8 @@ const Navbar = ({ show = true, reverseColor = false }) => {
         transition={{ duration: isVisible ? 0.8 : 0.2, ease: "easeInOut" }}
         style={{
           pointerEvents: isVisible ? "auto" : "none",
+          willChange: "opacity, transform",
+          transform: "translateZ(0)"
         }}
       >
         <nav
@@ -580,14 +579,15 @@ const Navbar = ({ show = true, reverseColor = false }) => {
         transition={{ duration: isVisible ? 0.8 : 0.2, ease: "easeInOut" }}
         style={{
           pointerEvents: "none",
+          willChange: "opacity, transform"
         }}
       >
         <div className={`w-full px-9 md:px-12 lg:px-24 flex justify-end ${navPadding}`} style={{ transition: 'padding 500ms ease-in-out' }}>
           <motion.div
             key={show}
             className="pointer-events-auto"
-            initial={{ scale: 0, opacity: 0.75, rotate: 180 }}
-            animate={isVisible && show ? { scale: 1, opacity: 1, rotate: 0 } : { scale: 0, opacity: 0, rotate: 180 }}
+            initial={{ scale: 0, opacity: 0.75, rotate: 180, filter: "blur(1px)" }}
+            animate={isVisible && show ? { scale: 1, opacity: 1, rotate: 0, filter: "blur(0px)" } : { scale: 0, opacity: 0, rotate: 180, filter: "blur(1px)" }}
             transition={{
               duration: 0.8,
               ease: [0.34, 1.56, 0.64, 1], // Spring-like feel

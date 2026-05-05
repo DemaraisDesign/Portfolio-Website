@@ -86,7 +86,10 @@ const Waveform = ({ color = '#FFFFFF', isPlaying = false }) => {
                 ctx.roundRect(x, y, barWidth, heights[i], [barWidth / 2]);
                 ctx.fill();
             }
-            animationFrameId = requestAnimationFrame(animate);
+            // Only keep looping while active or fading out — stop completely when idle
+            if (isPlaying || intensityRef.current > 0) {
+                animationFrameId = requestAnimationFrame(animate);
+            }
         };
         animate(); return () => cancelAnimationFrame(animationFrameId);
     }, [color, isPlaying]);
@@ -108,7 +111,7 @@ const UXIcon = ({ color = '#FFFFFF', isPlaying = false, speed = 1 }) => {
             if (isPlaying && !lastPlayState.current) { timeOffset.current = (Date.now() * speed) - (cycleDuration - 600); }
             lastPlayState.current = isPlaying;
             const t = (Date.now() * speed) - timeOffset.current;
-            const targetIntensity = 1; const transitionSpeed = 0.08;
+            const targetIntensity = isPlaying ? 1 : 0; const transitionSpeed = 0.08;
             if (intensityRef.current < targetIntensity) { intensityRef.current = Math.min(intensityRef.current + transitionSpeed, 1); }
             else if (intensityRef.current > targetIntensity) { intensityRef.current = Math.max(intensityRef.current - transitionSpeed, 0); }
             ctx.clearRect(0, 0, REF_SIZE, REF_SIZE); ctx.save();
@@ -129,7 +132,10 @@ const UXIcon = ({ color = '#FFFFFF', isPlaying = false, speed = 1 }) => {
                     for (let l = 0; l < maxLines; l++) { const ly = finalY + l * stride; const distFromBottom = (finalY + finalH) - ly; const fadeThreshold = fixedLineHeight + 2; let alpha = 1; if (distFromBottom < fadeThreshold) alpha = Math.max(0, distFromBottom / fadeThreshold); ctx.globalAlpha = alpha; ctx.fillRect(finalX, ly, finalW, fixedLineHeight); ctx.globalAlpha = 1.0; } ctx.restore();
                 } else { ctx.fillRect(finalX, finalY, finalW, finalH); }
             }
-            ctx.restore(); ctx.restore(); animationFrameId = requestAnimationFrame(animate);
+            ctx.restore(); ctx.restore();
+            if (isPlaying || intensityRef.current > 0) {
+                animationFrameId = requestAnimationFrame(animate);
+            }
         };
         animate(); return () => cancelAnimationFrame(animationFrameId);
     }, [color, isPlaying, speed]);
@@ -138,6 +144,7 @@ const UXIcon = ({ color = '#FFFFFF', isPlaying = false, speed = 1 }) => {
 
 const TheatreIcon = ({ color = '#FFFFFF', isPlaying = false, speed = 1 }) => {
     const canvasRef = useRef(null);
+    const intensityRef = useRef(0);
     const timeOffset = useRef(0);
     const lastPlayState = useRef(isPlaying);
     useEffect(() => {
@@ -198,7 +205,10 @@ const TheatreIcon = ({ color = '#FFFFFF', isPlaying = false, speed = 1 }) => {
             }
             ctx.save(); ctx.fillStyle = color; ctx.globalAlpha = 1; drawHead(); ctx.fill(); drawBody(); ctx.fill(); ctx.restore();
             intensities.forEach((intensity, index) => { if (intensity <= 0.01) return; const source = lightSources[index]; const minBeamW = 0; const maxBeamW = 30; const currentBeamW = lerp(minBeamW, maxBeamW, intensity); const lightOpacity = intensity; ctx.save(); ctx.beginPath(); ctx.moveTo(centerX - currentBeamW, floorY + 5); ctx.arcTo(source.x, source.y, centerX + currentBeamW, floorY + 5, 2); ctx.lineTo(centerX + currentBeamW, floorY + 5); ctx.bezierCurveTo(centerX + currentBeamW, floorY + 12, centerX - currentBeamW, floorY + 12, centerX - currentBeamW, floorY + 5); ctx.closePath(); ctx.clip(); ctx.globalAlpha = lightOpacity; ctx.fillStyle = 'black'; drawHead(); ctx.fill(); drawBody(); ctx.fill(); ctx.restore(); });
-            ctx.restore(); animationFrameId = requestAnimationFrame(animate);
+            ctx.restore();
+            if (isPlaying || intensityRef.current > 0) {
+                animationFrameId = requestAnimationFrame(animate);
+            }
         };
         animate(); return () => cancelAnimationFrame(animationFrameId);
     }, [color, isPlaying, speed]);
@@ -254,13 +264,17 @@ const ExperimentsIcon = ({ color = '#FFFFFF', isPlaying = false }) => {
             }
         };
         const animate = () => {
-            animationFrameId = requestAnimationFrame(animate); const t = Date.now();
+            const t = Date.now();
             ctx.clearRect(0, 0, REF_SIZE, REF_SIZE); ctx.save();
             const contentScale = 0.95;
             ctx.translate(REF_SIZE / 2, REF_SIZE / 2); ctx.scale(contentScale, contentScale); ctx.translate(-REF_SIZE / 2, -REF_SIZE / 2);
             ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = 3.5; ctx.lineCap = "round"; ctx.lineJoin = "round";
             drawLiquids(t); drawApparatus(); drawParticles(t); ctx.restore();
+            if (isPlaying) {
+                animationFrameId = requestAnimationFrame(animate);
+            }
         };
+        // Always draw one static frame so the icon is visible at rest
         animate(); return () => cancelAnimationFrame(animationFrameId);
     }, [color, isPlaying]);
     return (<div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}><canvas ref={canvasRef} style={{ width: '100%', height: '100%', objectFit: 'contain' }} /></div>);

@@ -1546,21 +1546,41 @@ export default function NavigationMap({ closeMenu }) {
         };
     }, []);
 
-    // Dedicated effect: close expanded case study when phone rotates to landscape
+    // Close expanded case study when phone rotates to landscape.
+    // Three-vector approach: orientationchange (iOS), resize (Android Chrome), screen.orientation (modern).
     useEffect(() => {
-        const checkAndClose = () => {
-            setTimeout(() => {
-                const w = window.innerWidth;
-                const h = window.innerHeight;
-                // Landscape on a mobile device: width > height and narrower than tablet
-                if (w > h && w < 1024) {
-                    setFocusedId(null);
-                }
-            }, 150); // brief delay so browser finishes updating dimensions
+        const closeIfLandscape = () => {
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            if (w > h && w < 1024) {
+                // Functional setter: no-op if already null — avoids unnecessary re-renders
+                setFocusedId(prev => (prev !== null ? null : prev));
+            }
         };
 
-        window.addEventListener('orientationchange', checkAndClose);
-        return () => window.removeEventListener('orientationchange', checkAndClose);
+        // iOS Safari: fires orientationchange
+        const onOrientationChange = () => setTimeout(closeIfLandscape, 150);
+
+        // Android Chrome: fires resize instead of orientationchange
+        const onResize = () => {
+            if (window.innerWidth < 1024) closeIfLandscape();
+        };
+
+        window.addEventListener('orientationchange', onOrientationChange);
+        window.addEventListener('resize', onResize);
+
+        // Modern browsers: screen.orientation API
+        if (screen.orientation) {
+            screen.orientation.addEventListener('change', onOrientationChange);
+        }
+
+        return () => {
+            window.removeEventListener('orientationchange', onOrientationChange);
+            window.removeEventListener('resize', onResize);
+            if (screen.orientation) {
+                screen.orientation.removeEventListener('change', onOrientationChange);
+            }
+        };
     }, []);
 
     // Automatically exit focus view if resized to desktop widths

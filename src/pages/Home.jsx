@@ -552,7 +552,9 @@ const Home = () => {
       canvas: canvasRef.current
     });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(window.devicePixelRatio);
+    // Cap pixel ratio — on mobile (iPhone) raw devicePixelRatio is 3, meaning 9× more pixels to render.
+    // Capping at 1.5 cuts GPU load roughly in half with no visible quality difference at phone sizes.
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
 
     const hemiLight = new THREE.HemisphereLight(0xffffff, 0x9EADB8, 1.8);
@@ -737,10 +739,6 @@ const Home = () => {
     let animationFrameId;
 
     function animate() {
-      animationFrameId = requestAnimationFrame(animate);
-
-      // Don't animate if scrolled out of view to save performance
-      if (window.scrollY > window.innerHeight) return;
 
       // START OFFSET: Add 15 seconds so we start in the middle of the "chaos" phase
       // instead of the initial "hold/reset" phase.
@@ -881,8 +879,27 @@ const Home = () => {
       });
 
       renderer.render(scene, camera);
+      animationFrameId = requestAnimationFrame(animate);
     }
 
+    // Use IntersectionObserver to fully stop the rAF loop when hero is off-screen.
+    // This is far cheaper than a scroll listener — zero JS cost when not visible.
+    let isVisible = true;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const wasVisible = isVisible;
+        isVisible = entry.isIntersecting;
+        if (isVisible && !wasVisible) {
+          // Restarting — resume the loop
+          animate();
+        } else if (!isVisible && wasVisible) {
+          // Leaving — cancel the loop entirely
+          cancelAnimationFrame(animationFrameId);
+        }
+      },
+      { threshold: 0.01 }
+    );
+    observer.observe(canvasRef.current);
     animate();
 
     // Handle Resize
@@ -897,6 +914,7 @@ const Home = () => {
     return () => {
       window.removeEventListener('resize', handleResize);
       cancelAnimationFrame(animationFrameId);
+      observer.disconnect();
 
       // Dispose Three.js resources
       rings.forEach(ring => {

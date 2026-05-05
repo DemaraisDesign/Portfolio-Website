@@ -1546,12 +1546,14 @@ export default function NavigationMap({ closeMenu }) {
         };
     }, []);
 
-    // Automatically exit focus view if the screen is resized to desktop widths
+    // Automatically exit focus view if the screen is resized to desktop widths OR mobile landscape
     useEffect(() => {
-        if (viewport.w >= 768 && focusedId !== null) {
+        const isDesktop = viewport.w >= 768;
+        const isMobileLandscape = viewport.w < 768 && viewport.w > viewport.h;
+        if ((isDesktop || isMobileLandscape) && focusedId !== null) {
             setTimeout(() => setFocusedId(null), 0);
         }
-    }, [viewport.w, focusedId]);
+    }, [viewport.w, viewport.h, focusedId]);
 
     const layout = useMemo(() =>
         computeLayout(viewport.w, viewport.h, focusedId, isLaunched),

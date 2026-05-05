@@ -316,6 +316,33 @@ const Navbar = ({ show = true, reverseColor = false }) => {
     };
   }, [isOpen]);
 
+  // Close the entire menu when the phone rotates to landscape
+  useEffect(() => {
+    if (!isOpen) return; // Only listen while menu is open
+
+    const closeIfLandscape = () => {
+      setTimeout(() => {
+        if (window.innerWidth > window.innerHeight && window.innerWidth < 1024) {
+          setIsOpen(false);
+        }
+      }, 150);
+    };
+
+    // matchMedia is the most reliable cross-browser method for orientation change
+    const mq = window.matchMedia('(orientation: landscape)');
+    const onMqChange = (e) => {
+      if (e.matches && window.innerWidth < 1024) setIsOpen(false);
+    };
+
+    mq.addEventListener('change', onMqChange);
+    window.addEventListener('orientationchange', closeIfLandscape); // iOS Safari fallback
+
+    return () => {
+      mq.removeEventListener('change', onMqChange);
+      window.removeEventListener('orientationchange', closeIfLandscape);
+    };
+  }, [isOpen]);
+
   const handleToggle = () => {
     // 1. Calculate the exact button center NOW
     calculateClipPath(isOpen);

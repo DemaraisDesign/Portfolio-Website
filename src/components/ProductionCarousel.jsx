@@ -134,9 +134,18 @@ export default function ProductionCarousel({ images = [], credit = "", accentCol
                         ))}
                     </div>
 
-                    {/* Credit */}
-                    <div className="text-sm font-public text-brand-ink/60 tracking-wide">
-                        Photos by <span className="font-semibold" style={{ color: accentColor }}>{credit}</span>
+                    {/* Caption & Credit */}
+                    <div className="flex flex-col items-start md:items-end text-left md:text-right mt-2 md:mt-0">
+                        {currentImage?.alt && (
+                            <div className="text-sm font-public font-bold text-brand-ink tracking-wide">
+                                {currentImage.alt}
+                            </div>
+                        )}
+                        {credit && (
+                            <div className="text-xs font-public text-brand-ink/60 tracking-wide mt-1">
+                                Photos by <span className="font-semibold" style={{ color: accentColor }}>{credit}</span>
+                            </div>
+                        )}
                     </div>
                 </div>
 

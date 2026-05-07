@@ -115,17 +115,21 @@ export default function ShowcaseCarousel({ images = [], accentColor = "#000000",
 
                 {/* Controls */}
                 <div className="flex items-center gap-8 self-end md:self-auto">
-                    {/* Pagination Dots */}
-                    <div className="flex gap-2">
-                        {images.map((_, idx) => (
-                            <button
-                                key={idx}
-                                onClick={() => setPage([page + (idx - imageIndex), idx > imageIndex ? 1 : -1])}
-                                className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${idx === imageIndex ? '' : 'bg-brand-dark/20 hover:bg-brand-dark/40'}`}
-                                style={{ backgroundColor: idx === imageIndex ? accentColor : undefined }}
-                                aria-label={`Go to slide ${idx + 1}`}
-                            />
-                        ))}
+                    {/* Pagination Indicator */}
+                    <div className="flex items-center justify-center min-w-[3rem] font-public text-brand-ink/60 text-sm font-medium tracking-widest gap-2">
+                        {images.length > 10 ? (
+                            <span>{imageIndex + 1} / {images.length}</span>
+                        ) : (
+                            images.map((_, idx) => (
+                                <button
+                                    key={idx}
+                                    onClick={() => setPage([page + (idx - imageIndex), idx > imageIndex ? 1 : -1])}
+                                    className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${idx === imageIndex ? '' : 'bg-brand-dark/20 hover:bg-brand-dark/40'}`}
+                                    style={{ backgroundColor: idx === imageIndex ? accentColor : undefined }}
+                                    aria-label={`Go to slide ${idx + 1}`}
+                                />
+                            ))
+                        )}
                     </div>
 
                     {/* Arrows */}

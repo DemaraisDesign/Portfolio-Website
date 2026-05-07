@@ -264,7 +264,11 @@ const SidebarSection = ({
               return (
                 <div key={index} className="flex flex-col">
                   {isQuickNote ? (
-                    <div className="pl-6 md:pl-8 border-l-4 py-2 rounded-xl" style={{ borderColor: activeColor }}>
+                    <div className="relative pl-6 md:pl-8 py-2">
+                      <div 
+                        className="absolute left-0 top-2 bottom-2 w-1 rounded-full" 
+                        style={{ backgroundColor: activeColor }}
+                      />
                       <p className="text-lg text-brand-ink-body leading-relaxed italic">
                         {parseBodyText(parsedParagraph)}
                       </p>

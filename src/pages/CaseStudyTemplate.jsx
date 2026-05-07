@@ -253,13 +253,23 @@ const SidebarSection = ({
               const isBullet =
                 typeof paragraph === "string" &&
                 paragraph.trim().startsWith("•");
+              const isQuickNote = 
+                typeof paragraph === "string" && 
+                paragraph.trim().startsWith("**A quick note before we start:**");
+                
               const parsedParagraph = isBullet
                 ? paragraph.replace(/^•\s*/, "")
                 : paragraph;
 
               return (
                 <div key={index} className="flex flex-col">
-                  {isBullet ? (
+                  {isQuickNote ? (
+                    <div className="pl-6 md:pl-8 border-l-4 py-2" style={{ borderColor: activeColor }}>
+                      <p className="text-lg text-brand-ink-body leading-relaxed italic">
+                        {parseBodyText(parsedParagraph)}
+                      </p>
+                    </div>
+                  ) : isBullet ? (
                     <div className="flex pl-8 md:pl-12">
                       <div
                         className="flex-shrink-0 mt-2 w-3.5 h-3.5 rounded-full mr-6"

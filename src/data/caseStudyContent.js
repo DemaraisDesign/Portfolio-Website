@@ -91,7 +91,7 @@ export const CASE_STUDIES = {
         { id: 25, src: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1776807258/Bash-Latterday-Plays_Season-2_kg6bdb.jpg", title: "bash: latter-day plays by Neil LaBute", credit: "Season 2" },
         { id: 26, src: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1776807265/Double-Falsehood_Season-2_x32qyg.jpg", title: "Double Falsehood by Lewis Theobald", credit: "Season 2" },
         { id: 27, src: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1776807262/No-Saints-Lane_Season-2_zvp8ga.jpg", title: "No. Saints Lane by Eric Czuleger", credit: "Season 2" },
-        { id: 28, src: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1776807267/Hats-Nudes-_-Immortality_Season-1_cjqmic.jpg", title: "Hats, Nudes, & Immortality", credit: "Season 1" },
+        { id: 28, src: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1776807267/Hats-Nudes-_-Immortality_Season-1_cjqmic.jpg", title: "Hats, Nudes, & Immortality by Charles Mee", credit: "Season 1" },
         { id: 29, src: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1776807296/Rocky-Horror-Show_Season-1_pgibus.png", title: "The Rocky Horror Show by Richard O'Brien", credit: "Season 1" },
         { id: 30, src: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1776807300/Under-Milk-Wood_Season-1_jfctzq.png", title: "Under Milk Wood by Dylan Thomas", credit: "Season 1" }
       ],

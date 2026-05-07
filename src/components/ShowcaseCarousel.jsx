@@ -100,9 +100,16 @@ export default function ShowcaseCarousel({ images = [], accentColor = "#000000",
                             animate="visible"
                             exit="exit"
                         >
-                            <h3 className="text-2xl md:text-3xl font-outfit font-medium text-brand-ink mb-1">
-                                {currentImage.title}
-                            </h3>
+                            <div className="mb-2">
+                                <h3 className="text-2xl md:text-3xl font-outfit font-medium text-brand-ink">
+                                    {currentImage.title}
+                                </h3>
+                                {currentImage.playwright && (
+                                    <p className="text-base font-public text-brand-ink/80 mt-0.5">
+                                        {currentImage.playwright}
+                                    </p>
+                                )}
+                            </div>
                             <div className="flex items-center gap-3">
                                 <div className="h-[1px] w-8 bg-brand-dark/20" style={{ backgroundColor: accentColor }} />
                                 <p className="text-sm font-sans tracking-widest uppercase text-brand-ink/60">

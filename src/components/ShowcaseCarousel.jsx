@@ -82,6 +82,7 @@ export default function ShowcaseCarousel({ images = [], accentColor = "#000000",
                             else if (swipe > swipeConfidenceThreshold) paginate(-1);
                         }}
                         className={`absolute inset-0 w-full h-full object-cover ${isDragging ? 'cursor-grabbing' : 'cursor-grab'} select-none`}
+                        style={{ objectPosition: currentImage.position || 'center' }}
                         draggable={false}
                     />
                 </AnimatePresence>

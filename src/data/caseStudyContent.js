@@ -72,7 +72,7 @@ export const CASE_STUDIES = {
         { id: 6, src: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1776807286/Slaughter-City_Season-9_zkavny.jpg", title: "Slaughter City", playwright: "by Naomi Wallace", credit: "Season 9" },
         { id: 7, src: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1776807300/Vendetta-Chrome_Season_9_goasbs.jpg", title: "Vendetta Chrome", playwright: "by Sally Oswald", credit: "Season 9" },
         { id: 8, src: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1776807275/Emilie_Season-8_jesevx.jpg", title: "Emilie", playwright: "by Lauren Gunderson", credit: "Season 8" },
-        { id: 9, src: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1776807261/Nicky_Season-8_e6mxsw.jpg", title: "Nicky", playwright: "by Bixby Elliot", credit: "Season 8" },
+        { id: 9, src: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1776807261/Nicky_Season-8_e6mxsw.jpg", title: "Nicky", playwright: "by Bixby Elliot", credit: "Season 8", position: "top" },
         { id: 10, src: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1776807297/Twelfth-Night_Season-7_z3n9n0.png", title: "Twelfth Night", playwright: "by William Shakespeare", credit: "Season 7" },
         { id: 11, src: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1776807255/Urinetown_Season-7_ezzrec.jpg", title: "Urinetown: The Musical", playwright: "Music & Lyrics by Mark Hollmann, Book & Lyrics by Greg Kotis", credit: "Season 7" },
         { id: 12, src: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1776807282/Vieux-Carr%C3%A9_Season-7_bnqh4u.jpg", title: "Vieux Carré", playwright: "by Tennessee Williams", credit: "Season 7" },

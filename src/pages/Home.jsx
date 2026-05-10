@@ -967,9 +967,9 @@ const Home = () => {
         {/* FLUID MODULES SECTION */}
         <section className="relative bg-brand-light w-full">
           <DebugSpacer id="Home_FluidModules_Top" defaultMobile={50} defaultDesktop={100} />
-          <div className="w-full max-w-[1400px] mx-auto px-9 md:px-12 lg:px-24 mb-[30px] md:mb-[50px] relative z-10">
-            <h2 id="portfolio" className="text-5xl md:text-7xl font-extrabold text-brand-ink tracking-tight mb-6 font-outfit uppercase">Portfolio</h2>
-            <AnimatedDivider className="mt-8" />
+          <div className="w-full max-w-[1400px] mx-auto px-9 md:px-12 lg:px-24 mb-[15px] md:mb-[25px] relative z-10">
+            <h2 id="portfolio" className="text-5xl md:text-7xl font-extrabold text-brand-ink tracking-tight mb-4 md:mb-6 font-outfit uppercase">Portfolio</h2>
+            <AnimatedDivider className="mt-4 md:mt-8" />
           </div>
 
           {/* Scroll arrows removed — carousel is swipeable on mobile */}
@@ -980,8 +980,8 @@ const Home = () => {
             className="
             w-full max-w-[1400px] mx-auto
             flex gap-6 px-9
-            overflow-x-auto pb-0 pt-12
-            md:grid md:grid-cols-3 md:gap-10 md:overflow-visible md:px-12 md:pb-0 md:pt-12 lg:gap-16 lg:px-24
+            overflow-x-auto pb-0 pt-4 md:pt-6
+            md:grid md:grid-cols-3 md:gap-10 md:overflow-visible md:px-12 md:pb-0 lg:gap-16 lg:px-24
             scrollbar-hide
             perspective-[1200px]
           "

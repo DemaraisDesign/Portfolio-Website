@@ -74,7 +74,7 @@ export const CASE_STUDIES = {
         { id: 8, src: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1776807275/Emilie_Season-8_jesevx.jpg", title: "Emilie", playwright: "by Lauren Gunderson", credit: "Season 8" },
         { id: 9, src: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1776807261/Nicky_Season-8_e6mxsw.jpg", title: "Nicky", playwright: "by Bixby Elliot", credit: "Season 8", position: "top" },
         { id: 10, src: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1776807297/Twelfth-Night_Season-7_z3n9n0.png", title: "Twelfth Night", playwright: "by William Shakespeare", credit: "Season 7" },
-        { id: 11, src: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1776807255/Urinetown_Season-7_ezzrec.jpg", title: "Urinetown: The Musical", playwright: "Music & Lyrics by Mark Hollmann, Book & Lyrics by Greg Kotis", credit: "Season 7" },
+        { id: 11, src: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1778531498/Urinetown_Season-7_ezzrec.jpg", title: "Urinetown: The Musical", playwright: "Music & Lyrics by Mark Hollmann, Book & Lyrics by Greg Kotis", credit: "Season 7" },
         { id: 12, src: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1776807282/Vieux-Carr%C3%A9_Season-7_bnqh4u.jpg", title: "Vieux Carré", playwright: "by Tennessee Williams", credit: "Season 7" },
         { id: 13, src: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1776807277/The-Pitchfork-Disney_Season-6_e3uz5w.jpg", title: "The Pitchfork Disney", playwright: "by Philip Ridley", credit: "Season 6" },
         { id: 14, src: "https://res.cloudinary.com/dqabyzuzf/image/upload/v1776807269/The-Woodsman_Season-6_skvqgz.jpg", title: "The Woodsman", playwright: "by Steven Fechter", credit: "Season 6" },

@@ -195,16 +195,6 @@ const Screens = () => {
                     </div>
                 </div>
 
-                {/* Elegant Architectural Divider */}
-                <motion.div 
-                    className="w-full h-[1px] bg-brand-dark/10 rounded-full mt-24"
-                    initial={{ scaleX: 0, opacity: 0 }}
-                    whileInView={{ scaleX: 1, opacity: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
-                />
-
-                <DebugSpacer id="Main_Section_Gap_2" defaultMobile={0} defaultDesktop={0} />
             </section>
 
         </motion.div>
